@@ -1,5 +1,0 @@
-# This is now a static site - no wrangler.toml needed
-# Deploy to Cloudflare Pages instead of Workers
-
-# If you need the wrangler.toml for a separate Worker project,
-# create it in a different repository for the redirect routing logic.
