@@ -1,6 +1,3 @@
 name = "aiqbrain"
-pages_build_output_dir = "."
 compatibility_date = "2025-07-23"
-
-[site]
-bucket = "."
+pages_build_output_dir = "."
