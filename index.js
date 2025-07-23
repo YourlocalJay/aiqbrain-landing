@@ -1,82 +1,73 @@
-// AIQBrain Cloudflare Worker - Enhanced Version
-const HTML_CONTENT = `<!DOCTYPE html>
+// AIQBrain Cloudflare Worker - Optimized Version
+const LANDING_PAGE = `<!DOCTYPE html>
 <html lang="en">
 <!-- [Previous HTML content remains exactly the same] -->
 </html>`;
 
-const REDIRECT_MAP = {
+const REDIRECTS = {
   // Primary redirects
   '/sv': 'https://singingfiles.com/show.php?l=0&u=2427730&id=68776',
   '/surveyvault': 'https://singingfiles.com/show.php?l=0&u=2427730&id=68776',
   '/vault': 'https://aiqengage.com/vault',
   '/start': 'https://aiqengage.com/get-started',
   
-  // Additional redirects can be added here
+  // Aliases
   '/prompts': '/sv',
   '/claude': '/sv',
   '/getstarted': '/start'
 };
 
-const TEXT_RESPONSES = {
+const TEXT_PAGES = {
   '/privacy': 'Privacy Policy - Coming Soon',
-  '/terms': 'Terms of Service - Coming Soon', 
-  '/about': 'About AIQBrain - Coming Soon',
-  '/contact': 'Contact Us - Coming Soon'
+  '/terms': 'Terms of Service - Coming Soon',
+  '/about': 'About AIQBrain - Coming Soon'
 };
 
 const SECURITY_HEADERS = {
-  'content-type': 'text/html;charset=UTF-8',
-  'cache-control': 'public, max-age=3600',
-  'x-content-type-options': 'nosniff',
-  'x-frame-options': 'DENY',
-  'x-xss-protection': '1; mode=block',
-  'strict-transport-security': 'max-age=31536000; includeSubDomains',
-  'referrer-policy': 'strict-origin-when-cross-origin',
-  'permissions-policy': 'geolocation=(), microphone=(), camera=()'
+  'Content-Type': 'text/html; charset=UTF-8',
+  'Cache-Control': 'public, max-age=3600',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
 };
 
 export default {
   async fetch(request, env, ctx) {
-    try {
-      const url = new URL(request.url);
-      const path = url.pathname.toLowerCase();
-      const userAgent = request.headers.get('user-agent') || '';
+    const url = new URL(request.url);
+    const path = url.pathname.toLowerCase();
+    
+    // Set cache TTL from environment or default
+    const headers = new Headers(SECURITY_HEADERS);
+    if (env.CACHE_TTL) {
+      headers.set('Cache-Control', `public, max-age=${env.CACHE_TTL}`);
+    }
 
+    try {
       // 1. Handle redirects
-      if (REDIRECT_MAP[path]) {
+      if (REDIRECTS[path]) {
         const destination = env[`REDIRECT_${path.toUpperCase().replace(/\//g, '_')}`] 
-                          || REDIRECT_MAP[path];
+                          || REDIRECTS[path];
         return Response.redirect(destination, 302);
       }
 
-      // 2. Handle text responses (like policy pages)
-      if (TEXT_RESPONSES[path]) {
-        return new Response(TEXT_RESPONSES[path], {
-          headers: { 'content-type': 'text/plain' }
+      // 2. Handle simple text pages
+      if (TEXT_PAGES[path]) {
+        return new Response(TEXT_PAGES[path], {
+          headers: { 'Content-Type': 'text/plain' }
         });
       }
 
-      // 3. Serve landing page with security headers
-      const headers = new Headers(SECURITY_HEADERS);
-      
-      // Cache control override from env
-      if (env.CACHE_TTL) {
-        headers.set('cache-control', `public, max-age=${env.CACHE_TTL}`);
-      }
-
-      // 4. Basic bot detection (optional)
-      if (userAgent.includes('bot') && !userAgent.includes('Twitterbot')) {
-        headers.set('content-type', 'text/plain');
-        return new Response('Welcome to AIQBrain', { headers });
-      }
-
-      return new Response(HTML_CONTENT, { headers });
+      // 3. Serve landing page for all other requests
+      return new Response(LANDING_PAGE, { headers });
 
     } catch (error) {
-      // Error handling
-      return new Response(`An error occurred: ${error.message}`, {
+      // Error handling with user-friendly message
+      return new Response('An error occurred. Please try again later.', {
         status: 500,
-        headers: { 'content-type': 'text/plain' }
+        headers: { 'Content-Type': 'text/plain' }
       });
     }
   }
