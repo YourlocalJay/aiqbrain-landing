@@ -1,3 +1,44 @@
 name = "aiqbrain"
+type = "javascript"
+main = "index.js"
 compatibility_date = "2025-07-23"
-pages_build_output_dir = "."
+workers_dev = true
+
+[vars]
+# Core configuration
+REDIRECT_DEFAULT = "https://aiqengage.com"
+CACHE_TTL = "3600"
+
+# Redirect mappings
+REDIRECT_SURVEYVAULT = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
+REDIRECT_SV = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
+REDIRECT_VAULT = "https://aiqengage.com/vault"
+REDIRECT_START = "https://aiqengage.com/get-started"
+
+# Analytics (optional)
+PLAUSIBLE_DOMAIN = "aiqbrain.com"
+GA_MEASUREMENT_ID = "G-XXXXXXXXXX"
+
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "modules"
+dir = "dist"
+main = "./dist/index.mjs"
+
+# Optional: enable later
+# [triggers]
+# routes = ["aiqbrain.com/*", "www.aiqbrain.com/*"]
+
+# [kv_namespaces]
+# binding = "REDIRECTS_KV"
+# id = "your-kv-id"
+# preview_id = "your-preview-kv-id"
+
+# [analytics_engine_datasets]
+# binding = "ANALYTICS"
+# dataset = "aiqbrain_analytics"
+
+# [logfwdr]
+# binding = "LOGS"
