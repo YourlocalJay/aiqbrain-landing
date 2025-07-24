@@ -3,64 +3,22 @@ main = "index.js"
 compatibility_date = "2025-07-23"
 workers_dev = true
 
-[env]
-# Environment-specific overrides can be added here
 [vars]
 # Core Configuration
 REDIRECT_DEFAULT = "https://aiqengage.com"
-CACHE_TTL = "86400"  # Increased to 24 hours for better caching
+CACHE_TTL = "86400"
 
 # Redirect Mappings
 REDIRECT_SURVEYVAULT = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
-REDIRECT_SV = ${REDIRECT_SURVEYVAULT}  # Inherits from SURVEYVAULT
+REDIRECT_SV = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
 REDIRECT_VAULT = "https://aiqengage.com/vault"
 REDIRECT_START = "https://aiqengage.com/get-started"
 
 # Analytics Configuration
 PLAUSIBLE_DOMAIN = "aiqbrain.com"
 GA_MEASUREMENT_ID = "G-XXXXXXXXXX"
-GTM_CONTAINER_ID = "GTM-XXXXXX"  # Added Google Tag Manager support
+GTM_CONTAINER_ID = "GTM-XXXXXX"
 
 # Performance
-ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"  # For static assets
-EDGE_CACHE_TTL = "14400"  # 4 hours for edge caching
-
-[build]
-command = "npm run build"
-upload.format = "modules"
-upload.dir = "dist"
-
-[build.upload.rules]
-[[build.upload.rules]]
-globs = ["**/*.js"]
-type = "ESModule"
-[[build.upload.rules]]
-globs = ["**/*.html"]
-type = "Text"
-[[build.upload.rules]]
-globs = ["**/*.css"]
-type = "Text"
-cache_control = ${ASSET_CACHE_CONTROL}
-
-[triggers]
-# Uncomment when ready for production deployment
-# routes = [
-#   "aiqbrain.com/*",
-#   "www.aiqbrain.com/*"
-# ]
-# include = ["*aiqbrain.com/*"]
-# exclude = ["*admin.aiqbrain.com/*"]
-
-[kv_namespaces]
-# For future dynamic content storage
-# binding = "CONTENT_KV"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-[analytics_engine_datasets]
-# For enhanced analytics
-# binding = "ANALYTICS"
-# dataset = "aiqbrain_metrics"
-
-[logfwdr]
-# For log management
-# binding = "LOGS"
+ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
+EDGE_CACHE_TTL = "14400"
