@@ -106,17 +106,15 @@
       align-items: center;
     }
 
-    .logo-placeholder {
-      font-family: 'Space Mono', monospace;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--text-primary);
+    .logo {
+      height: 40px;
       display: flex;
       align-items: center;
     }
 
-    .logo-placeholder span {
-      color: var(--accent-primary);
+    .logo img {
+      height: 100%;
+      width: auto;
     }
 
     /* Navigation */
@@ -419,6 +417,17 @@
       margin: 0 0.5rem;
     }
 
+    .footer-logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-logo img {
+      height: 60px;
+      width: auto;
+    }
+
     /* Accessibility and Responsive Adjustments */
     @media (max-width: 768px) {
       h1 {
@@ -463,6 +472,10 @@
         flex-direction: column;
         gap: 1rem;
       }
+
+      .logo {
+        height: 34px;
+      }
     }
 
     /* Animation for Neural Pattern */
@@ -482,7 +495,9 @@
   <header class="header">
     <div class="container">
       <div class="header-inner">
-        <a href="/" class="logo-placeholder">AIQ<span>Brain</span></a>
+        <a href="/" class="logo">
+          <img src="/images/aiqbrain-logo.svg" alt="AIQBrain Logo - Neural lock icon">
+        </a>
         <nav class="nav">
           <a href="/vault" class="nav-link">Vault</a>
           <a href="/strategy" class="nav-link">Strategy</a>
@@ -605,6 +620,9 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
+      <div class="footer-logo">
+        <img src="/images/aiqbrain-logo.svg" alt="AIQBrain Logo">
+      </div>
       <div class="footer-inner">
         <!-- Column 1 -->
         <div class="footer-col">
