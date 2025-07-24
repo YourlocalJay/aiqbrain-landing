@@ -3,43 +3,93 @@ main = "index.js"
 compatibility_date = "2025-07-23"
 workers_dev = true
 
-[vars]
-# Core Configuration
-REDIRECT_DEFAULT = "https://aiqengage.com"
-CACHE_TTL = "3600"
+[build]
+command = "npm run build"
+upload.format = "modules"
+upload.dir = "dist"
 
-# A/B Testing Configuration for /sv (Replace with your actual offers)
+[build.upload.rules]
+[[build.upload.rules]]
+globs = ["**/*.js"]
+type = "ESModule"
+[[build.upload.rules]]
+globs = ["**/*.html"]
+type = "Text"
+[[build.upload.rules]]
+globs = ["**/*.css"]
+type = "Text"
+cache_control = ${ASSET_CACHE_CONTROL}
+
+[vars]
+# ========== CORE CONFIGURATION ==========
+REDIRECT_DEFAULT = "https://aiqengage.com"
+CACHE_TTL = "3600"  # 1 hour default cache
+ENVIRONMENT = "production"  # production/staging/development
+
+# ========== A/B TESTING CONFIGURATION ==========
+# Main offer variants (33% split by default)
 SV_OFFER_A = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
 SV_OFFER_B = "https://singingfiles.com/show.php?l=0&u=2427730&id=68777"
 SV_OFFER_C = "https://singingfiles.com/show.php?l=0&u=2427730&id=68778"
 
-# Geographic Targeting (German-speaking countries)
-GERMAN_OFFER = "https://your-german-cpa-offer.com"
-GERMAN_VAULT = "https://your-german-vault.com"
+# ========== GEO-TARGETING CONFIGURATION ==========
+# German-speaking countries
+GEO_DE_OFFER = ${GERMAN_OFFER}
+GEO_DE_VAULT = ${GERMAN_VAULT}
+GEO_AT_OFFER = ${GERMAN_OFFER}  # Austria
+GEO_CH_OFFER = ${GERMAN_OFFER}  # Switzerland
 
-# Primary Redirects
-REDIRECT_VAULT = "https://aiqengage.com/vault"
-REDIRECT_START = "https://aiqengage.com/get-started"
+# ========== TIME-BASED OFFERS ==========
+TIME_WEEKEND_OFFER = ${WEEKEND_OFFER}
+TIME_EVENING_OFFER = ${EVENING_OFFER}
+TIME_HOLIDAY_OFFER = "https://holiday-special.com"  # New
 
-# Time-based Optimization (optional - replace with better converting offers)
-WEEKEND_OFFER = "https://weekend-special-offer.com"
-EVENING_OFFER = "https://evening-boost-offer.com"
+# ========== DEVICE-SPECIFIC OPTIMIZATION ==========
+DEVICE_MOBILE_VAULT = ${MOBILE_VAULT}
+DEVICE_MOBILE_START = ${MOBILE_START}
+DEVICE_TABLET_OFFER = "https://tablet-optimized.com"  # New
 
-# Device-specific Optimization
-MOBILE_VAULT = "https://mobile-optimized-vault.com"
-MOBILE_START = "https://mobile-onboarding.com"
+# ========== CONVERSION OPTIMIZATION ==========
+# Urgency tactics
+CONVERSION_EXIT_INTENT = "true"
+CONVERSION_EXIT_DISCOUNT = ${EXIT_INTENT_DISCOUNT}
+CONVERSION_URGENCY_SPOTS = ${URGENCY_SPOTS_LEFT}
+CONVERSION_URGENCY_TIMER = ${URGENCY_TIMER_HOURS}
 
-# Analytics & Tracking
-PLAUSIBLE_DOMAIN = "aiqbrain.com"
-GA_MEASUREMENT_ID = "G-XXXXXXXXXX"
-GTM_CONTAINER_ID = "GTM-XXXXXX"
-FACEBOOK_PIXEL_ID = "1234567890"
+# ========== ANALYTICS & TRACKING ==========
+# Web Analytics
+ANALYTICS_PLAUSIBLE_DOMAIN = ${PLAUSIBLE_DOMAIN}
+ANALYTICS_GA_MEASUREMENT_ID = ${GA_MEASUREMENT_ID}
+ANALYTICS_GTM_CONTAINER_ID = ${GTM_CONTAINER_ID}
+ANALYTICS_FB_PIXEL_ID = ${FACEBOOK_PIXEL_ID}
+ANALYTICS_TIKTOK_PIXEL_ID = "ABCDEF123456"  # New
 
-# Conversion Optimization Settings
-EXIT_INTENT_DISCOUNT = "30"
-URGENCY_SPOTS_LEFT = "50"
-URGENCY_TIMER_HOURS = "24"
+# ========== PERFORMANCE OPTIMIZATION ==========
+PERF_ASSET_CACHE = ${ASSET_CACHE_CONTROL}
+PERF_EDGE_CACHE_TTL = ${EDGE_CACHE_TTL}
+PERF_IMAGE_OPTIMIZATION = "true"  # New
 
-# Performance Optimization
-ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
-EDGE_CACHE_TTL = "14400"
+# ========== SECURITY CONFIGURATION ==========
+SECURITY_CSP_ENABLED = "true"
+SECURITY_RATE_LIMITING = "1000/10"  # 1000 requests per 10 minutes
+
+[triggers]
+# Uncomment for production deployment
+# routes = [
+#   "aiqbrain.com/*",
+#   "www.aiqbrain.com/*"
+# ]
+
+[kv_namespaces]
+# For dynamic configuration
+binding = "DYNAMIC_CONFIG"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[analytics_engine_datasets]
+# For real-time analytics
+binding = "ANALYTICS"
+dataset = "aiqbrain_events"
+
+[logfwdr]
+# For centralized logging
+binding = "LOGS"
