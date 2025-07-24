@@ -1,214 +1,173 @@
-// AIQBrain Cloudflare Worker - Enterprise Edition
-// Features: A/B Testing, Geo-Targeting, Device Optimization, Time-Based Offers
+// AIQBrain Landing Page Cloudflare Worker
+// Enhanced with A/B testing, geo-targeting, and ROI optimizations
 
-const LANDING_PAGE = `<!DOCTYPE html>
+const HTML_TEMPLATE = (spotsLeft = 17) => `<!DOCTYPE html>
 <html lang="en">
-<!-- [Previous HTML content remains exactly the same] -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIQBrain – Claude Prompt Tools</title>
+  <meta name="description" content="Accelerate your productivity with trusted AI unlocks">
+  <meta property="og:title" content="AIQBrain – Claude Prompt Tools">
+  <meta property="og:description" content="Unlock high-converting Claude prompts instantly.">
+  <meta property="og:image" content="https://aiqbrain.com/og.png">
+  <meta property="og:url" content="https://aiqbrain.com">
+  <style>
+    /* [Omitted for brevity — keep your existing CSS here] */
+  </style>
+</head>
+<body>
+  <div class="urgent-banner" id="urgencyBanner" style="display: none;">
+    ⚡ Limited Time: Get 50% OFF Premium Prompts – Only ${spotsLeft} spots left!
+  </div>
+
+  <!-- [Remaining HTML structure: header, hero, buttons, footer] -->
+
+  <script>
+    (function() {
+      const variants = {
+        A: {
+          title: "AIQBrain – Claude Prompt Tools",
+          subtitle: "Accelerate your productivity with trusted AI unlocks",
+          cta: "Unlock Claude Prompts",
+          urgency: false
+        },
+        B: {
+          title: "🎯 Master Claude AI in Minutes",
+          subtitle: "Get proven prompts that 10,000+ users trust for instant results",
+          cta: "Get Instant Access",
+          urgency: true
+        },
+        C: {
+          title: "💡 Claude Prompts That Actually Work",
+          subtitle: "Stop wasting time with generic prompts. Get results from day one",
+          cta: "Start Getting Results",
+          urgency: false
+        }
+      };
+
+      const userId = localStorage.getItem('aiq_uid') || Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('aiq_uid', userId);
+
+      const keys = Object.keys(variants);
+      const vIndex = userId.charCodeAt(0) % keys.length;
+      const variant = variants[keys[vIndex]];
+
+      document.getElementById('heroTitle').textContent = variant.title;
+      document.getElementById('heroSubtitle').textContent = variant.subtitle;
+      document.getElementById('primaryCTA').textContent = variant.cta;
+
+      if (variant.urgency || new Date().getHours() >= 18 || new Date().getHours() <= 6) {
+        document.getElementById('urgencyBanner').style.display = 'block';
+      }
+
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const url = new URL(this.href);
+          url.searchParams.set('utm_source', 'aiqbrain');
+          url.searchParams.set('utm_medium', 'landing');
+          url.searchParams.set('utm_campaign', keys[vIndex]);
+          url.searchParams.set('uid', userId);
+          this.href = url.toString();
+        });
+      });
+
+      let shown = false;
+      document.addEventListener('mouseleave', e => {
+        if (e.clientY <= 0 && !shown) {
+          shown = true;
+          if (confirm('Wait! Get 30% off your first purchase – Click OK to claim your discount!')) {
+            window.location.href = '/sv?discount=30';
+          }
+        }
+      });
+    })();
+  </script>
+</body>
 </html>`;
-
-// Configuration Objects
-const CONFIG = {
-  // A/B Testing for /sv redirect
-  AB_TESTS: {
-    SV_OFFERS: {
-      A: "https://singingfiles.com/show.php?l=0&u=2427730&id=68776",
-      B: "https://singingfiles.com/show.php?l=0&u=2427730&id=68777",
-      C: "https://singingfiles.com/show.php?l=0&u=2427730&id=68778"
-    },
-    LANDING_VARIANTS: {
-      A: { title: "AIQBrain – Claude Prompt Tools", subtitle: "Accelerate your productivity with trusted AI unlocks" },
-      B: { title: "🎯 Master Claude AI in Minutes", subtitle: "Get proven prompts that 10,000+ users trust" },
-      C: { title: "💡 Claude Prompts That Actually Work", subtitle: "Stop wasting time with generic prompts" }
-    }
-  },
-
-  // Geo-Specific Offers
-  GEO_TARGETING: {
-    DE: { vault: "https://de.aiqengage.com/vault", start: "https://de.aiqengage.com/start" },
-    FR: { vault: "https://fr.aiqengage.com/vault" },
-    ES: { vault: "https://es.aiqengage.com/vault" }
-  },
-
-  // Device-Specific Optimization
-  DEVICE_OPTIMIZATION: {
-    mobile: { vault: "https://m.aiqengage.com/vault", cta: "Get Mobile Access" },
-    tablet: { cta: "Get Tablet Access" }
-  },
-
-  // Time-Based Offers
-  TIME_OFFERS: {
-    weekend: { banner: "🚀 Weekend Special: 40% OFF All Prompts!" },
-    evening: { banner: "🌙 Night Owl Special: Bonus Prompts Included!" }
-  }
-};
-
-// Security Headers Configuration
-const SECURITY_HEADERS = {
-  html: {
-    'Content-Type': 'text/html; charset=UTF-8',
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
-  },
-  text: {
-    'Content-Type': 'text/plain'
-  }
-};
 
 export default {
   async fetch(request, env, ctx) {
-    try {
-      const url = new URL(request.url);
-      const { pathname } = url;
-      const path = pathname.toLowerCase();
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const userAgent = request.headers.get('user-agent') || '';
+    const country = request.cf?.country || 'US';
+    const ip = request.headers.get('cf-connecting-ip') || '0.0.0.0';
+    const isMobile = /mobile|android|iphone|ipad/i.test(userAgent);
+    const hour = new Date().getUTCHours();
+    const day = new Date().getUTCDay();
+    const isWeekend = day === 0 || day === 6;
+    const isEvening = hour >= 18 || hour <= 6;
 
-      // Extract request metadata
-      const userAgent = request.headers.get('user-agent') || '';
-      const cf = request.cf || {};
-      const country = cf.country || 'US';
-      const isMobile = /mobi|android|iphone|ipad/i.test(userAgent);
-      const isTablet = /tablet|ipad/i.test(userAgent);
-      const now = new Date();
-      const isWeekend = [0, 6].includes(now.getUTCDay());
-      const isEvening = now.getUTCHours() >= 18 || now.getUTCHours() <= 6;
+    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip + userAgent));
+    const userScore = Array.from(new Uint8Array(hash))[0]; // 0–255
+    const variantKey = ['A', 'B', 'C'][userScore % 3];
 
-      // Generate consistent user ID for A/B testing
-      const ip = request.headers.get('cf-connecting-ip') || '';
-      const userHash = await crypto.subtle.digest('SHA-256', 
-        new TextEncoder().encode(`${ip}${userAgent}${country}`));
-      const userScore = new Uint8Array(userHash)[0];
-
-      // Bot detection and handling
-      if (this.isBot(userAgent)) {
-        return this.serveBotVersion();
-      }
-
-      // Handle redirect routes
-      if (path === '/sv' || path === '/surveyvault') {
-        return this.handleSurveyVaultRedirect(userScore, country, isMobile, isEvening);
-      }
-
-      if (path === '/vault') {
-        return this.handleVaultRedirect(country, isMobile);
-      }
-
-      if (path === '/start') {
-        return this.handleStartRedirect(country, isMobile);
-      }
-
-      // Handle static pages
-      if (['/privacy', '/terms', '/about'].includes(path)) {
-        return new Response(`${path.slice(1).toUpperCase()} Page - Coming Soon`, {
-          headers: SECURITY_HEADERS.text
-        });
-      }
-
-      // Serve optimized landing page
-      return this.serveLandingPage(userScore, country, isMobile, isWeekend, isEvening);
-
-    } catch (error) {
-      // Error handling with logging
-      console.error(`Error processing request: ${error.message}`);
-      return new Response('An error occurred. Please try again later.', {
-        status: 500,
-        headers: SECURITY_HEADERS.text
+    // Bot filtering
+    const botPatterns = [/bot/i, /crawl/i, /spider/i, /facebook/i, /slack/i, /telegram/i];
+    if (botPatterns.some(r => r.test(userAgent))) {
+      return new Response(HTML_TEMPLATE().replace(/<script>[\s\S]*?<\/script>/g, ''), {
+        headers: { 'content-type': 'text/html', 'cache-control': 'public, max-age=86400' }
       });
     }
-  },
 
-  // Helper Methods
-  isBot(userAgent) {
-    const botPatterns = [/bot/i, /crawl/i, /spider/i, /scraper/i, /facebookexternalhit/i];
-    return botPatterns.some(pattern => pattern.test(userAgent));
-  },
+    // Geo offers
+    const geoOffers = { DE: env.GERMAN_OFFER, AT: env.GERMAN_OFFER, CH: env.GERMAN_OFFER };
+    const timeOffers = {
+      weekend: env.WEEKEND_OFFER,
+      evening: env.EVENING_OFFER
+    };
 
-  serveBotVersion() {
-    const cleanHTML = LANDING_PAGE.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
-    return new Response(cleanHTML, {
+    if (path === '/sv' || path === '/surveyvault') {
+      let target = env.SV_OFFER_A;
+
+      if (geoOffers[country]) {
+        target = geoOffers[country];
+      } else if (isWeekend && timeOffers.weekend) {
+        target = timeOffers.weekend;
+      } else if (isEvening && timeOffers.evening) {
+        target = timeOffers.evening;
+      } else {
+        target = { A: env.SV_OFFER_A, B: env.SV_OFFER_B, C: env.SV_OFFER_C }[variantKey];
+      }
+
+      const redirectUrl = new URL(target);
+      redirectUrl.searchParams.set('variant', variantKey);
+      redirectUrl.searchParams.set('country', country);
+      redirectUrl.searchParams.set('device', isMobile ? 'mobile' : 'desktop');
+      redirectUrl.searchParams.set('time', isEvening ? 'evening' : 'day');
+
+      return Response.redirect(redirectUrl.toString(), 302);
+    }
+
+    if (path === '/vault') {
+      const vault = isMobile && env.MOBILE_VAULT ? env.MOBILE_VAULT : env.REDIRECT_VAULT;
+      return Response.redirect(vault, 302);
+    }
+
+    if (path === '/start') {
+      const start = isMobile && env.MOBILE_START ? env.MOBILE_START : env.REDIRECT_START;
+      return Response.redirect(start, 302);
+    }
+
+    if (path === '/privacy') return new Response('Privacy Policy – Coming Soon');
+    if (path === '/terms') return new Response('Terms of Service – Coming Soon');
+    if (path === '/about') return new Response('About AIQBrain – Coming Soon');
+
+    // Localization
+    const html = HTML_TEMPLATE(Math.floor(Math.random() * 25 + 5));
+    const localizedHTML = (country === 'DE' || request.headers.get('accept-language')?.includes('de'))
+      ? html.replace('trusted AI unlocks', 'vertrauenswürdige KI-Freischaltungen')
+      : html;
+
+    return new Response(localizedHTML, {
       headers: {
-        ...SECURITY_HEADERS.html,
-        'Cache-Control': 'public, max-age=86400' // Longer cache for bots
+        'content-type': 'text/html',
+        'cache-control': `public, max-age=${env.CACHE_TTL || 3600}`,
+        'x-ab-variant': variantKey,
+        'x-country': country,
+        'x-device': isMobile ? 'mobile' : 'desktop'
       }
     });
-  },
-
-  handleSurveyVaultRedirect(userScore, country, isMobile, isEvening) {
-    // 1. Check for geo-specific offer
-    if (CONFIG.GEO_TARGETING[country]?.survey) {
-      return Response.redirect(CONFIG.GEO_TARGETING[country].survey, 302);
-    }
-
-    // 2. Select A/B test variant
-    const variantKey = ['A', 'B', 'C'][userScore % 3];
-    let redirectUrl = CONFIG.AB_TESTS.SV_OFFERS[variantKey];
-
-    // 3. Add tracking parameters
-    const trackingParams = new URLSearchParams();
-    trackingParams.set('variant', variantKey);
-    trackingParams.set('country', country);
-    trackingParams.set('device', isMobile ? 'mobile' : 'desktop');
-    if (isEvening) trackingParams.set('time', 'evening');
-
-    return Response.redirect(`${redirectUrl}?${trackingParams}`, 302);
-  },
-
-  handleVaultRedirect(country, isMobile) {
-    // 1. Check for geo-specific vault
-    if (CONFIG.GEO_TARGETING[country]?.vault) {
-      return Response.redirect(CONFIG.GEO_TARGETING[country].vault, 302);
-    }
-
-    // 2. Check for mobile-optimized vault
-    if (isMobile && CONFIG.DEVICE_OPTIMIZATION.mobile?.vault) {
-      return Response.redirect(CONFIG.DEVICE_OPTIMIZATION.mobile.vault, 302);
-    }
-
-    // 3. Default vault
-    return Response.redirect(env.REDIRECT_VAULT || 'https://aiqengage.com/vault', 302);
-  },
-
-  handleStartRedirect(country, isMobile) {
-    // Similar logic to vault redirect
-    if (CONFIG.GEO_TARGETING[country]?.start) {
-      return Response.redirect(CONFIG.GEO_TARGETING[country].start, 302);
-    }
-
-    if (isMobile && CONFIG.DEVICE_OPTIMIZATION.mobile?.start) {
-      return Response.redirect(CONFIG.DEVICE_OPTIMIZATION.mobile.start, 302);
-    }
-
-    return Response.redirect(env.REDIRECT_START || 'https://aiqengage.com/start', 302);
-  },
-
-  serveLandingPage(userScore, country, isMobile, isWeekend, isEvening) {
-    // 1. Select A/B test variant
-    const variantKey = ['A', 'B', 'C'][userScore % 3];
-    const variant = CONFIG.AB_TESTS.LANDING_VARIANTS[variantKey];
-
-    // 2. Apply variant to HTML
-    let html = LANDING_PAGE
-      .replace('AIQBrain – Claude Prompt Tools', variant.title)
-      .replace('Accelerate your productivity with trusted AI unlocks', variant.subtitle);
-
-    // 3. Apply geo-specific modifications
-    if (['DE', 'AT', 'CH'].includes(country)) {
-      html = html.replace('Unlock Claude Prompts', 'Jetzt freischalten');
-    }
-
-    // 4. Apply time-based modifications
-    if (isWeekend) {
-      html = html.replace('id="urgencyBanner" style="display: none;"', 
-        'id="urgencyBanner"');
-    }
-
-    // 5. Set response headers
-    const headers = new Headers(SECURITY_HEADERS.html);
-    headers.set('Cache-Control', `public, max-age=${env.CACHE_TTL || 3600}`);
-    headers.set('X-AB-Variant', variantKey);
-    headers.set('X-Geo-Country', country);
-
-    return new Response(html, { headers });
   }
 };
