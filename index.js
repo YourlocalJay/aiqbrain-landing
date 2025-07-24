@@ -1,11 +1,26 @@
 // AIQBrain Landing Page Cloudflare Worker
 // Enhanced with A/B testing, geo-targeting, and ROI optimizations
 
+// Define a minimal HTML structure for debugging
+const DEBUG_HTML = `<!DOCTYPE html>
+<html>
+<head>
+  <title>AIQBrain Debug</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+  <h1>AIQBrain Landing Page - Debug Mode</h1>
+  <p>If you can see this page, your Cloudflare Worker is functioning correctly.</p>
+</body>
+</html>`;
+
+// Main content HTML
 const HTML_CONTENT = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AIQBrain – Claude Prompt Tools</title>
   <meta name="description" content="Accelerate your productivity with trusted AI unlocks">
   <meta property="og:title" content="AIQBrain – Claude Prompt Tools">
@@ -98,53 +113,62 @@ const HTML_CONTENT = `<!DOCTYPE html>
         }
       };
 
-      const userId = localStorage.getItem('aiq_uid') || Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('aiq_uid', userId);
+      try {
+        const userId = localStorage.getItem('aiq_uid') || Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('aiq_uid', userId);
 
-      const keys = Object.keys(variants);
-      const vIndex = userId.charCodeAt(0) % keys.length;
-      const variant = variants[keys[vIndex]];
+        const keys = Object.keys(variants);
+        const vIndex = userId.charCodeAt(0) % keys.length;
+        const variant = variants[keys[vIndex]];
 
-      document.getElementById('heroTitle').textContent = variant.title;
-      document.getElementById('heroSubtitle').textContent = variant.subtitle;
-      document.getElementById('primaryCTA').textContent = variant.cta;
-      
-      // Set the spots left to a random number between 5 and 30
-      document.getElementById('spotsLeft').textContent = Math.floor(Math.random() * 25 + 5);
+        document.getElementById('heroTitle').textContent = variant.title;
+        document.getElementById('heroSubtitle').textContent = variant.subtitle;
+        document.getElementById('primaryCTA').textContent = variant.cta;
+        
+        // Set the spots left to a random number between 5 and 30
+        document.getElementById('spotsLeft').textContent = Math.floor(Math.random() * 25 + 5);
 
-      if (variant.urgency || new Date().getHours() >= 18 || new Date().getHours() <= 6) {
-        document.getElementById('urgencyBanner').style.display = 'block';
-      }
+        if (variant.urgency || new Date().getHours() >= 18 || new Date().getHours() <= 6) {
+          document.getElementById('urgencyBanner').style.display = 'block';
+        }
 
-      document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          if (this.href) {
-            const url = new URL(this.href);
-            url.searchParams.set('utm_source', 'aiqbrain');
-            url.searchParams.set('utm_medium', 'landing');
-            url.searchParams.set('utm_campaign', keys[vIndex]);
-            url.searchParams.set('uid', userId);
-            this.href = url.toString();
+        document.querySelectorAll('.btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            if (this.href) {
+              const url = new URL(this.href);
+              url.searchParams.set('utm_source', 'aiqbrain');
+              url.searchParams.set('utm_medium', 'landing');
+              url.searchParams.set('utm_campaign', keys[vIndex]);
+              url.searchParams.set('uid', userId);
+              this.href = url.toString();
+            }
+          });
+        });
+
+        let shown = false;
+        document.addEventListener('mouseleave', e => {
+          if (e.clientY <= 0 && !shown) {
+            shown = true;
+            if (confirm('Wait! Get 30% off your first purchase – Click OK to claim your discount!')) {
+              window.location.href = '/sv?discount=30';
+            }
           }
         });
-      });
-
-      let shown = false;
-      document.addEventListener('mouseleave', e => {
-        if (e.clientY <= 0 && !shown) {
-          shown = true;
-          if (confirm('Wait! Get 30% off your first purchase – Click OK to claim your discount!')) {
-            window.location.href = '/sv?discount=30';
-          }
-        }
-      });
+      } catch (error) {
+        console.error('Error in client-side script:', error);
+      }
     })();
   </script>
 </body>
 </html>`;
 
-export default {
-  async fetch(request, env, ctx) {
+// Main worker function
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+  try {
     const url = new URL(request.url);
     const path = url.pathname;
     const userAgent = request.headers.get('user-agent') || '';
@@ -156,8 +180,20 @@ export default {
     const isWeekend = day === 0 || day === 6;
     const isEvening = hour >= 18 || hour <= 6;
 
+    // Check if we're in debug mode
+    if (url.searchParams.has('debug')) {
+      return new Response(DEBUG_HTML, {
+        headers: {
+          'content-type': 'text/html',
+          'cache-control': 'no-store'
+        }
+      });
+    }
+
     // Generate a consistent hash for the user
-    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip + userAgent));
+    const encoder = new TextEncoder();
+    const data = encoder.encode(ip + userAgent);
+    const hash = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hash));
     const userScore = hashArray[0]; // 0–255
     const variantKey = ['A', 'B', 'C'][userScore % 3];
@@ -166,7 +202,7 @@ export default {
     const botPatterns = [/bot/i, /crawl/i, /spider/i, /facebook/i, /slack/i, /telegram/i];
     if (botPatterns.some(r => r.test(userAgent))) {
       // For bots, return a simplified version without scripts
-      return new Response(HTML_CONTENT.replace(/<script>[\s\S]*?<\/script>/g, ''), {
+      return new Response(HTML_CONTENT.replace(/<script>[\\s\\S]*?<\\/script>/g, ''), {
         headers: { 
           'content-type': 'text/html', 
           'cache-control': 'public, max-age=86400' 
@@ -174,22 +210,36 @@ export default {
       });
     }
 
+    // Environment variables and constants
+    // These would typically come from env but we'll hardcode for now to eliminate variables
+    const envVars = {
+      REDIRECT_VAULT: "https://aiqengage.com/vault",
+      REDIRECT_START: "https://aiqengage.com/get-started",
+      SV_OFFER_A: "https://singingfiles.com/show.php?l=0&u=2427730&id=68776",
+      SV_OFFER_B: "https://singingfiles.com/show.php?l=0&u=2427730&id=68777",
+      SV_OFFER_C: "https://singingfiles.com/show.php?l=0&u=2427730&id=68778",
+      GERMAN_OFFER: "https://your-german-cpa-offer.com",
+      WEEKEND_OFFER: "https://weekend-special-offer.com",
+      EVENING_OFFER: "https://evening-boost-offer.com",
+      CACHE_TTL: "3600"
+    };
+    
     // Geo offers mapping
     const geoOffers = { 
-      DE: env.GERMAN_OFFER, 
-      AT: env.GERMAN_OFFER, 
-      CH: env.GERMAN_OFFER 
+      DE: envVars.GERMAN_OFFER, 
+      AT: envVars.GERMAN_OFFER, 
+      CH: envVars.GERMAN_OFFER 
     };
     
     // Time-based offers
     const timeOffers = {
-      weekend: env.WEEKEND_OFFER,
-      evening: env.EVENING_OFFER
+      weekend: envVars.WEEKEND_OFFER,
+      evening: envVars.EVENING_OFFER
     };
 
     // Handle specific routes
     if (path === '/sv' || path === '/surveyvault') {
-      let target = env.SV_OFFER_A;
+      let target = envVars.SV_OFFER_A;
 
       if (geoOffers[country]) {
         target = geoOffers[country];
@@ -199,11 +249,11 @@ export default {
         target = timeOffers.evening;
       } else {
         const variantOffers = { 
-          A: env.SV_OFFER_A, 
-          B: env.SV_OFFER_B, 
-          C: env.SV_OFFER_C 
+          A: envVars.SV_OFFER_A, 
+          B: envVars.SV_OFFER_B, 
+          C: envVars.SV_OFFER_C 
         };
-        target = variantOffers[variantKey] || env.SV_OFFER_A;
+        target = variantOffers[variantKey] || envVars.SV_OFFER_A;
       }
 
       const redirectUrl = new URL(target);
@@ -222,12 +272,12 @@ export default {
     }
 
     if (path === '/vault') {
-      const vault = isMobile && env.MOBILE_VAULT ? env.MOBILE_VAULT : env.REDIRECT_VAULT;
+      const vault = envVars.REDIRECT_VAULT;
       return Response.redirect(vault, 302);
     }
 
     if (path === '/start') {
-      const start = isMobile && env.MOBILE_START ? env.MOBILE_START : env.REDIRECT_START;
+      const start = envVars.REDIRECT_START;
       return Response.redirect(start, 302);
     }
 
@@ -256,11 +306,42 @@ export default {
     return new Response(html, {
       headers: {
         'content-type': 'text/html',
-        'cache-control': `public, max-age=${env.CACHE_TTL || 3600}`,
+        'cache-control': `public, max-age=${envVars.CACHE_TTL || 3600}`,
         'x-ab-variant': variantKey,
         'x-country': country,
         'x-device': isMobile ? 'mobile' : 'desktop'
       }
     });
+  } catch (error) {
+    // Return a basic error page if something goes wrong
+    return new Response(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Error - AIQBrain</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+            .error { background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 4px; }
+            pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow: auto; }
+          </style>
+        </head>
+        <body>
+          <h1>Something went wrong</h1>
+          <div class="error">
+            <p>The server encountered an error while processing your request.</p>
+            <pre>${error.stack || error.message || 'Unknown error'}</pre>
+          </div>
+          <p><a href="/">Return to home page</a></p>
+        </body>
+      </html>
+    `, {
+      status: 500,
+      headers: {
+        'content-type': 'text/html',
+        'cache-control': 'no-store'
+      }
+    });
   }
-};
+}
