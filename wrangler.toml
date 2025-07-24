@@ -6,19 +6,40 @@ workers_dev = true
 [vars]
 # Core Configuration
 REDIRECT_DEFAULT = "https://aiqengage.com"
-CACHE_TTL = "86400"
+CACHE_TTL = "3600"
 
-# Redirect Mappings
-REDIRECT_SURVEYVAULT = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
-REDIRECT_SV = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
+# A/B Testing Configuration for /sv (Replace with your actual offers)
+SV_OFFER_A = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
+SV_OFFER_B = "https://singingfiles.com/show.php?l=0&u=2427730&id=68777"
+SV_OFFER_C = "https://singingfiles.com/show.php?l=0&u=2427730&id=68778"
+
+# Geographic Targeting (German-speaking countries)
+GERMAN_OFFER = "https://your-german-cpa-offer.com"
+GERMAN_VAULT = "https://your-german-vault.com"
+
+# Primary Redirects
 REDIRECT_VAULT = "https://aiqengage.com/vault"
 REDIRECT_START = "https://aiqengage.com/get-started"
 
-# Analytics Configuration
+# Time-based Optimization (optional - replace with better converting offers)
+WEEKEND_OFFER = "https://weekend-special-offer.com"
+EVENING_OFFER = "https://evening-boost-offer.com"
+
+# Device-specific Optimization
+MOBILE_VAULT = "https://mobile-optimized-vault.com"
+MOBILE_START = "https://mobile-onboarding.com"
+
+# Analytics & Tracking
 PLAUSIBLE_DOMAIN = "aiqbrain.com"
 GA_MEASUREMENT_ID = "G-XXXXXXXXXX"
 GTM_CONTAINER_ID = "GTM-XXXXXX"
+FACEBOOK_PIXEL_ID = "1234567890"
 
-# Performance
+# Conversion Optimization Settings
+EXIT_INTENT_DISCOUNT = "30"
+URGENCY_SPOTS_LEFT = "50"
+URGENCY_TIMER_HOURS = "24"
+
+# Performance Optimization
 ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
 EDGE_CACHE_TTL = "14400"
