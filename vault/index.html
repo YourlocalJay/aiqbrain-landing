@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vault - AIQBrain</title>
-  <meta name="description" content="Access our vault of proven Claude monetization systems and frameworks.">
-  <meta property="og:title" content="AIQBrain Vault - Claude Monetization Systems">
-  <meta property="og:description" content="Sample systems and lead capture for proven Claude-based monetization frameworks.">
+  <title>System Vault - AIQBrain</title>
+  <meta name="description" content="Access our premium Claude monetization frameworks delivering 18-27% conversion rates">
+  <meta property="og:title" content="AIQBrain System Vault - Claude Monetization Frameworks">
+  <meta property="og:description" content="TOS-compliant systems for sophisticated operators - limited access">
   <meta property="og:url" content="https://aiqbrain.com/vault">
   <meta property="og:type" content="website">
   <!-- Google Fonts -->
@@ -22,6 +22,7 @@
       --accent-primary: #ff7b72;
       --accent-secondary: #58a6ff;
       --accent-warning: #f9c74f;
+      --success-green: #56d364;
     }
 
     /* Reset & Base Styles */
@@ -62,6 +63,7 @@
 
     p {
       margin-bottom: 1rem;
+      color: var(--text-secondary);
     }
 
     a {
@@ -88,6 +90,26 @@
 
     .section {
       padding: 5rem 0;
+    }
+
+    /* Neural Pattern Background */
+    .neural-bg {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .neural-bg::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2358a6ff' stroke-width='0.5'%3E%3Ccircle cx='25' cy='25' r='1.5'/%3E%3Ccircle cx='10' cy='10' r='1.5'/%3E%3Ccircle cx='40' cy='10' r='1.5'/%3E%3Ccircle cx='10' cy='40' r='1.5'/%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3Cline x1='25' y1='25' x2='10' y2='10'/%3E%3Cline x1='25' y1='25' x2='40' y2='10'/%3E%3Cline x1='25' y1='25' x2='10' y2='40'/%3E%3Cline x1='25' y1='25' x2='40' y2='40'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 50px 50px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: -1;
     }
 
     /* Header */
@@ -121,6 +143,7 @@
     .nav {
       display: flex;
       gap: 1.5rem;
+      align-items: center;
     }
 
     .nav-link {
@@ -135,12 +158,16 @@
 
     /* Buttons */
     .btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0.75rem 1.5rem;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
+      height: 48px;
+      min-width: 180px;
     }
 
     .btn-primary {
@@ -167,10 +194,9 @@
 
     /* Vault Header Section */
     .vault-header {
-      padding: 3rem 0;
+      padding: 4rem 0;
       text-align: center;
       position: relative;
-      overflow: hidden;
       background-color: var(--card-bg);
       border-bottom: 1px solid rgba(88, 166, 255, 0.2);
     }
@@ -182,37 +208,87 @@
 
     .vault-description {
       max-width: 800px;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.5rem;
       color: var(--text-secondary);
+      font-size: 1.25rem;
+    }
+
+    .spots-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--accent-warning);
+      color: var(--background);
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.875rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+
+    .compliance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: rgba(88, 166, 255, 0.2);
+      border: 1px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      font-size: 0.875rem;
+      border-radius: 20px;
+      margin-top: 1rem;
     }
 
     /* Vault Content Section */
     .vault-content {
-      padding: 5rem 0;
+      padding: 3rem 0 5rem;
     }
 
     .vault-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 2rem;
       margin-bottom: 3rem;
     }
 
-    .vault-card {
+    .system-card {
       background-color: var(--card-bg);
       border-radius: 8px;
-      padding: 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      padding: 1.5rem;
       border: 1px solid rgba(88, 166, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       transition: transform 0.2s, box-shadow 0.2s;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
 
-    .vault-card:hover {
+    .system-card:hover {
       transform: scale(1.01);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-header {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-metric {
+      display: inline-block;
+      background-color: rgba(88, 166, 255, 0.2);
+      border: 1px solid var(--accent-secondary);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
     }
 
     .access-gate {
@@ -221,13 +297,13 @@
       border: 1px solid var(--accent-warning);
       border-radius: 8px;
       padding: 1.5rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       text-align: center;
     }
 
     .access-gate-icon {
       color: var(--accent-warning);
-      font-size: 2rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
 
@@ -239,12 +315,17 @@
       border-radius: 8px;
       padding: 2rem;
       border: 1px solid rgba(88, 166, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .form-title {
       text-align: center;
       margin-bottom: 1.5rem;
       color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .form-group {
@@ -255,6 +336,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
+      color: var(--text-primary);
     }
 
     .form-input {
@@ -265,9 +347,29 @@
       background-color: rgba(12, 17, 23, 0.6);
       color: var(--text-primary);
       padding: 0 1rem;
+      font-family: 'Inter Tight', sans-serif;
+      transition: all 0.2s ease;
     }
 
     .form-input:focus {
+      border-color: var(--accent-secondary);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+      outline: none;
+    }
+
+    .form-select {
+      width: 100%;
+      height: 48px;
+      border-radius: 6px;
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      background-color: rgba(12, 17, 23, 0.6);
+      color: var(--text-primary);
+      padding: 0 1rem;
+      font-family: 'Inter Tight', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    .form-select:focus {
       border-color: var(--accent-secondary);
       box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
       outline: none;
@@ -282,6 +384,8 @@
       color: var(--text-primary);
       padding: 0.75rem 1rem;
       resize: vertical;
+      font-family: 'Inter Tight', sans-serif;
+      transition: all 0.2s ease;
     }
 
     .form-textarea:focus {
@@ -300,12 +404,32 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .form-submit:hover {
       filter: brightness(110%);
       box-shadow: 0 0 8px rgba(255, 123, 114, 0.4);
       transform: translateY(-2px);
+    }
+
+    .form-disclaimer {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(88, 166, 255, 0.2);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .form-disclaimer a {
+      color: var(--accent-warning);
+      text-decoration: underline;
     }
 
     /* Footer */
@@ -319,11 +443,13 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 2rem;
+      margin-bottom: 3rem;
     }
 
     .footer-col h3 {
       color: var(--accent-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
     }
 
     .footer-links {
@@ -331,15 +457,17 @@
     }
 
     .footer-link {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .footer-link a {
       color: var(--text-secondary);
+      transition: all 0.2s ease;
     }
 
     .footer-link a:hover {
       color: var(--text-primary);
+      padding-left: 0.25rem;
     }
 
     .footer-bottom {
@@ -351,24 +479,49 @@
       font-size: 0.875rem;
     }
 
+    .ownership-statement {
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
     .legal-links {
-      margin-top: 0.5rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
     }
 
     .legal-links a {
       color: var(--text-muted);
-      margin: 0 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .legal-links a:hover {
+      color: var(--text-primary);
     }
 
     .footer-logo {
       display: flex;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .footer-logo img {
       height: 60px;
       width: auto;
+      opacity: 0.8;
+    }
+
+    /* Animation */
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
     }
 
     /* Accessibility and Responsive Adjustments */
@@ -391,20 +544,17 @@
       }
 
       .nav {
-        justify-content: center;
-      }
-
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-
-      .lead-form {
-        padding: 1.5rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .vault-grid {
         grid-template-columns: 1fr;
+      }
+
+      .lead-form {
+        padding: 1.5rem;
       }
     }
   </style>
@@ -418,19 +568,33 @@
           <img src="/images/aiqbrain-logo.svg" alt="AIQBrain Logo - Neural lock icon">
         </a>
         <nav class="nav">
-          <a href="/vault" class="nav-link">Vault</a>
-          <a href="/strategy" class="nav-link">Strategy</a>
-          <a href="/request" class="btn btn-primary">Request Access</a>
+          <a href="/vault" class="nav-link">System Vault</a>
+          <a href="/strategy" class="nav-link">Strategy Hub</a>
+          <a href="/request" class="btn btn-primary">Operator Access</a>
         </nav>
       </div>
     </div>
   </header>
 
   <!-- Vault Header Section -->
-  <section class="vault-header">
+  <section class="vault-header neural-bg">
     <div class="container">
-      <h1 class="vault-title">Vault Preview</h1>
-      <p class="vault-description">Sample systems and frameworks for Claude-centric monetization. Full access requires approval.</p>
+      <div class="spots-left pulse">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>Only 17 operator slots remaining this quarter</span>
+      </div>
+      <h1 class="vault-title">System Vault</h1>
+      <p class="vault-description">TOS-compliant Claude monetization frameworks delivering 18-27% conversion rates for qualified operators</p>
+      <div class="compliance-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <span>All systems platform-compliant</span>
+      </div>
     </div>
   </section>
 
@@ -438,41 +602,80 @@
   <section class="vault-content">
     <div class="container">
       <div class="vault-grid">
-        <!-- Vault Item 1 -->
-        <div class="vault-card">
-          <h3 class="card-header">Survey Vault System</h3>
-          <div class="card-content">
-            <p>Our flagship framework for Claude-centric monetization, delivering 22% average conversion rates with fully compliant implementation.</p>
+        <!-- System 1 -->
+        <div class="system-card">
+          <h3 class="card-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            NEURAL OPS v3.2
+          </h3>
+          <div>
+            <span class="card-metric">↑ 22.4% conversion</span>
+            <span class="card-metric">↓ 31% CPA</span>
+            <span class="card-metric">✓ TOS-verified</span>
           </div>
+          <p>Our flagship framework combining Claude's conversational strengths with optimized monetization pathways, delivering consistent results across niches.</p>
           <div class="access-gate">
-            <div class="access-gate-icon">🔒</div>
-            <p>Access Restricted</p>
+            <div class="access-gate-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <p>Operator access required</p>
             <a href="/request" class="btn btn-primary">Request Access</a>
           </div>
         </div>
 
-        <!-- Vault Item 2 -->
-        <div class="vault-card">
-          <h3 class="card-header">Prompt Arbitrage Network</h3>
-          <div class="card-content">
-            <p>Leverage market inefficiencies in prompt engineering with this systematic approach to scaling Claude implementations.</p>
+        <!-- System 2 -->
+        <div class="system-card">
+          <h3 class="card-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            SURVEY VAULT INTEGRATION
+          </h3>
+          <div>
+            <span class="card-metric">↑ 18.7% leads</span>
+            <span class="card-metric">$2.38 EPC</span>
+            <span class="card-metric">✓ Geo-optimized</span>
           </div>
+          <p>Specialized framework for maximizing survey monetization through Claude while maintaining user experience quality and compliance.</p>
           <div class="access-gate">
-            <div class="access-gate-icon">🔒</div>
-            <p>Access Restricted</p>
+            <div class="access-gate-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <p>Operator access required</p>
             <a href="/request" class="btn btn-primary">Request Access</a>
           </div>
         </div>
 
-        <!-- Vault Item 3 -->
-        <div class="vault-card">
-          <h3 class="card-header">OpSec Protocol</h3>
-          <div class="card-content">
-            <p>Comprehensive compliance and operational security framework for sustainable Claude-based business models.</p>
+        <!-- System 3 -->
+        <div class="system-card">
+          <h3 class="card-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            OPSEC PROTOCOL v2.1
+          </h3>
+          <div>
+            <span class="card-metric">✓ Compliance</span>
+            <span class="card-metric">↓ 83% risk</span>
+            <span class="card-metric">↑ Longevity</span>
           </div>
+          <p>Comprehensive compliance and operational security framework for sustainable Claude-based business models with reduced platform risk.</p>
           <div class="access-gate">
-            <div class="access-gate-icon">🔒</div>
-            <p>Access Restricted</p>
+            <div class="access-gate-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <p>Operator access required</p>
             <a href="/request" class="btn btn-primary">Request Access</a>
           </div>
         </div>
@@ -480,15 +683,21 @@
 
       <!-- Lead Capture Form -->
       <div class="lead-form">
-        <h2 class="form-title">Get Vault Access</h2>
-        <form action="/request" method="get">
+        <h2 class="form-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Operator Application
+        </h2>
+        <form action="/submit-application" method="post" id="vaultApplication">
           <div class="form-group">
-            <label for="email" class="form-label">Email Address</label>
-            <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+            <label for="vaultEmail" class="form-label">Email Address</label>
+            <input type="email" id="vaultEmail" name="email" class="form-input" placeholder="operator@domain.com" required>
           </div>
           <div class="form-group">
-            <label for="experience" class="form-label">Experience Level</label>
-            <select id="experience" class="form-input" required>
+            <label for="vaultExperience" class="form-label">Claude Experience Level</label>
+            <select id="vaultExperience" name="experience" class="form-select" required>
               <option value="" disabled selected>Select your experience level</option>
               <option value="beginner">Beginner (< 6 months)</option>
               <option value="intermediate">Intermediate (6-12 months)</option>
@@ -497,10 +706,24 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="message" class="form-label">How would you implement these systems?</label>
-            <textarea id="message" class="form-textarea" placeholder="Briefly describe your implementation plans..." required></textarea>
+            <label for="vaultImplementation" class="form-label">Implementation Plan</label>
+            <textarea id="vaultImplementation" name="implementation" class="form-textarea" placeholder="Describe how you would implement these frameworks..." required></textarea>
+            <div class="compliance-badge" style="margin-top: 0.5rem; display: inline-flex;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span>Must comply with platform guidelines</span>
+            </div>
           </div>
-          <button type="submit" class="form-submit">Submit Application</button>
+          <button type="submit" class="form-submit">
+            Submit Qualification Request
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <div class="form-disclaimer">
+            <p>By applying, you acknowledge our <a href="/terms">Terms</a> and confirm you've read our <a href="/compliance">Compliance Guidelines</a>. AIQBrain is not affiliated with Anthropic.</p>
+          </div>
         </form>
       </div>
     </div>
@@ -517,7 +740,7 @@
         <div class="footer-col">
           <h3>AIQBrain</h3>
           <ul class="footer-links">
-            <li class="footer-link"><a href="/vault">Vault</a></li>
+            <li class="footer-link"><a href="/vault">System Vault</a></li>
             <li class="footer-link"><a href="/strategy">Strategy Hub</a></li>
             <li class="footer-link"><a href="/lab">Monetization Lab</a></li>
           </ul>
@@ -529,16 +752,17 @@
           <ul class="footer-links">
             <li class="footer-link"><a href="/results">Results Dashboard</a></li>
             <li class="footer-link"><a href="/ops">OPSEC Resources</a></li>
-            <li class="footer-link"><a href="/faq">FAQ</a></li>
+            <li class="footer-link"><a href="/faq">Operator FAQ</a></li>
           </ul>
         </div>
 
         <!-- Column 3 -->
         <div class="footer-col">
-          <h3>Company</h3>
+          <h3>Compliance</h3>
           <ul class="footer-links">
-            <li class="footer-link"><a href="/contact">Contact</a></li>
-            <li class="footer-link"><a href="/compliance">Compliance</a></li>
+            <li class="footer-link"><a href="/contact">Operator Support</a></li>
+            <li class="footer-link"><a href="/compliance">Guidelines</a></li>
+            <li class="footer-link"><a href="/tos">Terms</a></li>
           </ul>
         </div>
       </div>
@@ -546,15 +770,78 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <div class="ownership-statement">
-          AIQBrain is an independent resource for AI monetization strategies. We are not affiliated with Anthropic, OpenAI, or any mentioned platforms beyond standard user relationships.
+          AIQBrain is an independent resource for AI monetization strategies. We are not affiliated with Anthropic, OpenAI, or any mentioned platforms beyond standard user relationships. All frameworks operate within platform guidelines.
         </div>
         <div class="legal-links">
           <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms of Service</a>
+          <a href="/compliance">Compliance</a>
+          <a href="/disclaimer">Income Disclaimer</a>
         </div>
         <div class="copyright">© 2025 AIQBrain.com. All rights reserved.</div>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Form submission handling
+      const form = document.getElementById('vaultApplication');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Get form data
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          
+          // Add tracking parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          data.t = 'VAULT_ACCESS';
+          data.src = urlParams.get('src') || 'direct';
+          data.m = urlParams.get('m') || 'organic';
+          data.c = 'vault_application_q3_2025';
+          data.v = urlParams.get('v') || 'A';
+          
+          // Add device fingerprint
+          data.fingerprint = generateFingerprint();
+          
+          // Here you would normally send the data to your server
+          console.log('Vault application submission:', data);
+          
+          // For demo purposes, show a success message
+          alert('Application submitted successfully. You will receive a response within 24 hours.');
+          form.reset();
+        });
+      }
+      
+      // Simple fingerprint generator (for demo purposes)
+      function generateFingerprint() {
+        return [
+          navigator.userAgent,
+          screen.width,
+          screen.height,
+          navigator.language,
+          new Date().getTimezoneOffset()
+        ].join('|');
+      }
+      
+      // Update spots left counter (demo only)
+      function updateSpotsCounter() {
+        const spotsElement = document.querySelector('.spots-left span');
+        if (spotsElement) {
+          let spots = parseInt(spotsElement.textContent);
+          if (spots > 0) {
+            spots -= Math.floor(Math.random() * 2);
+            if (spots < 0) spots = 0;
+            spotsElement.textContent = spots;
+          }
+        }
+      }
+      
+      // Update spots counter every 30 seconds
+      setInterval(updateSpotsCounter, 30000);
+    });
+  </script>
 </body>
 </html>
