@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <!-- Brain + Keyhole (coral) -->
+    <path fill="#ff7b72" d="M260 214.2c0-37.8 30.7-68.5 68.5-68.5s68.5 30.7 68.5 68.5c0 13.4-3.8 25.8-10.5 36.4v41.8c0 11.6-9.4 21-21 21h-74c-11.6 0-21-9.4-21-21v-41.8c-6.6-10.6-10.5-23.1-10.5-36.4z"/>
+    <path fill="#ff7b72" d="M338 165c0 0-25.5 12.1-25.5 54 0 41.9 25.5 58.7 25.5 58.7s25.5-16.8 25.5-58.7c0-41.9-25.5-54-25.5-54z"/>
+    <path fill="#0a0e12" d="M338 204c-9.9 0-18 8.1-18 18 0 7.2 4.2 13.4 10.3 16.3v11.2c0 4.2 3.4 7.6 7.6 7.6s7.6-3.4 7.6-7.6v-11.2c6.1-2.9 10.3-9.1 10.3-16.3 0.2-9.9-7.9-18-17.8-18z"/>
+    
+    <!-- Circuit pattern (trust blue) -->
+    <circle fill="#58a6ff" cx="206" cy="180" r="6"/>
+    <circle fill="#58a6ff" cx="206" cy="250" r="6"/>
+    <circle fill="#58a6ff" cx="248" cy="308" r="6"/>
+    <circle fill="#58a6ff" cx="428" cy="308" r="6"/>
+    <circle fill="#58a6ff" cx="470" cy="250" r="6"/>
+    <circle fill="#58a6ff" cx="470" cy="180" r="6"/>
+    <circle fill="#58a6ff" cx="338" cy="130" r="6"/>
+    
+    <!-- Connection lines (trust blue) -->
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M206 180l54 34"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M206 250l42 58"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M248 308h180"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M470 250l-42 58"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M470 180l-54 34"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M338 130v35"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M260 214h46"/>
+    <path stroke="#58a6ff" stroke-width="3" fill="none" d="M370 214h57"/>
+
+    <!-- AIQBrain text (trust blue) -->
+    <text x="510" y="240" font-family="Arial, sans-serif" font-weight="bold" font-size="80" fill="#58a6ff">AIQBRAIN</text>
+  </g>
+</svg>
