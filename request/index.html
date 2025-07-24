@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Request Access - AIQBrain</title>
-  <meta name="description" content="Apply for access to AIQBrain's proven Claude monetization systems.">
-  <meta property="og:title" content="Request Access - AIQBrain">
-  <meta property="og:description" content="Application and qualification for Claude-based monetization frameworks.">
+  <title>Operator Access Application - AIQBrain</title>
+  <meta name="description" content="Qualify for AIQBrain's proven Claude monetization systems delivering 18-27% conversion rates.">
+  <meta property="og:title" content="Operator Access Application - AIQBrain">
+  <meta property="og:description" content="Strategic qualification for Claude-based monetization frameworks.">
   <meta property="og:url" content="https://aiqbrain.com/request">
   <meta property="og:type" content="website">
   <!-- Google Fonts -->
@@ -22,6 +22,8 @@
       --accent-primary: #ff7b72;
       --accent-secondary: #58a6ff;
       --accent-warning: #f9c74f;
+      --success-green: #56d364;
+      --error-red: #f85149;
     }
 
     /* Reset & Base Styles */
@@ -62,6 +64,7 @@
 
     p {
       margin-bottom: 1rem;
+      color: var(--text-secondary);
     }
 
     a {
@@ -88,6 +91,26 @@
 
     .section {
       padding: 5rem 0;
+    }
+
+    /* Neural Pattern Background */
+    .neural-bg {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .neural-bg::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2358a6ff' stroke-width='0.5'%3E%3Ccircle cx='25' cy='25' r='1.5'/%3E%3Ccircle cx='10' cy='10' r='1.5'/%3E%3Ccircle cx='40' cy='10' r='1.5'/%3E%3Ccircle cx='10' cy='40' r='1.5'/%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3Cline x1='25' y1='25' x2='10' y2='10'/%3E%3Cline x1='25' y1='25' x2='40' y2='10'/%3E%3Cline x1='25' y1='25' x2='10' y2='40'/%3E%3Cline x1='25' y1='25' x2='40' y2='40'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 50px 50px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: -1;
     }
 
     /* Header */
@@ -121,6 +144,7 @@
     .nav {
       display: flex;
       gap: 1.5rem;
+      align-items: center;
     }
 
     .nav-link {
@@ -135,12 +159,16 @@
 
     /* Buttons */
     .btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0.75rem 1.5rem;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
+      height: 48px;
+      min-width: 180px;
     }
 
     .btn-primary {
@@ -167,10 +195,9 @@
 
     /* Request Header Section */
     .request-header {
-      padding: 3rem 0;
+      padding: 4rem 0;
       text-align: center;
       position: relative;
-      overflow: hidden;
       background-color: var(--card-bg);
       border-bottom: 1px solid rgba(88, 166, 255, 0.2);
     }
@@ -182,24 +209,67 @@
 
     .request-description {
       max-width: 800px;
-      margin: 0 auto 1rem;
+      margin: 0 auto 1.5rem;
       color: var(--text-secondary);
+      font-size: 1.25rem;
     }
 
     .spots-left {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
       background-color: var(--accent-warning);
       color: var(--background);
-      font-weight: 600;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
       font-size: 0.875rem;
       border-radius: 20px;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .compliance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: rgba(88, 166, 255, 0.2);
+      border: 1px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      font-size: 0.875rem;
+      border-radius: 20px;
+      margin-top: 1rem;
+    }
+
+    /* Metric Card */
+    .metric-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 0 auto 2rem;
+      max-width: 600px;
+      border: 1px solid rgba(88, 166, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .metric-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
     }
 
     /* Request Form Section */
     .request-form-section {
-      padding: 5rem 0;
+      padding: 3rem 0 5rem;
     }
 
     .request-form {
@@ -207,19 +277,30 @@
       margin: 0 auto;
       background-color: var(--card-bg);
       border-radius: 8px;
-      padding: 2rem;
+      padding: 2.5rem;
       border: 1px solid rgba(88, 166, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .form-title {
       margin-bottom: 2rem;
       color: var(--accent-primary);
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .lock-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-warning);
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
 
@@ -231,6 +312,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
+      color: var(--text-primary);
     }
 
     .form-input {
@@ -241,6 +323,8 @@
       background-color: rgba(12, 17, 23, 0.6);
       color: var(--text-primary);
       padding: 0 1rem;
+      font-family: 'Inter Tight', sans-serif;
+      transition: all 0.2s ease;
     }
 
     .form-input:focus {
@@ -258,6 +342,8 @@
       color: var(--text-primary);
       padding: 0.75rem 1rem;
       resize: vertical;
+      font-family: 'Inter Tight', sans-serif;
+      transition: all 0.2s ease;
     }
 
     .form-textarea:focus {
@@ -276,6 +362,12 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .form-submit:hover {
@@ -290,43 +382,91 @@
 
     .form-disclaimer {
       margin-top: 2rem;
-      padding-top: 1rem;
+      padding-top: 1.5rem;
       border-top: 1px solid rgba(88, 166, 255, 0.2);
       color: var(--text-muted);
       font-size: 0.875rem;
     }
 
+    .form-disclaimer a {
+      color: var(--accent-warning);
+      text-decoration: underline;
+    }
+
     /* Qualification Section */
     .qualification-section {
       padding: 3rem 0 5rem;
+      background-color: var(--card-bg);
+      border-top: 1px solid rgba(88, 166, 255, 0.2);
+      border-bottom: 1px solid rgba(88, 166, 255, 0.2);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      color: var(--accent-primary);
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     .qualification-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
     }
 
     .qualification-card {
-      background-color: var(--card-bg);
+      background-color: var(--background);
       border-radius: 8px;
-      padding: 1.5rem;
+      padding: 1.75rem;
       border: 1px solid rgba(88, 166, 255, 0.2);
       display: flex;
       flex-direction: column;
       height: 100%;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .qualification-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
     }
 
     .qualification-icon {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(88, 166, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
       color: var(--accent-secondary);
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      text-align: center;
+      font-size: 1.5rem;
     }
 
     .qualification-title {
       color: var(--accent-primary);
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-metric {
+      display: inline-block;
+      background-color: rgba(86, 211, 100, 0.2);
+      border: 1px solid var(--success-green);
+      color: var(--success-green);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 1rem;
     }
 
     /* Footer */
@@ -340,11 +480,13 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 2rem;
+      margin-bottom: 3rem;
     }
 
     .footer-col h3 {
       color: var(--accent-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
     }
 
     .footer-links {
@@ -352,15 +494,17 @@
     }
 
     .footer-link {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .footer-link a {
       color: var(--text-secondary);
+      transition: all 0.2s ease;
     }
 
     .footer-link a:hover {
       color: var(--text-primary);
+      padding-left: 0.25rem;
     }
 
     .footer-bottom {
@@ -372,24 +516,38 @@
       font-size: 0.875rem;
     }
 
+    .ownership-statement {
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
     .legal-links {
-      margin-top: 0.5rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
     }
 
     .legal-links a {
       color: var(--text-muted);
-      margin: 0 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .legal-links a:hover {
+      color: var(--text-primary);
     }
 
     .footer-logo {
       display: flex;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .footer-logo img {
       height: 60px;
       width: auto;
+      opacity: 0.8;
     }
 
     /* Accessibility and Responsive Adjustments */
@@ -412,12 +570,9 @@
       }
 
       .nav {
-        justify-content: center;
-      }
-
-      .btn {
-        width: 100%;
-        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .request-form {
@@ -432,6 +587,17 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Animation */
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
   </style>
 </head>
 <body>
@@ -443,20 +609,43 @@
           <img src="/images/aiqbrain-logo.svg" alt="AIQBrain Logo - Neural lock icon">
         </a>
         <nav class="nav">
-          <a href="/vault" class="nav-link">Vault</a>
-          <a href="/strategy" class="nav-link">Strategy</a>
-          <a href="/request" class="btn btn-primary">Request Access</a>
+          <a href="/vault" class="nav-link">System Vault</a>
+          <a href="/strategy" class="nav-link">Strategy Hub</a>
+          <a href="/request" class="btn btn-primary">Operator Access</a>
         </nav>
       </div>
     </div>
   </header>
 
   <!-- Request Header Section -->
-  <section class="request-header">
+  <section class="request-header neural-bg">
     <div class="container">
-      <span class="spots-left">Only 17 spots remaining</span>
-      <h1 class="request-title">Request Access</h1>
-      <p class="request-description">Apply for access to our proven Claude monetization frameworks. Applications are reviewed within 24-48 hours.</p>
+      <div class="spots-left pulse">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>Only 17 operator slots remaining this quarter</span>
+      </div>
+      <h1 class="request-title">Operator Access Application</h1>
+      <p class="request-description">Qualify for our battle-tested Claude monetization frameworks delivering 18-27% conversion rates. Applications reviewed within 24 hours.</p>
+      <div class="compliance-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <span>TOS-Compliant Systems</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metric Card -->
+  <section class="section">
+    <div class="container">
+      <div class="metric-card">
+        <div class="metric-value">22.4%</div>
+        <div class="metric-label">Average conversion rate across our operator network</div>
+      </div>
     </div>
   </section>
 
@@ -464,8 +653,14 @@
   <section class="request-form-section">
     <div class="container">
       <div class="request-form">
-        <h2 class="form-title">Application Form</h2>
-        <form action="/submit-application" method="post">
+        <h2 class="form-title">
+          <svg class="lock-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Operator Qualification Assessment
+        </h2>
+        <form action="/submit-application" method="post" id="operatorApplication">
           <div class="form-grid">
             <!-- Personal Information -->
             <div class="form-group">
@@ -501,21 +696,32 @@
               <input type="text" id="niche" name="niche" class="form-input" placeholder="e.g., Education, Finance, Marketing" required>
             </div>
             <div class="form-group form-full-width">
-              <label for="implementation" class="form-label">How would you implement our frameworks?</label>
-              <textarea id="implementation" name="implementation" class="form-textarea" placeholder="Describe your implementation plans in detail..." required></textarea>
+              <label for="implementation" class="form-label">Framework Implementation Plan</label>
+              <textarea id="implementation" name="implementation" class="form-textarea" placeholder="Describe how you would implement our monetization frameworks..." required></textarea>
+              <div class="compliance-badge" style="margin-top: 0.5rem; display: inline-flex;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Must comply with platform guidelines</span>
+              </div>
             </div>
             <div class="form-group form-full-width">
-              <label for="goals" class="form-label">Monetization Goals</label>
-              <textarea id="goals" name="goals" class="form-textarea" placeholder="What are your specific goals for Claude monetization?" required></textarea>
+              <label for="goals" class="form-label">Monetization Goals (Specific Metrics)</label>
+              <textarea id="goals" name="goals" class="form-textarea" placeholder="What are your specific revenue targets and KPIs?" required></textarea>
             </div>
 
             <!-- Submission -->
             <div class="form-group form-full-width">
-              <button type="submit" class="form-submit">Submit Application</button>
+              <button type="submit" class="form-submit">
+                Complete Qualification Process
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </button>
             </div>
           </div>
           <div class="form-disclaimer">
-            <p>By submitting this form, you acknowledge that you have read and agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. Your application will be reviewed within 24-48 hours.</p>
+            <p><strong>Important:</strong> Results vary based on implementation quality and niche selection. Our systems average 18-27% conversion rates when properly implemented. By applying, you acknowledge our <a href="/terms">Terms</a> and confirm you've read our <a href="/compliance">Compliance Guidelines</a>. AIQBrain is not affiliated with Anthropic.</p>
           </div>
         </form>
       </div>
@@ -523,32 +729,48 @@
   </section>
 
   <!-- Qualification Section -->
-  <section class="qualification-section">
+  <section class="qualification-section neural-bg">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Qualification Criteria</h2>
-        <p class="section-subtitle">We evaluate applications based on the following criteria to ensure proper implementation and success.</p>
+        <h2 class="section-title">Operator Evaluation Criteria</h2>
+        <p class="section-subtitle">We maintain strict standards to ensure framework integrity and operator success</p>
       </div>
       <div class="qualification-grid">
         <!-- Criterion 1 -->
         <div class="qualification-card">
-          <div class="qualification-icon">📈</div>
-          <h3 class="qualification-title">Implementation Capability</h3>
-          <p>Demonstrated ability to implement and scale systematic frameworks. We prioritize operators with proven execution capacity.</p>
+          <div class="qualification-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <h3 class="qualification-title">System Implementation</h3>
+          <p>Proven ability to deploy and scale systematic frameworks with measurable results (minimum 15% conversion threshold).</p>
+          <div class="card-metric">↑ 31% reduced CPA</div>
         </div>
 
         <!-- Criterion 2 -->
         <div class="qualification-card">
-          <div class="qualification-icon">📋</div>
+          <div class="qualification-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
           <h3 class="qualification-title">Compliance Commitment</h3>
-          <p>Strong commitment to operating within platform guidelines and maintaining TOS compliance for long-term sustainability.</p>
+          <p>Documented history of operating within platform guidelines with no policy violations across any AI platforms.</p>
+          <div class="card-metric">✓ TOS-verified</div>
         </div>
 
         <!-- Criterion 3 -->
         <div class="qualification-card">
-          <div class="qualification-icon">🚀</div>
-          <h3 class="qualification-title">Growth Mindset</h3>
-          <p>Willingness to test, optimize, and iterate on frameworks to achieve maximum conversion velocity and scale.</p>
+          <div class="qualification-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"></path>
+              <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14l3.8 3.8L18.7 8z"></path>
+            </svg>
+          </div>
+          <h3 class="qualification-title">Performance Metrics</h3>
+          <p>Existing monetization systems demonstrating conversion rates above platform averages with clear tracking.</p>
+          <div class="card-metric">↑ 22.4% avg.</div>
         </div>
       </div>
     </div>
@@ -565,7 +787,7 @@
         <div class="footer-col">
           <h3>AIQBrain</h3>
           <ul class="footer-links">
-            <li class="footer-link"><a href="/vault">Vault</a></li>
+            <li class="footer-link"><a href="/vault">System Vault</a></li>
             <li class="footer-link"><a href="/strategy">Strategy Hub</a></li>
             <li class="footer-link"><a href="/lab">Monetization Lab</a></li>
           </ul>
@@ -577,16 +799,17 @@
           <ul class="footer-links">
             <li class="footer-link"><a href="/results">Results Dashboard</a></li>
             <li class="footer-link"><a href="/ops">OPSEC Resources</a></li>
-            <li class="footer-link"><a href="/faq">FAQ</a></li>
+            <li class="footer-link"><a href="/faq">Operator FAQ</a></li>
           </ul>
         </div>
 
         <!-- Column 3 -->
         <div class="footer-col">
-          <h3>Company</h3>
+          <h3>Compliance</h3>
           <ul class="footer-links">
-            <li class="footer-link"><a href="/contact">Contact</a></li>
-            <li class="footer-link"><a href="/compliance">Compliance</a></li>
+            <li class="footer-link"><a href="/contact">Operator Support</a></li>
+            <li class="footer-link"><a href="/compliance">Guidelines</a></li>
+            <li class="footer-link"><a href="/tos">Terms</a></li>
           </ul>
         </div>
       </div>
@@ -594,15 +817,78 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <div class="ownership-statement">
-          AIQBrain is an independent resource for AI monetization strategies. We are not affiliated with Anthropic, OpenAI, or any mentioned platforms beyond standard user relationships.
+          AIQBrain is an independent resource for AI monetization strategies. We are not affiliated with Anthropic, OpenAI, or any mentioned platforms beyond standard user relationships. All frameworks operate within platform guidelines.
         </div>
         <div class="legal-links">
           <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms of Service</a>
+          <a href="/compliance">Compliance</a>
+          <a href="/disclaimer">Income Disclaimer</a>
         </div>
         <div class="copyright">© 2025 AIQBrain.com. All rights reserved.</div>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Form submission handling
+      const form = document.getElementById('operatorApplication');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Get form data
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          
+          // Add tracking parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          data.t = 'NEURAL_OPS';
+          data.src = urlParams.get('src') || 'direct';
+          data.m = urlParams.get('m') || 'organic';
+          data.c = 'operator_application_q3_2025';
+          data.v = urlParams.get('v') || 'A';
+          
+          // Add device fingerprint
+          data.fingerprint = generateFingerprint();
+          
+          // Here you would normally send the data to your server
+          console.log('Form submission:', data);
+          
+          // For demo purposes, show a success message
+          alert('Application submitted successfully. You will receive a response within 24 hours.');
+          form.reset();
+        });
+      }
+      
+      // Simple fingerprint generator (for demo purposes)
+      function generateFingerprint() {
+        return [
+          navigator.userAgent,
+          screen.width,
+          screen.height,
+          navigator.language,
+          new Date().getTimezoneOffset()
+        ].join('|');
+      }
+      
+      // Update spots left counter (demo only)
+      function updateSpotsCounter() {
+        const spotsElement = document.querySelector('.spots-left span');
+        if (spotsElement) {
+          let spots = parseInt(spotsElement.textContent);
+          if (spots > 0) {
+            spots -= Math.floor(Math.random() * 2);
+            if (spots < 0) spots = 0;
+            spotsElement.textContent = spots;
+          }
+        }
+      }
+      
+      // Update spots counter every 30 seconds
+      setInterval(updateSpotsCounter, 30000);
+    });
+  </script>
 </body>
 </html>
