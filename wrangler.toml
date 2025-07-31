@@ -6,34 +6,35 @@ usage_model = "bundled"
 
 [build]
 command = "npm run build"
-upload.format = "modules"
-upload.dir = "dist"
 
 [env.production]
 name = "aiqbrain-prod"
-zone_id = "78ac727a756f49b190a3d68a2d56f407" # Replace with your actual zone ID
-route = "aiqbrain.com/*"
 workers_dev = false
+route = { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" }
 
+# ================= ENVIRONMENT VARIABLES =================
 [vars]
 # ================= CORE REDIRECTS =================
 REDIRECT_VAULT = "https://aiqengage.com/vault"
 REDIRECT_START = "https://aiqengage.com/get-started"
 REDIRECT_PRIVACY = "https://aiqengage.com/privacy"
 REDIRECT_COMPLIANCE = "https://aiqengage.com/compliance"
+REDIRECT_TERMS = "https://aiqengage.com/terms"
 
 # ================= CPA OFFER ROTATION =================
-SV_OFFERS_A = "https://singingfiles.com/show.php?l=0&u=2427730&id=69234"
-SV_OFFERS_B = "https://singingfiles.com/show.php?l=0&u=2427730&id=67666"
-SV_OFFERS_C = "https://singingfiles.com/show.php?l=0&u=2427730&id=70869"
-SV_OFFERS_D = "https://singingfiles.com/show.php?l=0&u=2427730&id=68661" # High-converting variant
+# IMPORTANT: Replace these with your actual CPA offers
+SV_OFFER_A = "https://your-network.com/offer?id=1001"
+SV_OFFER_B = "https://your-network.com/offer?id=1002"
+SV_OFFER_C = "https://your-network.com/offer?id=1003"
+SV_OFFER_D = "https://your-network.com/offer?id=1004"
 
 # ================= GEO-TARGETED OFFERS =================
-GEO_OFFERS_US = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
-GEO_OFFERS_UK = "https://singingfiles.com/show.php?l=0&u=2427730&id=68583"
-GEO_OFFERS_DE = "https://singingfiles.com/show.php?l=0&u=2427730&id=68865"
-GEO_OFFERS_CA = "https://singingfiles.com/show.php?l=0&u=2427730&id=68846"
-GEO_OFFERS_AU = "https://vdl.medias-cloud.com/qsldv/en/?aid=90&amp;v=nfl"
+# IMPORTANT: Replace with geo-specific offers
+GEO_OFFERS_US = "https://your-network.com/us-offer"
+GEO_OFFERS_UK = "https://your-network.com/uk-offer"
+GEO_OFFERS_DE = "https://your-network.com/de-offer"
+GEO_OFFERS_CA = "https://your-network.com/ca-offer"
+GEO_OFFERS_AU = "https://your-network.com/au-offer"
 
 # ================= DEVICE-SPECIFIC =================
 MOBILE_VAULT = "https://m.aiqengage.com/vault"
@@ -42,47 +43,86 @@ DESKTOP_VAULT = "https://aiqengage.com/vault"
 DESKTOP_START = "https://aiqengage.com/start"
 
 # ================= TIME-BASED OFFERS =================
-WEEKEND_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=70867"
-EVENING_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=68653"
-Q4_PROMO = "https://singingfiles.com/show.php?l=0&u=2427730&id=67273" # Seasonal offer
+# IMPORTANT: Replace with time-specific offers
+WEEKEND_OFFER = "https://your-network.com/weekend-offer"
+EVENING_OFFER = "https://your-network.com/evening-offer"
+Q4_PROMO = "https://your-network.com/holiday-offer"
 
 # ================= SECURITY =================
-ALLOWED_COUNTRIES = "US,CA,UK,DE,AU,JP,NZ" # Comma-separated
-BLOCKED_IPS = "192.168.1.1,10.0.0.1" # Internal/testing IPs
-RATE_LIMIT = "1000/60" # 1000 requests per minute
-MAINTENANCE_ENABLED = "false" # Flip to "true" for maintenance
+ALLOWED_COUNTRIES = "US,CA,UK,DE,AU,JP,NZ,FR,IT,ES,NL,SE,NO,DK,FI"
+BLOCKED_IPS = "" # Add IPs to block, comma-separated
+RATE_LIMIT = "100" # Requests per minute per IP
+MAINTENANCE_ENABLED = "false"
+MAINTENANCE_MESSAGE = "AIQBrain is currently under maintenance. Please check back soon."
 
 # ================= PERFORMANCE =================
 CACHE_TTL = "3600" # 1 hour
 EDGE_CACHE_TTL = "14400" # 4 hours
-JS_BUNDLE_VERSION = "v3.2.1" # Cache busting
+JS_BUNDLE_VERSION = "v1.0.0"
 
 # ================= ANALYTICS =================
+# IMPORTANT: Replace with your actual analytics IDs
 PLAUSIBLE_DOMAIN = "aiqbrain.com"
 GA_MEASUREMENT_ID = "G-XXXXXXXXXX" # Replace with actual ID
 GTM_CONTAINER_ID = "GTM-XXXXXX" # Replace with actual ID
 FACEBOOK_PIXEL_ID = "1234567890" # Replace with actual ID
 
 # ================= CONVERSION OPTIMIZATION =================
-AB_TEST_SPLIT = "0.3,0.3,0.3,0.1" # A/B/C/D weights (must sum to 1)
-EXIT_INTENT_DISCOUNT = "30" # Percentage
-URGENCY_SPOTS_LEFT = "50" # Initial count
+AB_TEST_SPLIT = "0.3,0.3,0.3,0.1" # A/B/C/D weights
+EXIT_INTENT_DISCOUNT = "30"
+URGENCY_SPOTS_LEFT = "25"
 URGENCY_TIMER_HOURS = "24"
-CONVERSION_COOLDOWN = "86400" # 24 hours in seconds
+CONVERSION_COOLDOWN = "86400" # 24 hours
 
 # ================= API INTEGRATIONS =================
+# IMPORTANT: Replace with your actual endpoints
 CRM_API_ENDPOINT = "https://crm.aiqbrain.com/api/v3"
 PAYMENT_GATEWAY = "https://pay.aiqbrain.com/process"
 AFFILIATE_API = "https://affiliates.aiqbrain.com/v2"
+WEBHOOK_URL = "https://your-backend.com/webhooks/conversions"
 
 # ================= KV NAMESPACES =================
-kv_namespaces = [
-  { binding = "CONVERSION_LOGS", id = "3e8a8b8b8b8b8b8b8b8b8b8b8b8b8b8b", preview_id = "3e8a8b8b8b8b8b8b8b8b8b8b8b8b8b8b" },
-  { binding = "ERROR_LOGS", id = "4f9a9c9c9c9c9c9c9c9c9c9c9c9c9c9c", preview_id = "4f9a9c9c9c9c9c9c9c9c9c9c9c9c9c9c" }
-]
+# IMPORTANT: Create these namespaces and update IDs
+# Run: npm run kv:create
+[[kv_namespaces]]
+binding = "CONVERSION_LOGS"
+id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create CONVERSION_LOGS
+preview_id = "YOUR_PREVIEW_ID_HERE"
 
-# ================= SECRETS (set via CLI) =================
-# Run:
-# wrangler secret put WEBHOOK_SECRET
-# wrangler secret put WEBHOOK_URL
-# wrangler secret put SMTP_CREDENTIALS
+[[kv_namespaces]]
+binding = "ERROR_LOGS"
+id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create ERROR_LOGS
+preview_id = "YOUR_PREVIEW_ID_HERE"
+
+[[kv_namespaces]]
+binding = "RATE_LIMITER"
+id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create RATE_LIMITER
+preview_id = "YOUR_PREVIEW_ID_HERE"
+
+[[kv_namespaces]]
+binding = "USER_SESSIONS"
+id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create USER_SESSIONS
+preview_id = "YOUR_PREVIEW_ID_HERE"
+
+[[kv_namespaces]]
+binding = "OFFER_HEALTH"
+id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create OFFER_HEALTH
+preview_id = "YOUR_PREVIEW_ID_HERE"
+
+# ================= DURABLE OBJECTS (Optional) =================
+# [[durable_objects.bindings]]
+# name = "RATE_LIMITER_DO"
+# class_name = "RateLimiter"
+
+# ================= R2 BUCKETS (Optional) =================
+# [[r2_buckets]]
+# binding = "ASSETS_BUCKET"
+# bucket_name = "aiqbrain-assets"
+
+# ================= SECRETS =================
+# Set these via CLI - DO NOT put values here!
+# Run: npm run secrets:setup
+# - WEBHOOK_SECRET
+# - GA_API_SECRET
+# - SMTP_CREDENTIALS
+# - API_KEY
