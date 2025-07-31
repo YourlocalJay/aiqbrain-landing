@@ -1,8 +1,8 @@
 name = "aiqbrain-landing"
 main = "dist/index.js"
-compatibility_date = "2025-07-23"
+compatibility_date = "2025-07-30"
 workers_dev = true
-type = "javascript"
+usage_model = "bundled"
 
 [build]
 command = "npm run build"
@@ -11,91 +11,78 @@ upload.dir = "dist"
 
 [env.production]
 name = "aiqbrain-prod"
-zone_id = "YOUR_ZONE_ID"
+zone_id = "78ac727a756f49b190a3d68a2d56f407" # Replace with your actual zone ID
 route = "aiqbrain.com/*"
 workers_dev = false
 
 [vars]
-# ========== CORE REDIRECTS ==========
+# ================= CORE REDIRECTS =================
 REDIRECT_VAULT = "https://aiqengage.com/vault"
 REDIRECT_START = "https://aiqengage.com/get-started"
-REDIRECT_COMPLIANCE = "https://aiqengage.com/compliance"
 REDIRECT_PRIVACY = "https://aiqengage.com/privacy"
+REDIRECT_COMPLIANCE = "https://aiqengage.com/compliance"
 
-# ========== CPA OFFER ROTATION ==========
-[svars.SV_OFFERS]
-A = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
-B = "https://singingfiles.com/show.php?l=0&u=2427730&id=68777"
-C = "https://singingfiles.com/show.php?l=0&u=2427730&id=68778"
-D = "https://singingfiles.com/show.php?l=0&u=2427730&id=68779" # New high-converting variant
+# ================= CPA OFFER ROTATION =================
+SV_OFFERS_A = "https://singingfiles.com/show.php?l=0&u=2427730&id=68776"
+SV_OFFERS_B = "https://singingfiles.com/show.php?l=0&u=2427730&id=68777"
+SV_OFFERS_C = "https://singingfiles.com/show.php?l=0&u=2427730&id=68778"
+SV_OFFERS_D = "https://singingfiles.com/show.php?l=0&u=2427730&id=68779" # High-converting variant
 
-# ========== GEO-TARGETED OFFERS ==========
-[svars.GEO_OFFERS]
-DE = "https://your-german-cpa-offer.com"
-UK = "https://your-uk-cpa-offer.com"
-CA = "https://your-canada-cpa-offer.com"
-AU = "https://your-australia-cpa-offer.com"
-JP = "https://your-japan-cpa-offer.com"
+# ================= GEO-TARGETED OFFERS =================
+GEO_OFFERS_US = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
+GEO_OFFERS_UK = "https://singingfiles.com/show.php?l=0&u=2427730&id=68583"
+GEO_OFFERS_DE = "https://your-german-cpa-offer.com"
+GEO_OFFERS_CA = "https://singingfiles.com/show.php?l=0&u=2427730&id=68846"
+GEO_OFFERS_AU = "https://your-australia-cpa-offer.com"
 
-[svars.GEO_VAULTS]
-DE = "https://your-german-vault.com"
-UK = "https://your-uk-vault.com"
-
-# ========== DEVICE-SPECIFIC ==========
+# ================= DEVICE-SPECIFIC =================
 MOBILE_VAULT = "https://m.aiqengage.com/vault"
 MOBILE_START = "https://m.aiqengage.com/start"
 DESKTOP_VAULT = "https://aiqengage.com/vault"
 DESKTOP_START = "https://aiqengage.com/start"
 
-# ========== TIME-BASED OPTIMIZATION ==========
+# ================= TIME-BASED OFFERS =================
 WEEKEND_OFFER = "https://weekend-special-offer.com"
 EVENING_OFFER = "https://evening-boost-offer.com"
-Q4_PROMO = "https://q4-special-promo.com" # New seasonal offer
+Q4_PROMO = "https://q4-special-promo.com" # Seasonal offer
 
-# ========== PERFORMANCE SETTINGS ==========
-CACHE_TTL = "3600" # 1 hour
-ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
-EDGE_CACHE_TTL = "14400" # 4 hours
-JS_BUNDLE_VERSION = "v3.2.1" # For cache busting
-
-# ========== SECURITY SETTINGS ==========
-ALLOWED_COUNTRIES = "US,CA,UK,DE,AU"
+# ================= SECURITY =================
+ALLOWED_COUNTRIES = "US,CA,UK,DE,AU,JP,NZ" # Comma-separated
 BLOCKED_IPS = "192.168.1.1,10.0.0.1" # Internal/testing IPs
 RATE_LIMIT = "1000/60" # 1000 requests per minute
+MAINTENANCE_ENABLED = "false" # Flip to "true" for maintenance
 
-# ========== ANALYTICS & TRACKING ==========
+# ================= PERFORMANCE =================
+CACHE_TTL = "3600" # 1 hour
+EDGE_CACHE_TTL = "14400" # 4 hours
+JS_BUNDLE_VERSION = "v3.2.1" # Cache busting
+
+# ================= ANALYTICS =================
 PLAUSIBLE_DOMAIN = "aiqbrain.com"
-GA_MEASUREMENT_ID = "G-XXXXXXXXXX"
-GTM_CONTAINER_ID = "GTM-XXXXXX"
-FACEBOOK_PIXEL_ID = "1234567890"
-HOTJAR_ID = "1234567"
-CLICKY_SITE_ID = "123456"
+GA_MEASUREMENT_ID = "G-XXXXXXXXXX" # Replace with actual ID
+GTM_CONTAINER_ID = "GTM-XXXXXX" # Replace with actual ID
+FACEBOOK_PIXEL_ID = "1234567890" # Replace with actual ID
 
-# ========== CONVERSION OPTIMIZATION ==========
+# ================= CONVERSION OPTIMIZATION =================
+AB_TEST_SPLIT = "0.3,0.3,0.3,0.1" # A/B/C/D weights (must sum to 1)
 EXIT_INTENT_DISCOUNT = "30" # Percentage
 URGENCY_SPOTS_LEFT = "50" # Initial count
 URGENCY_TIMER_HOURS = "24"
-AB_TEST_SPLIT = "0.3,0.3,0.4" # A/B/C weights
 CONVERSION_COOLDOWN = "86400" # 24 hours in seconds
 
-# ========== EMAIL/SMS SETTINGS ==========
-SMTP_SERVER = "smtp.mailprovider.com"
-SMS_GATEWAY = "https://sms-gateway.com/api"
-CONFIRMATION_TEMPLATE = "confirm_v1"
-
-# ========== API INTEGRATIONS ==========
+# ================= API INTEGRATIONS =================
 CRM_API_ENDPOINT = "https://crm.aiqbrain.com/api/v3"
 PAYMENT_GATEWAY = "https://pay.aiqbrain.com/process"
 AFFILIATE_API = "https://affiliates.aiqbrain.com/v2"
 
-# ========== COMPLIANCE SETTINGS ==========
-GDPR_MODE = "strict"
-CCPA_ENABLED = true
-AGE_GATE = "18"
-RESTRICTED_STATES = "CA,NY" # For US-specific regulations
+# ================= KV NAMESPACES =================
+kv_namespaces = [
+  { binding = "CONVERSION_LOGS", id = "3e8a8b8b8b8b8b8b8b8b8b8b8b8b8b8b", preview_id = "3e8a8b8b8b8b8b8b8b8b8b8b8b8b8b8b" },
+  { binding = "ERROR_LOGS", id = "4f9a9c9c9c9c9c9c9c9c9c9c9c9c9c9c", preview_id = "4f9a9c9c9c9c9c9c9c9c9c9c9c9c9c9c" }
+]
 
-# ========== MAINTENANCE MODE ==========
-[svars.MAINTENANCE]
-ENABLED = false
-MESSAGE = "System upgrades in progress - check back soon"
-ETA = "2025-08-01T12:00:00Z"
+# ================= SECRETS (set via CLI) =================
+# Run:
+# wrangler secret put WEBHOOK_SECRET
+# wrangler secret put WEBHOOK_URL
+# wrangler secret put SMTP_CREDENTIALS
