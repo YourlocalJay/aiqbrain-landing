@@ -1,0 +1,27 @@
+{
+  "name": "aiqbrain-landing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "node build.js",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:prod": "npm run build && wrangler deploy --env production",
+    "tail": "wrangler tail --format pretty",
+    "logs": "wrangler tail --env production",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "kv:create": "node scripts/create-kv.js",
+    "secrets:setup": "node scripts/setup-secrets.js"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240730.0",
+    "esbuild": "^0.21.5",
+    "wrangler": "^3.65.1",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "itty-router": "^5.0.17"
+  }
+}
