@@ -31,9 +31,9 @@ SV_OFFERS_D = "https://singingfiles.com/show.php?l=0&u=2427730&id=68779" # High-
 # ================= GEO-TARGETED OFFERS =================
 GEO_OFFERS_US = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
 GEO_OFFERS_UK = "https://singingfiles.com/show.php?l=0&u=2427730&id=68583"
-GEO_OFFERS_DE = "https://your-german-cpa-offer.com"
+GEO_OFFERS_DE = "https://singingfiles.com/show.php?l=0&u=2427730&id=68865"
 GEO_OFFERS_CA = "https://singingfiles.com/show.php?l=0&u=2427730&id=68846"
-GEO_OFFERS_AU = "https://your-australia-cpa-offer.com"
+GEO_OFFERS_AU = "https://vdl.medias-cloud.com/qsldv/en/?aid=90&amp;v=nfl"
 
 # ================= DEVICE-SPECIFIC =================
 MOBILE_VAULT = "https://m.aiqengage.com/vault"
