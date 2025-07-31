@@ -16,10 +16,10 @@
     "secrets:setup": "node scripts/setup-secrets.js"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240730.0",
-    "esbuild": "^0.21.5",
-    "wrangler": "^3.65.1",
-    "vitest": "^1.6.0"
+    "@cloudflare/workers-types": "^4.20240806.0",
+    "esbuild": "^0.25.8",
+    "wrangler": "^4.27.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "itty-router": "^5.0.17"
