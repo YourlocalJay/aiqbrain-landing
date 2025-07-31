@@ -1,6 +1,6 @@
 name = "aiqbrain-landing"
 main = "dist/index.js"
-compatibility_date = "2025-07-30"
+compatibility_date = "2025-07-31"
 workers_dev = true
 usage_model = "bundled"
 
@@ -8,7 +8,7 @@ usage_model = "bundled"
 command = "npm run build"
 
 [env.production]
-name = "aiqbrain-prod"
+name = "aiqbrain-prod"  
 workers_dev = false
 route = { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" }
 
@@ -16,7 +16,7 @@ route = { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" }
 [vars]
 # ================= CORE REDIRECTS =================
 REDIRECT_VAULT = "https://aiqengage.com/vault"
-REDIRECT_START = "https://aiqengage.com/get-started"
+REDIRECT_START = "https://aiqengage.com/get-started" 
 REDIRECT_PRIVACY = "https://aiqengage.com/privacy"
 REDIRECT_COMPLIANCE = "https://aiqengage.com/compliance"
 REDIRECT_TERMS = "https://aiqengage.com/terms"
@@ -83,46 +83,39 @@ WEBHOOK_URL = "https://your-backend.com/webhooks/conversions"
 
 # ================= KV NAMESPACES =================
 # IMPORTANT: Create these namespaces and update IDs
-# Run: npm run kv:create
-[[kv_namespaces]]
-binding = "CONVERSION_LOGS"
-id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create CONVERSION_LOGS
-preview_id = "YOUR_PREVIEW_ID_HERE"
+# Run: wrangler kv:namespace create "CONVERSION_LOGS" to get the IDs
+# Then replace the placeholder IDs below
 
-[[kv_namespaces]]
-binding = "ERROR_LOGS"
-id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create ERROR_LOGS
-preview_id = "YOUR_PREVIEW_ID_HERE"
+# Uncomment and replace with actual KV namespace IDs after creation:
+# [[kv_namespaces]]
+# binding = "CONVERSION_LOGS"
+# id = "YOUR_KV_ID_HERE" 
+# preview_id = "YOUR_PREVIEW_ID_HERE"
 
-[[kv_namespaces]]
-binding = "RATE_LIMITER"
-id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create RATE_LIMITER
-preview_id = "YOUR_PREVIEW_ID_HERE"
+# [[kv_namespaces]]
+# binding = "ERROR_LOGS"
+# id = "YOUR_KV_ID_HERE"
+# preview_id = "YOUR_PREVIEW_ID_HERE"
 
-[[kv_namespaces]]
-binding = "USER_SESSIONS"
-id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create USER_SESSIONS
-preview_id = "YOUR_PREVIEW_ID_HERE"
+# [[kv_namespaces]]
+# binding = "RATE_LIMITER"
+# id = "YOUR_KV_ID_HERE"
+# preview_id = "YOUR_PREVIEW_ID_HERE"
 
-[[kv_namespaces]]
-binding = "OFFER_HEALTH"
-id = "YOUR_KV_ID_HERE" # wrangler kv:namespace create OFFER_HEALTH
-preview_id = "YOUR_PREVIEW_ID_HERE"
+# [[kv_namespaces]]
+# binding = "USER_SESSIONS"
+# id = "YOUR_KV_ID_HERE"
+# preview_id = "YOUR_PREVIEW_ID_HERE"
 
-# ================= DURABLE OBJECTS (Optional) =================
-# [[durable_objects.bindings]]
-# name = "RATE_LIMITER_DO"
-# class_name = "RateLimiter"
-
-# ================= R2 BUCKETS (Optional) =================
-# [[r2_buckets]]
-# binding = "ASSETS_BUCKET"
-# bucket_name = "aiqbrain-assets"
+# [[kv_namespaces]]
+# binding = "OFFER_HEALTH"
+# id = "YOUR_KV_ID_HERE"
+# preview_id = "YOUR_PREVIEW_ID_HERE"
 
 # ================= SECRETS =================
 # Set these via CLI - DO NOT put values here!
-# Run: npm run secrets:setup
+# Run: wrangler secret put SECRET_NAME
 # - WEBHOOK_SECRET
-# - GA_API_SECRET
+# - GA_API_SECRET  
 # - SMTP_CREDENTIALS
 # - API_KEY
