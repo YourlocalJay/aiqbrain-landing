@@ -6,9 +6,9 @@ import path from 'path';
 await fs.rm('dist', { recursive: true, force: true });
 await fs.mkdir('dist', { recursive: true });
 
-// Build worker
+// Build worker - corrected path to point to root index.js
 await build({
-  entryPoints: ['src/index.js'],
+  entryPoints: ['index.js'],
   bundle: true,
   outfile: 'dist/index.js',
   format: 'esm',
@@ -18,17 +18,16 @@ await build({
   external: ['cloudflare:*'],
 });
 
-// Copy static assets
-try {
-  await fs.cp('src/pages', 'dist/pages', { recursive: true });
-} catch (e) {
-  console.log('No pages directory to copy');
-}
+// Copy static assets from various directories
+const assetDirs = ['images', 'vault', 'request'];
 
-try {
-  await fs.cp('src/assets', 'dist/assets', { recursive: true });
-} catch (e) {
-  console.log('No assets directory to copy');
+for (const dir of assetDirs) {
+  try {
+    await fs.cp(dir, `dist/${dir}`, { recursive: true });
+    console.log(`✅ Copied ${dir} directory`);
+  } catch (e) {
+    console.log(`⚠️ No ${dir} directory to copy`);
+  }
 }
 
 console.log('✅ Build complete');
