@@ -1,94 +1,151 @@
 # AIQBrain Landing - Deployment Guide
 
-This guide will help you fix the deployment issues and get your AIQBrain landing page running on Cloudflare Workers.
+This guide provides detailed instructions for deploying the AIQBrain landing page system using Cloudflare Workers.
 
-## Issues Fixed
+## Prerequisites
 
-✅ **Updated Dependencies**: All dependencies updated to latest versions
-- esbuild: ^0.25.8 (was ^0.21.5)
-- wrangler: ^4.27.0 (was ^3.65.1) 
-- vitest: ^3.2.4 (was ^1.6.0)
-- @cloudflare/workers-types: ^4.20240806.0
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [npm](https://www.npmjs.com/) (v8 or higher)
+- [Cloudflare account](https://dash.cloudflare.com/sign-up) with Workers enabled
+- [wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) (included in dev dependencies)
 
-✅ **Fixed Build Configuration**: Corrected entry point path in build.js
-✅ **Updated Compatibility Date**: Set to 2025-07-31
-✅ **Commented Out KV Namespaces**: Until they are created properly
+## Getting Started
 
-## Deployment Steps
-
-### 1. Install Updated Dependencies
+### 1. Clone the Repository
 
 ```bash
-# Delete node_modules and lockfile to ensure clean install
-rm -rf node_modules package-lock.json
+git clone https://github.com/YourlocalJay/aiqbrain-landing.git
+cd aiqbrain-landing
+```
 
-# Install with latest versions
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-### 2. Authenticate with Cloudflare
+### 3. Configure Environment
 
-```bash
-# Login to Cloudflare (if not already done)
-npx wrangler auth login
+Edit the `wrangler.toml` file to customize your deployment settings:
+
+```toml
+name = "aiqbrain-landing"
+main = "src/worker.js"
+compatibility_date = "2023-10-16"
+
+[vars]
+ENVIRONMENT = "production"
+# Add your configuration variables here
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
 ```
 
-### 3. Create KV Namespaces (Optional)
+## Development
 
-If you want to use KV storage features, create the namespaces:
+### Local Development
+
+Start a local development server:
 
 ```bash
-# Run the KV creation script
-npm run kv:create
+npm run dev
 ```
 
-This will create the required KV namespaces and give you the IDs to update in `wrangler.toml`.
+This will start a local server at `http://localhost:8787`.
 
-### 4. Set Up Secrets (Optional)
+### Testing
 
-If you need webhook secrets or API keys:
+To run tests:
 
 ```bash
-# Run the secrets setup script
-npm run secrets:setup
+npm test
 ```
 
-### 5. Deploy
+## Deployment
 
-Now you can deploy with the standard commands:
+### Authentication
+
+Authenticate with Cloudflare:
 
 ```bash
-# Deploy to development
+npx wrangler login
+```
+
+### Deploy to Cloudflare Workers
+
+Deploy to production:
+
+```bash
 npm run deploy
-
-# Or deploy to production
-npm run deploy:prod
 ```
 
-## Brand Style Implementation
+Or deploy to a specific environment:
 
-Based on the AIQBrain Brand Style Guide provided, here are the key elements to implement:
-
-### Colors (CSS Variables)
-```css
-:root {
-  --background: #0a0e12;      /* Deep Slate */
-  --card-bg: #121820;         /* Dark Steel */
-  --text-primary: #e6edf3;    /* Light Steel */
-  --text-secondary: rgba(230, 237, 243, 0.8);
-  --text-muted: rgba(230, 237, 243, 0.6);
-  --accent-primary: #ff7b72;  /* Coral Action */
-  --accent-secondary: #58a6ff; /* Trust Blue */
-  --accent-warning: #f9c74f;  /* Alert Yellow */
-}
+```bash
+npx wrangler deploy --env development
 ```
 
-### Typography
-- **Headers**: Space Mono, 700 weight
-- **Body**: Inter Tight, 400-600 weight
-- **Font CDN**: Already specified in the style guide
+## Custom Domain Setup
 
-### URL Architecture (as per guide)
+To use a custom domain with your Cloudflare Workers deployment:
+
+1. In the Cloudflare dashboard, go to the **Workers & Pages** section
+2. Select your worker
+3. Go to **Triggers** > **Custom Domains**
+4. Add your domain (e.g., `aiqbrain.com`)
+5. Configure DNS settings as directed
+
+## Environment Variables
+
+For sensitive information, use Cloudflare Workers secrets:
+
+```bash
+# Set a secret
+npx wrangler secret put API_KEY
+
+# List all secrets
+npx wrangler secret list
+```
+
+## File Structure
+
+The project is organized as follows:
+
+```
+aiqbrain-landing/
+├── public/                  # Static assets
+│   ├── assets/              # CSS, JS, and images
+│   ├── _headers             # Cloudflare headers config
+│   └── _redirects           # Cloudflare redirects config
+├── src/                     # Source code
+│   ├── components/          # Reusable UI components
+│   ├── data/                # Data configuration
+│   ├── handlers/            # Route handlers
+│   ├── middleware/          # Request middleware
+│   ├── templates/           # HTML templates
+│   ├── utils/               # Utility functions
+│   ├── routes.js            # Route definitions
+│   └── worker.js            # Worker entry point
+└── wrangler.toml            # Cloudflare Workers config
+```
+
+## Customizing Routes
+
+To add or modify routes, edit the `src/routes.js` file:
+
+```javascript
+export const routes = [
+  { path: '/', handler: 'home' },
+  { path: '/vault', handler: 'vault' },
+  { path: '/sv', handler: 'offers' },
+  // Add your routes here
+];
+```
+
+## URL Architecture
+
+As per the AIQBrain brand style guide, the following URL architecture is implemented:
+
 - `/` - Homepage (qualification + initial filter)
 - `/vault` - Vault Preview (samples + lead capture)
 - `/request` - Access Request (application + qualification)
@@ -100,51 +157,66 @@ Based on the AIQBrain Brand Style Guide provided, here are the key elements to i
 
 ## Troubleshooting
 
-### If deployment still fails:
+### Common Issues
 
-1. **Check Wrangler Version**:
-   ```bash
-   npx wrangler --version
-   ```
-   Should be 4.27.0 or higher.
+**"Worker size limit exceeded"**:
+- Reduce the size of your worker by removing unnecessary dependencies
+- Split large functionalities into separate workers
 
-2. **Verify Build Output**:
-   ```bash
-   npm run build
-   ls -la dist/
-   ```
-   Should show `index.js` in the dist folder.
+**"Failed to deploy worker"**:
+- Check your Cloudflare account permissions
+- Verify your wrangler authentication
 
-3. **Test Locally**:
-   ```bash
-   npm run dev
-   ```
-   Should start the dev server without errors.
+**"Cannot find module"**:
+- Make sure all dependencies are installed: `npm install`
+- Check import paths for typos
 
-4. **Check Cloudflare Dashboard**:
-   - Verify your account has Workers enabled
-   - Check domain configuration if using custom routes
+### Logs and Debugging
 
-### Common Error Solutions
+View logs from your deployed worker:
 
-**"No such file or directory" during build**:
-- Fixed by updating build.js to use correct entry point
+```bash
+npx wrangler tail
+```
 
-**"Compatibility date" errors**:
-- Fixed by updating to 2025-07-31
+## Performance Optimization
 
-**KV namespace errors**:
-- Commented out in wrangler.toml until properly created
+To optimize performance:
 
-**Old wrangler syntax errors**:
-- Fixed by updating to wrangler v4+ compatible format
+1. Minimize CSS and JavaScript
+2. Use the Cloudflare Cache API for frequently accessed content
+3. Implement edge caching with appropriate headers
+4. Optimize images and other assets
 
-## Next Steps
+## Security Best Practices
 
-1. Update your actual CPA offer URLs in `wrangler.toml`
-2. Replace placeholder analytics IDs with your real ones
-3. Implement the brand style guide CSS
-4. Create the funnel pages according to the URL architecture
-5. Set up proper tracking and analytics
+The security middleware implements several best practices:
 
-Your deployment should now work correctly with the latest dependencies and fixed configuration!
+1. Content Security Policy (CSP)
+2. HTTP Strict Transport Security (HSTS)
+3. XSS Protection
+4. Frame Options
+5. Referrer Policy
+
+Customize security settings in `src/middleware/security.js`.
+
+## Maintenance
+
+### Updates
+
+To update dependencies:
+
+```bash
+npm update
+```
+
+### Monitoring
+
+Monitor your worker's performance using Cloudflare Analytics in the dashboard.
+
+## Support
+
+For assistance, contact:
+```
+support@aiqbrain.com
+```
