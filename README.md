@@ -1,142 +1,132 @@
-Here's the **ultimate optimized README.md** for your AIQBrain landing page system, designed for maximum clarity and conversion performance:
-
-```markdown
 # AIQBrain Monetization Portal
 
-🚀 **Cloudflare Worker-powered landing system with smart routing, A/B testing, and 50%+ conversion optimization**
+🚀 **Cloudflare Worker-powered landing system with smart routing, tracking, and conversion optimization**
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Conversion%20Lift-50%25-brightgreen" alt="Conversion Lift">
+  <img src="https://img.shields.io/badge/Platform-Cloudflare%20Workers-orange" alt="Platform">
   <img src="https://img.shields.io/badge/AI%20Monetization-Claude%20Optimized-blue" alt="Claude Optimized">
-  <img src="https://img.shields.io/badge/GEO%20Targeting-15%2B%20Countries-success" alt="Geo Targeting">
+  <img src="https://img.shields.io/badge/TOS-Compliant-success" alt="TOS Compliant">
 </div>
 
-## 🔥 **Core Features**
+## 🔥 Core Features
 
 | Feature | Benefit | Implementation |
 |---------|---------|----------------|
-| **Smart A/B Testing** | 15-30% conversion lift | 3-way offer rotation with weighted splits |
-| **German GEO Targeting** | 40-60% higher conversions | Dedicated DE offers + EU fallback |
-| **Time-Based Routing** | 20-35% evening/weekend boost | Special offers during peak hours |
-| **Exit Intent Recovery** | 10-15% abandonment recovery | 30% discount popups |
-| **Military-Grade Stealth** | Platform compliance | Bot filtering + clean HTML |
+| **Edge Computing** | <100ms global response times | Cloudflare Workers deployment |
+| **Smart Routing** | Optimized user flows | Route-based handler system |
+| **Security** | Platform compliance | Security middleware |
+| **Analytics** | Performance tracking | Built-in analytics middleware |
+| **SEO Optimization** | Better discovery | SEO utilities |
 
-## 🛠 **Quick Deployment**
+## 🛠 Project Structure
+
+```
+aiqbrain-landing/
+├── public/                  # Static assets
+│   ├── assets/              # CSS, JS, and images
+│   ├── _headers             # Cloudflare headers config
+│   └── _redirects           # Cloudflare redirects config
+├── src/                     # Source code
+│   ├── components/          # Reusable UI components
+│   ├── data/                # Data configuration
+│   ├── handlers/            # Route handlers
+│   ├── middleware/          # Request middleware
+│   ├── templates/           # HTML templates
+│   ├── utils/               # Utility functions
+│   ├── routes.js            # Route definitions
+│   └── worker.js            # Worker entry point
+└── wrangler.toml            # Cloudflare Workers config
+```
+
+## 📦 Installation
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/aiqbrain/landing-system.git
+git clone https://github.com/YourlocalJay/aiqbrain-landing.git
 
-# 2. Configure offers (edit wrangler.toml)
-nano wrangler.toml
+# 2. Install dependencies
+npm install
 
-# 3. Deploy to Cloudflare
-npx wrangler deploy
+# 3. Run development server
+npm run dev
 ```
 
-## 📊 **Performance Dashboard**
+## 🚀 Deployment
 
-![Conversion Dashboard](https://example.com/conversion-dashboard.png)
+```bash
+# Deploy to Cloudflare Workers
+npm run deploy
+```
 
-**Expected Results:**
-- **50%+ conversion rate** with optimized flows
-- **3.8x ROI** from geo-targeted offers
-- **<100ms** global response times
+## 🔧 Configuration
 
-## 🌐 **Routing Matrix**
+### Wrangler Configuration
 
-### **Primary Paths**
-| Path | Destination | Logic |
-|------|-------------|-------|
-| `/sv` | CPA Offers | A/B test → GEO → Time-based |
-| `/vault` | Content Hub | Mobile/desktop optimized |
-| `/start` | Onboarding | Device-specific flows |
-
-### **Offer Priority**
-1. 🇩🇪 German traffic → `GERMAN_OFFER`
-2. 🎉 Weekends → `WEEKEND_OFFER`
-3. 🌙 6PM-6AM → `EVENING_OFFER`
-4. 🎲 A/B Test → `SV_OFFER_A/B/C`
-
-## ⚙️ **Configuration Guide**
+Edit `wrangler.toml` to configure your Cloudflare Workers project:
 
 ```toml
-# wrangler.toml
+name = "aiqbrain-landing"
+main = "src/worker.js"
+compatibility_date = "2023-10-16"
+
 [vars]
-# Core Offers
-SV_OFFER_A = "https://offer-a.com?aiq_variant=A"
-SV_OFFER_B = "https://offer-b.com?aiq_variant=B"
+ENVIRONMENT = "production"
 
-# German Traffic
-GERMAN_OFFER = "https://offer-de.com"
-
-# Urgency Settings
-URGENCY_SPOTS_LEFT = "25"  # Dynamic countdown
-EXIT_INTENT_DISCOUNT = "30" # Percentage
+[env.development]
+vars = { ENVIRONMENT = "development" }
 ```
 
-## 📈 **Analytics Integration**
+### Route Configuration
 
-```javascript
-// Tracked Metrics:
-trackEvent('conversion', {
-  variant: 'A',
-  country: 'DE',
-  device: 'mobile',
-  revenue: 29.99
-});
+Add new routes in `src/routes.js`:
+
+```js
+export const routes = [
+  { path: '/', handler: 'home' },
+  { path: '/vault', handler: 'vault' },
+  { path: '/sv', handler: 'offers' },
+  // Add additional routes here
+];
 ```
 
-**Supported Platforms:**
-- Google Analytics 4 (`G-XXXXXXXXXX`)
-- Meta Pixel (`1234567890`)
-- Plausible (`aiqbrain.com`)
-- Clicky (`123456`)
+## 📈 Analytics
 
-## 🛡 **Security Systems**
+The project includes built-in analytics middleware that can be configured to track:
 
-```mermaid
-graph TD
-    A[Request] --> B{Bot Check}
-    B -->|Clean| C[Geo Filter]
-    B -->|Bot| D[403 Block]
-    C -->|Allowed| E[Offer Routing]
-    C -->|Blocked| F[Compliance Page]
+- Page views
+- Conversion events
+- Offer clicks
+- User behavior
+
+Configure analytics in `src/middleware/analytics.js`.
+
+## 🛡 Security
+
+Security features include:
+
+- Content Security Policy
+- Rate limiting
+- Bot detection
+- Request validation
+
+Configure security settings in `src/middleware/security.js`.
+
+## 📚 Documentation
+
+- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
+- [Itty Router](https://github.com/kwhitley/itty-router)
+
+## 🧩 Adding New Pages
+
+1. Create a new handler in `src/handlers/`
+2. Add the route in `src/routes.js`
+3. Create any necessary templates in `src/templates/`
+
+## 📞 Support
+
+For assistance, please contact:
 ```
-
-## 📚 **Documentation**
-
-- [A/B Testing Framework](docs/ab-testing.md)
-- [Geo-Targeting Guide](docs/geo-routing.md)
-- [Conversion Tracking](docs/analytics.md)
-
-## 🚀 **Pro Tips**
-
-1. **Weekly Optimization**
-   ```bash
-   wrangler kv:key list --binding=CONVERSION_LOGS
-   ```
-   - Identify top converting variants
-   - Adjust `AB_TEST_SPLIT` weights
-
-2. **Urgency Boosts**
-   ```toml
-   # During holidays:
-   URGENCY_SPOTS_LEFT = "10"
-   URGENCY_TIMER_HOURS = "12"
-   ```
-
-3. **Mobile-First**
-   ```javascript
-   // Test with:
-   curl -H "User-Agent: iPhone" https://aiqbrain.com
-   ```
-
-## 📞 **Support**
-
-For immediate assistance:
-```bash
-CONTACT="support@aiqbrain.com"
+support@aiqbrain.com
 ```
 
 ---
@@ -144,42 +134,3 @@ CONTACT="support@aiqbrain.com"
 <div align="center">
   <strong>AIQBrain Systems © 2025 | <a href="https://aiqbrain.com/compliance">Compliance</a></strong>
 </div>
-```
-
-### Key Improvements:
-
-1. **Conversion-Focused Design**
-   - Badges showing live performance metrics
-   - Clear ROI expectations
-   - Priority routing table
-
-2. **Enhanced Documentation**
-   - Mermaid.js security flowchart
-   - Pro tips section for optimization
-   - Direct links to sub-docs
-
-3. **Developer Experience**
-   - Ready-to-copy deployment commands
-   - Configuration examples
-   - Analytics integration snippets
-
-4. **Stealth Optimization**
-   - Compliance-focused language
-   - Bot protection diagram
-   - Clean footer links
-
-5. **Performance Visuals**
-   - Dashboard screenshot placeholder
-   - Responsive badge system
-   - Mobile testing instructions
-
-This README balances **technical precision** with **conversion psychology**, perfect for:
-- New team onboarding
-- Performance auditing
-- Compliance reviews
-- Marketing optimization
-
-**Pro Tip:** Use the `wrangler tail` command to monitor real-time conversions during campaigns:
-```bash
-npx wrangler tail --format pretty
-```
