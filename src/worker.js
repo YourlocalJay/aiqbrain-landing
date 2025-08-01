@@ -19,7 +19,7 @@ import { requestHandler } from './handlers/request.js';
 import { highIntentHandler } from './handlers/high-intent.js';
 import { mobileHomeHandler } from './handlers/mobile-home.js';
 import { opsecHandler } from './handlers/opsec.js';
-import { handleOfferRedirect } from './handlers/offers.js';
+import { offersHandler } from './handlers/offers.js';
 import { privacyHandler } from './handlers/legal/privacy.js';
 import { termsHandler } from './handlers/legal/terms.js';
 import { complianceHandler } from './handlers/legal/compliance.js';
@@ -40,7 +40,7 @@ const handlerMap = {
   highIntentHandler,
   mobileHomeHandler,
   opsecHandler,
-  offerRedirectHandler: handleOfferRedirect,
+  offersHandler,
   privacyHandler,
   termsHandler,
   complianceHandler,
