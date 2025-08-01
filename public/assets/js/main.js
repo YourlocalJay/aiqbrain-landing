@@ -127,6 +127,9 @@
 
   // Set up analytics tracking
   function setupTracking() {
+    // Initialize dataLayer if not already initialized
+    window.dataLayer = window.dataLayer || [];
+    
     // Track page view
     trackEvent('page_view', {
       page: window.location.pathname,
@@ -180,9 +183,25 @@
       console.error('Failed to send analytics:', e);
     }
     
-    // If Google Analytics is available
-    if (typeof gtag === 'function') {
-      gtag('event', eventName, eventData);
+    // Send to Google Tag Manager
+    try {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: eventName,
+          ...eventData
+        });
+      }
+    } catch (gtmError) {
+      console.error('GTM error:', gtmError);
+    }
+    
+    // If Plausible is available
+    if (typeof window.plausible === 'function') {
+      try {
+        window.plausible(eventName, { props: eventData });
+      } catch (plausibleError) {
+        console.error('Plausible error:', plausibleError);
+      }
     }
   }
 
