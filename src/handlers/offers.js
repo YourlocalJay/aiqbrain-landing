@@ -1,51 +1,36 @@
+cat > src/handlers/offers.js << 'EOF'
 /**
- * Offer redirect handler for AIQBrain
- * Manages all offer clicks, tracking, and redirects
+ * Offers/Survey Vault handler for AIQBrain
+ * In production, this would redirect to external offers
+ * For local development, we'll show a placeholder
  */
-import { offers } from '../data/offers.js';
+import { baseTemplate } from '../templates/base.js';
 
-export async function handleOfferRedirect(request, env) {
-  const url = new URL(request.url);
-  const offerSlug = url.pathname.replace('/offers/', '');
-  
-  // Get the offer data
-  const offer = offers[offerSlug];
-  
-  if (!offer || !offer.active || new Date() > new Date(offer.expiry)) {
-    // Offer not found, inactive, or expired
-    return Response.redirect(url.origin, 302);
-  }
-  
-  // Track the offer click in analytics
-  const visitorId = request.headers.get('cf-ray') || request.headers.get('cf-connecting-ip');
-  const timestamp = new Date().toISOString();
-  
-  await env.AIQ_ANALYTICS.put(`offer_click:${offerSlug}:${visitorId}:${timestamp}`, JSON.stringify({
-    offer: offerSlug,
-    referrer: request.headers.get('referer') || 'direct',
-    country: request.cf.country,
-    device: /Mobile|Android/.test(request.headers.get('user-agent')) ? 'mobile' : 'desktop',
-    timestamp
-  }), {
-    expirationTtl: 2592000 // 30 days
-  });
-  
-  // Send webhook if configured
-  if (env.WEBHOOK_SECRET && env.WEBHOOK_URL) {
-    fetch(env.WEBHOOK_URL, {
-      method: 'POST',
+export async function offersHandler(request, env) {
+  // For local development, show a placeholder instead of redirecting
+  if (env.ENVIRONMENT === 'development' || request.headers.get('host').includes('localhost')) {
+    const content = `
+      <div class="container page-container">
+        <h1>Survey Vault (Local Development)</h1>
+        <p>In production, this route would redirect to external offer pages.</p>
+        <p>For local development, we're showing this placeholder instead.</p>
+
+        <div class="cta-container">
+          <a href="/" class="btn btn-primary">Return Home</a>
+        </div>
+      </div>
+    `;
+
+    return new Response(baseTemplate(content, { page: 'survey-vault' }), {
       headers: {
-        'Content-Type': 'application/json',
-        'X-Webhook-Secret': env.WEBHOOK_SECRET
-      },
-      body: JSON.stringify({
-        event: 'offer_click',
-        offer: offerSlug,
-        timestamp
-      })
-    }).catch(() => {}); // Ignore errors to prevent blocking the redirect
+        'Content-Type': 'text/html'
+      }
+    });
   }
-  
-  // Redirect to the offer URL
-  return Response.redirect(offer.url, 302);
+
+  // In production, this would redirect to the actual offer
+  const targetUrl = 'https://trkr.aiqbrain.com/redirect?source=sv';
+
+  return Response.redirect(targetUrl, 302);
 }
+EOF
