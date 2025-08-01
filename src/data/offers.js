@@ -1,103 +1,129 @@
+// src/data/offers.js
+
 /**
- * AIQBrain offers configuration
- * Manages all CPA/affiliate offers with tracking, fallbacks, and expiry dates
+ * Offer structure:
+ * - id: unique identifier
+ * - name: human-readable name
+ * - network: affiliate network/source
+ * - payout: USD (or specify currency)
+ * - device: 'android' | 'ios' | 'any'
+ * - geo: country code or 'any'
+ * - url: must contain tracking_id= for appending
+ * - notes: optional extra info
  */
-export const offers = {
-  "survey-vault-us-m": {
-    id: "sv-us-m",
-    name: "US Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/us-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
+
+const offers = [
+  // --- USA ---
+  {
+    id: 'us-android-1',
+    name: 'Survey Vault US Android',
+    network: 'CPAGrip',
+    payout: 2.25,
+    device: 'android',
+    geo: 'US',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831&tracking_id=',
+    notes: 'No CC, mobile-friendly, Reddit allowed',
   },
-  "survey-vault-ca-m": {
-    id: "sv-ca-m",
-    name: "CA Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/ca-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
+  {
+    id: 'us-ios-1',
+    name: 'Survey Vault US iOS',
+    network: 'CPAGrip',
+    payout: 2.10,
+    device: 'ios',
+    geo: 'US',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69234&tracking_id=',
+    notes: 'No CC, mobile, Reddit allowed',
   },
-  "survey-vault-uk-m": {
-    id: "sv-uk-m",
-    name: "UK Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/uk-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
+
+  // --- UK ---
+  {
+    id: 'uk-android-1',
+    name: 'Survey Vault UK Android',
+    network: 'CPAGrip',
+    payout: 2.05,
+    device: 'android',
+    geo: 'UK',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68583&tracking_id=',
+    notes: 'No CC, Reddit allowed',
   },
-  "survey-vault-au-m": {
-    id: "sv-au-m",
-    name: "AU Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/au-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
+
+  // --- Canada ---
+  {
+    id: 'ca-android-1',
+    name: 'Survey Vault CA Android',
+    network: 'CPAGrip',
+    payout: 1.95,
+    device: 'android',
+    geo: 'CA',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68846&tracking_id=',
+    notes: 'No CC, Reddit allowed',
   },
-  "survey-vault-de-m": {
-    id: "sv-de-m",
-    name: "DE Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/de-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
+  {
+    id: 'ca-ios-1',
+    name: 'Survey Vault CA iOS',
+    network: 'CPAGrip',
+    payout: 2.10,
+    device: 'ios',
+    geo: 'CA',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69339&tracking_id=',
+    notes: 'No CC, Reddit allowed',
   },
-  "survey-vault-global-m": {
-    id: "sv-global-m",
-    name: "Global Mobile Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/global-m?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: null, // No fallback - never use AliExpress
-    active: true,
-    expiry: "2025-12-31"
+
+  // --- Fallback (default) ---
+  {
+    id: 'fallback-1',
+    name: 'Vault Default Offer',
+    network: 'CPAGrip',
+    payout: 1.00,
+    device: 'any',
+    geo: 'any',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831&tracking_id=',
+    notes: 'Fallback if targeting fails',
   },
-  // Desktop offers
-  "survey-vault-us-d": {
-    id: "sv-us-d",
-    name: "US Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/us-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
-  },
-  "survey-vault-ca-d": {
-    id: "sv-ca-d",
-    name: "CA Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/ca-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
-  },
-  "survey-vault-uk-d": {
-    id: "sv-uk-d",
-    name: "UK Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/uk-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
-  },
-  "survey-vault-au-d": {
-    id: "sv-au-d",
-    name: "AU Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/au-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
-  },
-  "survey-vault-de-d": {
-    id: "sv-de-d",
-    name: "DE Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/de-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=fallback",
-    active: true,
-    expiry: "2025-12-31"
-  },
-  "survey-vault-global-d": {
-    id: "sv-global-d",
-    name: "Global Desktop Survey Vault",
-    url: "https://trkr.aiqbrain.com/sv/global-d?t=NEURAL_OPS&src=direct&m=referral",
-    fallback: null, // No fallback - never use AliExpress
-    active: true,
-    expiry: "2025-12-31"
+];
+
+// --------- PRE-INDEX OFFERS FOR FAST LOOKUP ---------
+
+const offerMap = offers.reduce((map, offer) => {
+  const key = `${offer.geo.toLowerCase()}_${offer.device.toLowerCase()}`;
+  map[key] = offer;
+  return map;
+}, {});
+
+function findFallback() {
+  return offers.find((o) => o.id.startsWith('fallback')) || offers[0];
+}
+
+/**
+ * Main lookup function: returns the best offer for a given geo/device.
+ * - geo: country code (e.g., 'US', 'UK', 'CA'), default 'any'
+ * - device: 'android', 'ios', or 'any', default 'any'
+ */
+function getOffer({ geo = 'any', device = 'any' } = {}) {
+  if (!geo || !device) {
+    console.warn('Missing geo/device. Using fallback.');
+    return findFallback();
   }
-};
+  const key = `${geo.toLowerCase()}_${device.toLowerCase()}`;
+  // Exact match
+  if (offerMap[key]) return offerMap[key];
+  // Geo only
+  const geoKey = `${geo.toLowerCase()}_any`;
+  if (offerMap[geoKey]) return offerMap[geoKey];
+  // Device only (rare)
+  const deviceKey = `any_${device.toLowerCase()}`;
+  if (offerMap[deviceKey]) return offerMap[deviceKey];
+  // Fallback/default
+  return findFallback();
+}
+
+// --------- VALIDATE OFFER URLS ON STARTUP (DEVELOPMENT ONLY) ---------
+if (process.env.NODE_ENV !== 'production') {
+  offers.forEach((offer) => {
+    if (!offer.url.includes('tracking_id=')) {
+      console.warn(`Offer ${offer.id} is missing tracking_id= in URL!`);
+    }
+  });
+}
+
+module.exports = { offers, getOffer, findFallback };
