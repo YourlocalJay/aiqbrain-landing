@@ -21,7 +21,7 @@ const offers = [
     payout: 2.25,
     device: 'android',
     geo: 'US',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831',
     notes: 'No CC, mobile-friendly, Reddit allowed',
   },
   {
@@ -31,7 +31,7 @@ const offers = [
     payout: 2.10,
     device: 'ios',
     geo: 'US',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69234&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69234',
     notes: 'No CC, mobile, Reddit allowed',
   },
 
@@ -43,7 +43,7 @@ const offers = [
     payout: 2.05,
     device: 'android',
     geo: 'UK',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68583&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68583',
     notes: 'No CC, Reddit allowed',
   },
 
@@ -55,7 +55,7 @@ const offers = [
     payout: 1.95,
     device: 'android',
     geo: 'CA',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68846&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68846',
     notes: 'No CC, Reddit allowed',
   },
   {
@@ -65,7 +65,7 @@ const offers = [
     payout: 2.10,
     device: 'ios',
     geo: 'CA',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69339&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=69339',
     notes: 'No CC, Reddit allowed',
   },
 
@@ -77,7 +77,7 @@ const offers = [
     payout: 1.00,
     device: 'any',
     geo: 'any',
-    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831&tracking_id=',
+    url: 'https://singingfiles.com/show.php?l=0&u=2427730&id=68831',
     notes: 'Fallback if targeting fails',
   },
 ];
