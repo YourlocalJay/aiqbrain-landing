@@ -23,18 +23,18 @@ REDIRECT_TERMS = "https://aiqengage.com/terms"
 
 # ================= CPA OFFER ROTATION =================
 # IMPORTANT: Replace these with your actual CPA offers
-SV_OFFER_A = "https://your-network.com/offer?id=1001"
-SV_OFFER_B = "https://your-network.com/offer?id=1002"
-SV_OFFER_C = "https://your-network.com/offer?id=1003"
-SV_OFFER_D = "https://your-network.com/offer?id=1004"
+SV_OFFER_A = "https://singingfiles.com/show.php?...id=68776"
+SV_OFFER_B = "https://singingfiles.com/show.php?...id=68777"
+SV_OFFER_C = "https://singingfiles.com/show.php?...id=68778"
+SV_OFFER_D = "https://singingfiles.com/show.php?...id=68779"
 
 # ================= GEO-TARGETED OFFERS =================
 # IMPORTANT: Replace with geo-specific offers
-GEO_OFFERS_US = "https://your-network.com/us-offer"
-GEO_OFFERS_UK = "https://your-network.com/uk-offer"
-GEO_OFFERS_DE = "https://your-network.com/de-offer"
-GEO_OFFERS_CA = "https://your-network.com/ca-offer"
-GEO_OFFERS_AU = "https://your-network.com/au-offer"
+GEO_OFFERS_US = "https://singingfiles.com/show.php?...id=68831"
+GEO_OFFERS_UK = "https://singingfiles.com/show.php?...id=68583"
+GEO_OFFERS_DE = "https://singingfiles.com/show.php?...id=68865"
+GEO_OFFERS_CA = "https://singingfiles.com/show.php?...id=68846"
+GEO_OFFERS_AU = "https://vdl.medias-cloud.com/qsldv/en/?aid=90&v=nfl"
 
 # ================= DEVICE-SPECIFIC =================
 MOBILE_VAULT = "https://m.aiqengage.com/vault"
@@ -44,14 +44,14 @@ DESKTOP_START = "https://aiqengage.com/start"
 
 # ================= TIME-BASED OFFERS =================
 # IMPORTANT: Replace with time-specific offers
-WEEKEND_OFFER = "https://your-network.com/weekend-offer"
-EVENING_OFFER = "https://your-network.com/evening-offer"
-Q4_PROMO = "https://your-network.com/holiday-offer"
+WEEKEND_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=69234"
+EVENING_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=70869"
+Q4_PROMO = "https://singingfiles.com/show.php?l=0&u=2427730&id=67666"
 
 # ================= SECURITY =================
 ALLOWED_COUNTRIES = "US,CA,UK,DE,AU,JP,NZ,FR,IT,ES,NL,SE,NO,DK,FI"
-BLOCKED_IPS = "" # Add IPs to block, comma-separated
-RATE_LIMIT = "100" # Requests per minute per IP
+BLOCKED_IPS = "192.168.1.1,10.0.0.1" # Add IPs to block, comma-separated
+RATE_LIMIT = "1000/60" # Requests per minute per IP
 MAINTENANCE_ENABLED = "false"
 MAINTENANCE_MESSAGE = "AIQBrain is currently under maintenance. Please check back soon."
 
@@ -63,14 +63,13 @@ JS_BUNDLE_VERSION = "v1.0.0"
 # ================= ANALYTICS =================
 # IMPORTANT: Replace with your actual analytics IDs
 PLAUSIBLE_DOMAIN = "aiqbrain.com"
-GA_MEASUREMENT_ID = "G-XXXXXXXXXX" # Replace with actual ID
-GTM_CONTAINER_ID = "GTM-XXXXXX" # Replace with actual ID
-FACEBOOK_PIXEL_ID = "1234567890" # Replace with actual ID
+GA_MEASUREMENT_ID = "G-WD8ME9QKG0" # Replace with actual ID
+GTM_CONTAINER_ID = "GTM-MLJCSX2P" # Replace with actual ID
 
 # ================= CONVERSION OPTIMIZATION =================
 AB_TEST_SPLIT = "0.3,0.3,0.3,0.1" # A/B/C/D weights
 EXIT_INTENT_DISCOUNT = "30"
-URGENCY_SPOTS_LEFT = "25"
+URGENCY_SPOTS_LEFT = "50"
 URGENCY_TIMER_HOURS = "24"
 CONVERSION_COOLDOWN = "86400" # 24 hours
 
