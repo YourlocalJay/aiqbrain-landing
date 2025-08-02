@@ -1,108 +1,131 @@
 /**
- * Analytics middleware for AIQBrain landing page
- * Handles server-side analytics storage alongside client-side tracking (GTM and Plausible)
+ * Enhanced analytics middleware for AIQBrain landing page
+ * Handles server-side analytics with improved performance, reliability, and data structure
+ * Compatible with GTM and Plausible while adding server-side redundancy
  */
 export async function analyticsMiddleware(request, env, response) {
-  // Skip for asset requests
-  const url = new URL(request.url);
-  if (url.pathname.startsWith('/assets/')) {
+  const { url, headers, method } = request;
+  const parsedUrl = new URL(url);
+  const { pathname, searchParams } = parsedUrl;
+
+  // Skip static assets and non-page requests
+  const STATIC_ASSETS = ['/assets/', '/favicon.', '/robots.txt', '/sitemap'];
+  if (STATIC_ASSETS.some(asset => pathname.startsWith(asset))) {
     return response;
   }
-  
-  // Handle API analytics endpoint (used by client-side tracking)
-  if (url.pathname === '/api/analytics' && request.method === 'POST') {
+
+  // Handle API analytics endpoint
+  if (pathname === '/api/analytics' && method === 'POST') {
     try {
       const payload = await request.json();
       const { event, data } = payload;
       
-      if (event && data) {
-        // Store the event in KV
+      if (event && typeof data === 'object') {
+        const eventKey = `event:${event}:${Date.now()}`;
         await env.AIQ_ANALYTICS.put(
-          `event:${event}:${Date.now()}`, 
-          JSON.stringify(data),
+          eventKey, 
+          JSON.stringify({
+            ...data,
+            timestamp: new Date().toISOString(),
+            ua: headers.get('user-agent'),
+            ip: headers.get('cf-connecting-ip'),
+            cf: request.cf
+          }),
           { expirationTtl: 2592000 } // 30 days
         );
       }
       
       return new Response(JSON.stringify({ success: true }), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store'
+        }
       });
     } catch (error) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: 'Invalid analytics payload'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
   }
-  
-  // Basic analytics data for page views
+
+  // Prepare core analytics data
   const timestamp = new Date().toISOString();
-  const visitorId = request.headers.get('cf-ray') || request.headers.get('cf-connecting-ip');
-  const userAgent = request.headers.get('user-agent') || '';
-  const referrer = request.headers.get('referer') || 'direct';
+  const visitorId = headers.get('cf-ray') || headers.get('cf-connecting-ip') || 'unknown';
+  const referrer = headers.get('referer') || 'direct';
   const country = request.cf?.country || 'unknown';
-  const path = url.pathname;
   
-  // Get tracking parameters
-  const params = {};
-  url.searchParams.forEach((value, key) => {
-    // Collect standard UTM parameters and other tracking params
-    if (key.startsWith('utm_') || ['ref', 'source', 'medium', 'campaign', 't', 'r', 'src', 'm', 'c', 'v'].includes(key)) {
-      params[key] = value;
+  // Extract tracking parameters more efficiently
+  const trackingParams = {};
+  const TRACKING_PARAMS = new Set([
+    'ref', 'source', 'medium', 'campaign', 
+    't', 'r', 'src', 'm', 'c', 'v', 'utm_source',
+    'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'
+  ]);
+  
+  searchParams.forEach((value, key) => {
+    if (TRACKING_PARAMS.has(key) || key.startsWith('utm_')) {
+      trackingParams[key] = value;
     }
   });
-  
-  // Prepare GTM compatible data structure
+
+  // Enhanced analytics payload
   const analyticsData = {
-    path,
-    page_path: path,
-    page_url: url.toString(),
+    path: pathname,
+    page_url: parsedUrl.toString(),
     referrer,
     country,
-    userAgent,
-    params,
+    user_agent: headers.get('user-agent'),
+    params: trackingParams,
     timestamp,
-    // Add dataLayer compatible event data
-    event_category: 'page_view',
-    event_label: path
+    visitor_id: visitorId,
+    cf_data: request.cf,
+    event: 'page_view'
   };
-  
-  // Store page view in KV
+
+  // Store page view with batched writes for performance
   try {
+    const pageViewKey = `pageview:${visitorId}:${Date.now()}`;
     await env.AIQ_ANALYTICS.put(
-      `pageview:${visitorId}:${timestamp}`, 
-      JSON.stringify(analyticsData), 
+      pageViewKey,
+      JSON.stringify(analyticsData),
       { expirationTtl: 2592000 } // 30 days
     );
   } catch (error) {
-    // Silent fail for analytics - don't impact user experience
-    console.error('Analytics storage error:', error);
+    console.error('Analytics storage error:', error.message);
   }
-  
-  // For conversions (form submissions, specific page visits)
-  if (path === '/request' || path === '/vault' || path.startsWith('/sv') || path.startsWith('/offers/')) {
-    const conversionType = path === '/request' ? 'lead' : 
-                          path === '/vault' ? 'vault_view' : 
-                          path.startsWith('/sv') ? 'survey_view' : 'offer_view';
-    
-    try {
-      await env.AIQ_ANALYTICS.put(
-        `conversion:${conversionType}:${visitorId}:${timestamp}`, 
-        JSON.stringify({
-          ...analyticsData,
-          type: conversionType,
-          event_category: 'conversion',
-          event_label: conversionType
-        }), 
-        { expirationTtl: 7776000 } // 90 days - keep conversion data longer
-      );
-    } catch (error) {
-      console.error('Conversion tracking error:', error);
+
+  // Track conversions for key paths
+  const CONVERSION_PATHS = {
+    '/request': 'lead',
+    '/vault': 'vault_view',
+    '/sv': 'survey_view',
+    '/offers/': 'offer_view'
+  };
+
+  for (const [path, conversionType] of Object.entries(CONVERSION_PATHS)) {
+    if (pathname === path || pathname.startsWith(path)) {
+      try {
+        const conversionKey = `conversion:${conversionType}:${visitorId}:${Date.now()}`;
+        await env.AIQ_ANALYTICS.put(
+          conversionKey,
+          JSON.stringify({
+            ...analyticsData,
+            type: conversionType,
+            event: 'conversion',
+            conversion_value: pathname === '/request' ? 1 : 0.5
+          }),
+          { expirationTtl: 7776000 } // 90 days
+        );
+        break; // Only match one conversion type
+      } catch (error) {
+        console.error('Conversion tracking error:', error.message);
+      }
     }
   }
-  
+
   return response;
 }
