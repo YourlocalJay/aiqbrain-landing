@@ -1,4 +1,3 @@
-cat > src/handlers/offers.js << 'EOF'
 /**
  * Offers/Survey Vault handler for AIQBrain
  * In production, this would redirect to external offers
@@ -33,4 +32,3 @@ export async function offersHandler(request, env) {
 
   return Response.redirect(targetUrl, 302);
 }
-EOF
