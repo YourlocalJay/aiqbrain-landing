@@ -3,8 +3,8 @@ main = "src/worker.js"
 compatibility_date = "2025-06-01"
 
 kv_namespaces = [
-  { binding = "AIQ_ANALYTICS", id = "xxxxx", preview_id = "xxxxx" },
-  { binding = "AIQ_VISITORS", id = "xxxxx", preview_id = "xxxxx" }
+  { binding = "AIQ_ANALYTICS", id = "245ad1781ade43bcab7b60cf7a8c5934" },
+  { binding = "AIQ_VISITORS", id = "28d78ba9bada415489c28bdf16b88f50" }
 ]
 
 [vars]
