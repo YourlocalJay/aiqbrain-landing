@@ -49,9 +49,10 @@ export async function securityMiddleware(request, env) {
     });
   }
 
-  // Country filtering with Set for better performance
-  const allowedCountries = new Set(['US', 'CA', 'GB', 'UK', 'AU', 'DE', 'NZ']);
-  if (!allowedCountries.has(country)) {
+  // Allow global traffic except for explicit sanctions or undefined
+  // Expanded country support: Only block explicitly disallowed or undefined
+  const blockedCountries = new Set(['KP', 'SY', 'IR', 'CU', 'SD']); // Example: OFAC sanctions
+  if (!country || blockedCountries.has(country)) {
     return new Response('Service not available in your region', {
       status: 451,
       headers: securityHeaders
