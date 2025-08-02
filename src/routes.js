@@ -68,7 +68,7 @@ export const routes = [
   // Offers matching
   { 
     pathMatch: (path) => path.startsWith('/offers/'),
-    handler: 'offerRedirectHandler'
+    handler: 'offersHandler'
   },
   
   // Static assets
