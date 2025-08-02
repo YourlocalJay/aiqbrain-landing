@@ -7,45 +7,27 @@ import { getOwnershipStatement, getIncomeDisclaimer, getAIUsageNotice } from '..
 export async function complianceHandler(request, env) {
   const content = `
     <div class="container legal-container">
-      <h1>AIQBrain Compliance</h1>
-      
-      <section class="legal-section">
-        <h2>Platform Compliance</h2>
-        <p>AIQBrain is committed to operating within the terms of service of all platforms and services we interact with. Our systems are designed to comply with Claude and other AI platform guidelines while maximizing performance.</p>
-        
-        <p>We actively monitor platform updates and policy changes to ensure our systems remain compliant and effective. All frameworks, templates, and guidance provided through AIQBrain are designed to work within established platform boundaries.</p>
-      </section>
-      
-      <section class="legal-section">
-        <h2>User Responsibility</h2>
-        <p>While we design our systems to be compliant, all users are responsible for implementing these systems in accordance with relevant platform guidelines and applicable laws in their jurisdiction.</p>
-        
-        <p>Users agree to:</p>
-        <ul>
-          <li>Review and understand the terms of service for any platforms they use</li>
-          <li>Implement AIQBrain systems within those guidelines</li>
-          <li>Use the content and outputs responsibly and legally</li>
-          <li>Keep informed about platform policy changes</li>
-        </ul>
-      </section>
-      
-      ${getOwnershipStatement()}
-      ${getIncomeDisclaimer()}
-      ${getAIUsageNotice()}
-      
-      <section class="legal-section">
-        <h2>Updates to Compliance Policies</h2>
-        <p>Our compliance policies are regularly updated to reflect platform changes and industry best practices. Users should check this page periodically for updates.</p>
-        <p>Last Updated: August 1, 2025</p>
-      </section>
-      
+      <h1>Compliance</h1>
+      <p>
+        <b>AIQBrain is committed to full compliance with all applicable laws, regulations, and platform policies.</b>
+      </p>
+      <ul>
+        <li>All monetization systems and recommendations are designed to operate within the Terms of Service (TOS) of referenced platforms.</li>
+        <li>No techniques are provided or endorsed that violate platform rules, encourage prohibited activities, or circumvent compliance mechanisms.</li>
+        <li>All affiliate and CPA relationships are transparently disclosed. Users are encouraged to read and follow the TOS of all third-party services they interact with.</li>
+        <li>We do not guarantee income or specific results. Operator success depends on many factors including execution quality, market conditions, and compliance with third-party rules.</li>
+        <li>Any suggestions or systems presented should be reviewed and adapted as necessary to remain within the guidelines of the operator’s jurisdiction and platform rules.</li>
+      </ul>
+      <p>
+        If you believe any content or system on AIQBrain is non-compliant, please contact us immediately at <a href="mailto:compliance@aiqbrain.com">compliance@aiqbrain.com</a> and we will investigate.
+      </p>
       <div class="cta-container">
         <a href="/" class="btn btn-secondary">Return Home</a>
       </div>
     </div>
   `;
-  
-  return new Response(baseTemplate(content, { 
+
+  return new Response(baseTemplate(content, {
     page: 'compliance',
     title: 'Compliance | AIQBrain',
     description: 'AIQBrain Compliance policies and information.'

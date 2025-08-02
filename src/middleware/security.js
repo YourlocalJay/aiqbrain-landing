@@ -21,16 +21,16 @@ export async function securityMiddleware(request, env) {
 
   // Enhanced bot detection with more precise matching
   const botPatterns = [
-    'bot', 'crawler', 'spider', 'lighthouse', 
+    'bot', 'crawler', 'spider', 'lighthouse',
     'pagespeed', 'pingdom', 'gtmetrix', 'monitor',
     'slurp', 'teoma', 'archive', 'scan', 'check',
     'validator', 'cloudflare', 'headless', 'phantom',
     'selenium', 'webdriver', 'prerender', 'node-fetch',
     'python-urllib', 'java', 'curl', 'wget', 'go-http'
   ];
-  
+
   if (botPatterns.some(pattern => userAgent.includes(pattern))) {
-    return new Response('Not found', { 
+    return new Response('Not found', {
       status: 404,
       headers: securityHeaders
     });
@@ -38,12 +38,12 @@ export async function securityMiddleware(request, env) {
 
   // Optimized ASN blocking with Set for faster lookups
   const blockedASNs = new Set([
-    16509, 14618, 15169, 13335, 20473, 
+    16509, 14618, 15169, 13335, 20473,
     14061, 63949, 16276, 8075, 396982
   ]);
-  
+
   if (blockedASNs.has(asn)) {
-    return new Response('Access denied', { 
+    return new Response('Access denied', {
       status: 403,
       headers: securityHeaders
     });
@@ -52,7 +52,7 @@ export async function securityMiddleware(request, env) {
   // Country filtering with Set for better performance
   const allowedCountries = new Set(['US', 'CA', 'GB', 'UK', 'AU', 'DE', 'NZ']);
   if (!allowedCountries.has(country)) {
-    return new Response('Service not available in your region', { 
+    return new Response('Service not available in your region', {
       status: 451,
       headers: securityHeaders
     });
@@ -77,6 +77,6 @@ export async function securityMiddleware(request, env) {
     expirationTtl: 60
   });
 
-  // Continue to the next middleware by returning null
+  // If all checks pass, do not block; let the request continue to the next handler
   return null;
 }
