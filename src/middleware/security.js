@@ -60,7 +60,7 @@ export async function securityMiddleware(request, env) {
 
   // Enhanced rate limiting with atomic operations
   const rateLimitKey = `rate_${visitorId}`;
-  const { value } = await env.AIQ_VISITORS.getWithMetadata(rateLimitKey);
+  const { value } = await env.AIQ_VISITORS.getWithMetadata(rateLimitKey) || { value: null };
   const currentCount = value ? parseInt(value, 10) : 0;
 
   if (currentCount > 30) {
@@ -77,9 +77,6 @@ export async function securityMiddleware(request, env) {
     expirationTtl: 60
   });
 
-  // Add security headers to successful requests
-  return new Response(null, {
-    status: 200,
-    headers: securityHeaders
-  });
+  // Continue to the next middleware by returning null
+  return null;
 }
