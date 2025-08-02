@@ -1,10 +1,12 @@
-/**
- * Enhanced security middleware for AIQBrain landing page
- * Handles IP filtering, bot detection, rate limiting, and security headers
- * Optimized for performance and reduced false positives
+/****
+ * Set RATE_LIMIT_MAX in wrangler.toml [vars] or [env.production.vars] to control max requests per minute.
+ * Example:
+ * [vars]
+ * RATE_LIMIT_MAX = "60"
  */
 export async function securityMiddleware(request, env) {
   const { cf } = request;
+  // Rate limiting: configurable via env.RATE_LIMIT_MAX (default: 30 requests/min)
   const clientIP = request.headers.get('cf-connecting-ip') || '';
   const country = cf.country || '';
   const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
@@ -64,7 +66,8 @@ export async function securityMiddleware(request, env) {
   const { value } = await env.AIQ_VISITORS.getWithMetadata(rateLimitKey) || { value: null };
   const currentCount = value ? parseInt(value, 10) : 0;
 
-  if (currentCount > 30) {
+  const rateLimitMax = parseInt(env.RATE_LIMIT_MAX, 10) || 30;
+  if (currentCount > rateLimitMax) {
     return new Response('Too many requests', {
       status: 429,
       headers: {
