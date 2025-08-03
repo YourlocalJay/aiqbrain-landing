@@ -8,7 +8,8 @@ kv_namespaces = [
   { binding = "AIQ_VISITORS", id = "28d78ba9bada415489c28bdf16b88f50" }
 ]
 routes = [
-  { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" }
+  { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" },
+  { pattern = "trkr.aiqbrain.com/*", zone_name = "aiqbrain.com" }
 ]
 
 [env.production.vars]
