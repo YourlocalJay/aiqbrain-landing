@@ -732,7 +732,7 @@ async function logOpsecAccess(env, metadata) {
   try {
     await env.ANALYTICS_KV.put(logKey, JSON.stringify(logEntry), {
       expirationTtl: 86400 * 90 // 90 days retention
-    };
+    });
   } catch (error) {
     console.warn('OPSEC access logging failed:', error.message);
     throw error;

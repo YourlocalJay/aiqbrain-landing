@@ -345,7 +345,7 @@ function formatTimeRemaining(ms) {
 
   if (hours > 24) {
     const days = Math.floor(hours / 24);
-    return \`\${days}d \${hours % 24}h\`;
+    return `${days}d ${hours % 24}h`;
   }
-  return \`\${hours}h \${minutes}m\`;
+  return `${hours}h ${minutes}m`;
 }
