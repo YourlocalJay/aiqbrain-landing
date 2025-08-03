@@ -1,6 +1,8 @@
 /**
- * Analytics utilities for AIQBrain
- * Centralizes tracking functionality and integrates with Google Tag Manager
+ * AIQBrain Analytics (Plausible-first)
+ * Centralized analytics utilities. Plausible is the source of truth; GTM is fallback.
+ * All event payloads use snake_case. Handles event deduplication.
+ * Brand style and compliance by AIQBrain guidelines.
  */
 
 /**
@@ -10,12 +12,22 @@
 export function initAnalytics() {
   // Initialize dataLayer for Google Tag Manager if not already defined
   window.dataLayer = window.dataLayer || [];
-  
+
   // Track page view on initialization
   trackPageView();
-  
+
   // Set up scroll depth tracking
   setupScrollTracking();
+
+  // Ensure outbound link and download tracking is initialized (Plausible best practice)
+  if (typeof window.plausible === 'function') {
+    try {
+      window.plausible('Outbound Link: Click', { props: {} }); // dummy fire to ensure enabled
+      window.plausible('File Download', { props: {} });
+    } catch (error) {
+      console.warn('Plausible outbound/download tracking init error:', error);
+    }
+  }
 }
 
 /**
@@ -24,30 +36,68 @@ export function initAnalytics() {
  * @param {Object} eventData - Additional data to include with the event
  * @returns {void}
  */
+const _eventDeduplicationWindowMs = 750;
+let _recentEvents = [];
+
+function toSnakeCase(str) {
+  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`).replace(/^_/, '');
+}
+
+function keysToSnakeCase(obj) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
+  const out = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const snakeKey = toSnakeCase(key);
+      out[snakeKey] = keysToSnakeCase(obj[key]);
+    }
+  }
+  return out;
+}
+
 export function trackEvent(eventName, eventData = {}) {
-  // Add timestamp
+  // Deduplicate rapid events (by eventName + stringified data)
+  const now = Date.now();
+  const eventKey = eventName + ':' + JSON.stringify(eventData);
+  _recentEvents = _recentEvents.filter(e => now - e.ts < _eventDeduplicationWindowMs);
+  if (_recentEvents.some(e => e.key === eventKey)) {
+    // Deduplicated: skip
+    return;
+  }
+  _recentEvents.push({ key: eventKey, ts: now });
+
+  // Construct snake_case payload (for Plausible consistency)
+  const snakeData = keysToSnakeCase(eventData);
   const eventWithTimestamp = {
-    ...eventData,
+    ...snakeData,
     timestamp: new Date().toISOString()
   };
-  
-  // Send to Google Tag Manager
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: eventName,
-      ...eventWithTimestamp
-    });
-  }
-  
-  // Send to Plausible (if available)
+
+  // Plausible is primary analytics system
+  let plausibleError = null;
   if (typeof window.plausible === 'function') {
     try {
       window.plausible(eventName, { props: eventWithTimestamp });
     } catch (error) {
-      console.error('Plausible tracking error:', error);
+      plausibleError = error;
+      console.warn('Plausible tracking error:', error);
     }
   }
-  
+
+  // Fallback to GTM/dataLayer if present
+  if (!window.plausible || plausibleError) {
+    if (window.dataLayer) {
+      try {
+        window.dataLayer.push({
+          event: eventName,
+          ...eventWithTimestamp
+        });
+      } catch (err) {
+        console.warn('GTM/dataLayer push error:', err);
+      }
+    }
+  }
+
   // Send to server-side analytics
   try {
     fetch('/api/analytics', {
@@ -60,9 +110,11 @@ export function trackEvent(eventName, eventData = {}) {
         data: eventWithTimestamp
       }),
       keepalive: true
-    }).catch(err => console.error('Server analytics error:', err));
+    }).catch(err => {
+      console.warn('Server analytics (network) error:', err);
+    });
   } catch (error) {
-    console.error('Failed to send server-side analytics:', error);
+    console.warn('Failed to send server-side analytics:', error);
   }
 }
 
@@ -79,7 +131,6 @@ export function trackPageView(additionalData = {}) {
     referrer: document.referrer,
     ...additionalData
   };
-  
   trackEvent('page_view', pageData);
 }
 
@@ -107,12 +158,12 @@ function setupScrollTracking() {
     75: false,
     100: false
   };
-  
+
   window.addEventListener('scroll', () => {
     const scrollPosition = window.scrollY;
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercentage = (scrollPosition / totalHeight) * 100;
-    
+
     Object.keys(scrollDepthTriggered).forEach(depth => {
       if (!scrollDepthTriggered[depth] && scrollPercentage >= parseInt(depth)) {
         scrollDepthTriggered[depth] = true;
@@ -134,7 +185,7 @@ function setupScrollTracking() {
  */
 export function trackElementClicks(selector, eventName, dataCallback = null) {
   const elements = document.querySelectorAll(selector);
-  
+
   elements.forEach(element => {
     element.addEventListener('click', (event) => {
       const baseData = {
@@ -142,9 +193,9 @@ export function trackElementClicks(selector, eventName, dataCallback = null) {
         element_type: element.tagName.toLowerCase(),
         page: window.location.pathname
       };
-      
+
       const additionalData = dataCallback ? dataCallback(element, event) : {};
-      
+
       trackEvent(eventName, {
         ...baseData,
         ...additionalData
@@ -152,3 +203,7 @@ export function trackElementClicks(selector, eventName, dataCallback = null) {
     });
   });
 }
+
+// To add custom event flows (e.g., vault unlock, persona run, affiliate click),
+// use trackEvent('custom_event_name', { ...props });
+// Example: trackEvent('vault_access', { user_id, vault_id, source: 'reddit' });
