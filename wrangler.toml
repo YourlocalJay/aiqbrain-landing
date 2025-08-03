@@ -8,8 +8,8 @@ kv_namespaces = [
 ]
 
 [vars]
-PLAUSIBLE_API_KEY = ""
-WEBHOOK_SECRET = ""
+PLAUSIBLE_API_KEY = "0Nk1YoUc7iG-QTpFhv6WgjHru51t3cwXiYJMtVZMHISg7U91KfrNytmh7ZJI4VEC"
+WEBHOOK_SECRET = "3c9381b73fd684c7f88a848d757a81647521b09bd43f2e9098d04bfcbe076e9e"
 WEBHOOK_URL = "https://api.aiqbrain.com/webhooks/events"
 GEO_ROUTING_ENABLED = "true"
 TIME_ROUTING_ENABLED = "true"
@@ -21,6 +21,9 @@ routes = [
 ]
 
 [env.production.vars]
+PLAUSIBLE_API_KEY = "0Nk1YoUc7iG-QTpFhv6WgjHru51t3cwXiYJMtVZMHISg7U91KfrNytmh7ZJI4VEC"
+WEBHOOK_SECRET = "3c9381b73fd684c7f88a848d757a81647521b09bd43f2e9098d04bfcbe076e9e"
+WEBHOOK_URL = "https://api.aiqbrain.com/webhooks/events"
 ENVIRONMENT = "production"
 DEBUG_MODE = "false"
 
