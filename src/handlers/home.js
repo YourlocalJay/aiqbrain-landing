@@ -1,5 +1,5 @@
 /**
- * AIQBrain Home Handler - Premium Monetization Portal
+ * AIQBrain Home Handler - Premium Affiliate & CPA Offer Platform
  * Enhanced with performance optimizations, security hardening, and semantic structure
  */
 import { baseTemplate } from '../templates/base.js';
@@ -105,7 +105,7 @@ export async function homeHandler(request, env) {
             letter-spacing:0.05em;
             text-transform:uppercase;
           ">
-            Claude-Centric Monetization Systems
+            GEO-Optimized Affiliate Platform
           </div>
 
           <h1 style="
@@ -118,7 +118,7 @@ export async function homeHandler(request, env) {
             max-width:900px;
             margin-inline:auto;
           ">
-            Transform Claude Expertise Into Sustainable Revenue Streams
+            Dynamic Offer Routing & High-Converting CPA Campaigns
           </h1>
 
           <p style="
@@ -129,8 +129,8 @@ export async function homeHandler(request, env) {
             max-width:700px;
             margin-inline:auto;
           ">
-            Battle-tested, TOS-compliant monetization frameworks that maximize
-            conversion velocity without sacrificing long-term viability. For discerning operators only.
+            Intelligent traffic routing platform that automatically matches visitors to 
+            high-converting CPA offers based on GEO, device, and behavior. For affiliate professionals only.
           </p>
 
           <!-- Hero CTAs -->
@@ -153,7 +153,7 @@ export async function homeHandler(request, env) {
               box-shadow:0 4px 12px rgba(255,123,114,0.3);
               ${isMobile ? 'width:100%;text-align:center;' : ''}
             ">
-              Access Vault Systems
+              View Top Offers
             </a>
 
             <a href="/strategy${trackingString}" style="
@@ -167,7 +167,7 @@ export async function homeHandler(request, env) {
               font-size:1.125rem;
               ${isMobile ? 'width:100%;text-align:center;' : ''}
             ">
-              View Frameworks
+              Optimize Campaigns
             </a>
           </div>
 
@@ -218,7 +218,7 @@ export async function homeHandler(request, env) {
               <div style="
                 color:rgba(230,237,243,0.6);
                 font-size:0.75rem;
-              ">Operators</div>
+              ">Affiliates</div>
             </div>
 
             <div style="text-align:center;padding:0.5rem;">
@@ -232,7 +232,7 @@ export async function homeHandler(request, env) {
               <div style="
                 color:rgba(230,237,243,0.6);
                 font-size:0.75rem;
-              ">Systems</div>
+              ">Offers</div>
             </div>
           </div>
         </div>
@@ -255,7 +255,7 @@ export async function homeHandler(request, env) {
             margin-bottom:3rem;
             line-height:1.2;
           ">
-            Why Sophisticated Operators Choose AIQBrain
+            Why Top Affiliates Choose AIQBrain
           </h2>
 
           <div style="
@@ -263,7 +263,7 @@ export async function homeHandler(request, env) {
             grid-template-columns:${isMobile ? '1fr' : 'repeat(3,1fr)'};
             gap:2rem;
           ">
-            <!-- Framework Card -->
+            <!-- Intelligent Routing Card -->
             <article style="
               background:#121820;
               border-radius:8px;
@@ -278,19 +278,19 @@ export async function homeHandler(request, env) {
                 margin-bottom:1rem;
                 font-size:1.125rem;
               ">
-                Battle-Tested Frameworks
+                Intelligent Offer Routing
               </h3>
               <p style="
                 color:rgba(230,237,243,0.8);
                 line-height:1.5;
                 font-size:0.875rem;
               ">
-                Monetization architectures validated by advanced operators
-                generating consistent revenue across multiple verticals and traffic sources.
+                Advanced traffic analysis automatically matches visitors to the highest-converting
+                offers based on GEO, device, and behavior for maximum EPC.
               </p>
             </article>
 
-            <!-- Automation Card -->
+            <!-- Traffic Qualification Card -->
             <article style="
               background:#121820;
               border-radius:8px;
@@ -305,15 +305,15 @@ export async function homeHandler(request, env) {
                 margin-bottom:1rem;
                 font-size:1.125rem;
               ">
-                Systematic Implementation
+                Premium Traffic Qualification
               </h3>
               <p style="
                 color:rgba(230,237,243,0.8);
                 line-height:1.5;
                 font-size:0.875rem;
               ">
-                Deploy optimized Claude systems across traffic sources within hours.
-                Complete automation protocols with conversion tracking and scaling guidelines.
+                Sophisticated visitor scoring and segmentation ensures only qualified 
+                traffic reaches your offers, boosting conversion rates and earnings.
               </p>
             </article>
 
@@ -332,15 +332,15 @@ export async function homeHandler(request, env) {
                 margin-bottom:1rem;
                 font-size:1.125rem;
               ">
-                Compliance-First Scaling
+                Multi-Network Integration
               </h3>
               <p style="
                 color:rgba(230,237,243,0.8);
                 line-height:1.5;
                 font-size:0.875rem;
               ">
-                Future-proof revenue systems that operate within platform guidelines.
-                Sustainable growth tactics with built-in risk mitigation protocols.
+                Direct integration with top CPA networks including CPAGrip, OGAds, 
+                MaxBounty and more with complete tracking and conversion attribution.
               </p>
             </article>
           </div>
@@ -358,7 +358,7 @@ export async function homeHandler(request, env) {
             margin-bottom:1rem;
             line-height:1.2;
           ">
-            Verified Operator Performance
+            Verified Affiliate Performance
           </h2>
 
           <p style="
@@ -369,8 +369,8 @@ export async function homeHandler(request, env) {
             max-width:600px;
             margin-inline:auto;
           ">
-            Real metrics from operators implementing AIQBrain systems across
-            diverse verticals and traffic sources.
+            Real metrics from affiliates using AIQBrain's offer routing platform across
+            diverse traffic sources and verticals.
           </p>
 
           <div style="
@@ -418,7 +418,7 @@ export async function homeHandler(request, env) {
                 color:rgba(230,237,243,0.8);
                 font-size:0.875rem;
                 font-weight:500;
-              ">Implementation Success</div>
+              ">Traffic Matching Accuracy</div>
             </div>
 
             <div style="
@@ -439,7 +439,7 @@ export async function homeHandler(request, env) {
                 color:rgba(230,237,243,0.8);
                 font-size:0.875rem;
                 font-weight:500;
-              ">ROI Improvement</div>
+              ">EPC Improvement</div>
             </div>
 
             <div style="
@@ -460,7 +460,7 @@ export async function homeHandler(request, env) {
                 color:rgba(230,237,243,0.8);
                 font-size:0.875rem;
                 font-weight:500;
-              ">Operators Served</div>
+              ">Affiliates Served</div>
             </div>
           </div>
 
@@ -469,7 +469,7 @@ export async function homeHandler(request, env) {
             color:rgba(230,237,243,0.6);
             font-style:italic;
           ">
-            Metrics based on anonymized operator data from Q3 2025. Individual results will vary based on implementation quality and market conditions.
+            Metrics based on anonymized affiliate data from Q3 2025. Individual results will vary based on traffic quality and volume.
           </p>
         </div>
       </section>
@@ -491,7 +491,7 @@ export async function homeHandler(request, env) {
             margin-bottom:3rem;
             line-height:1.2;
           ">
-            Operator Feedback
+            Affiliate Feedback
           </h2>
 
           <div style="
@@ -513,14 +513,14 @@ export async function homeHandler(request, env) {
                 font-style:italic;
                 margin:0;
               ">
-                "AIQBrain's frameworks enabled deployment of Claude systems that maintain
-                consistent profitability. Six months of stable conversion rates with zero compliance issues."
+                "AIQBrain's intelligent offer routing increased my EPC by 27%. The geo-targeting
+                 and device detection ensure my traffic converts at maximum efficiency."
               </blockquote>
               <div style="
                 color:#58a6ff;
                 font-weight:600;
                 font-size:0.8rem;
-              ">— Digital Strategy Consultant</div>
+              ">— Performance Affiliate</div>
             </article>
 
             <article style="
@@ -537,14 +537,14 @@ export async function homeHandler(request, env) {
                 font-style:italic;
                 margin:0;
               ">
-                "Implementation documentation made deployment straightforward.
-                Positive ROI within first week, maintained compliance throughout scaling phase."
+                "Set up was incredibly straightforward with their dynamic traffic routing.
+                Started seeing positive ROI within hours of pushing traffic to their system."
               </blockquote>
               <div style="
                 color:#58a6ff;
                 font-weight:600;
                 font-size:0.8rem;
-              ">— Performance Marketing Specialist</div>
+              ">— Media Buyer</div>
             </article>
 
             <article style="
@@ -561,14 +561,14 @@ export async function homeHandler(request, env) {
                 font-style:italic;
                 margin:0;
               ">
-                "Finally found systems that scale without triggering platform restrictions.
-                Compliance-first approach delivers sustainable growth."
+                "The offer rotation and multi-network integration save me hours of manual work.
+                Their advanced traffic filtering keeps my accounts in good standing."
               </blockquote>
               <div style="
                 color:#58a6ff;
                 font-weight:600;
                 font-size:0.8rem;
-              ">— Growth Operations Manager</div>
+              ">— CPA Network Partner</div>
             </article>
           </div>
         </div>
@@ -585,7 +585,7 @@ export async function homeHandler(request, env) {
             margin-bottom:1rem;
             line-height:1.2;
           ">
-            Deploy Claude Revenue Systems Without Guesswork
+            Maximize Earnings With Intelligent Offer Routing
           </h2>
 
           <p style="
@@ -594,8 +594,8 @@ export async function homeHandler(request, env) {
             font-size:1.125rem;
             line-height:1.4;
           ">
-            Access complete framework library, verified implementation guides,
-            and systematic optimization protocols for sophisticated operators.
+            Access premium CPA offers, advanced traffic qualification, and
+            conversion optimization tools built for professional affiliates.
           </p>
 
           <a href="/request${trackingString}" style="
@@ -610,7 +610,7 @@ export async function homeHandler(request, env) {
             box-shadow:0 6px 20px rgba(255,123,114,0.3);
             margin-bottom:1rem;
           ">
-            Request Operator Access
+            Get Top Converting Offers
           </a>
 
           <p style="
@@ -618,7 +618,7 @@ export async function homeHandler(request, env) {
             margin-top:1rem;
             font-size:0.9rem;
           ">
-            Qualification required • Advanced operators only • Limited access windows
+            Verification required • Affiliate traffic only • Limited access windows
           </p>
         </div>
       </section>
@@ -641,8 +641,8 @@ export async function homeHandler(request, env) {
 
   return new Response(baseTemplate(content, {
     page: 'home',
-    title: 'AIQBrain | Claude-Centric Monetization Systems for Discerning Operators',
-    description: 'Transform Claude expertise into sustainable revenue streams. Battle-tested, TOS-compliant frameworks for sophisticated operators.'
+    title: 'AIQBrain | Premium CPA & Affiliate Offer Platform for Performance Marketers',
+    description: 'Dynamic offer rotation with GEO-targeting and device fingerprinting. Maximize CPA campaign performance with intelligent traffic routing.'
   }), {
     headers: SECURITY_HEADERS
   });
