@@ -30,7 +30,7 @@ export function checkOperatorAccess(user, accessLevel = 'basic') {
   const userLevel = user.operatorLevel || 'basic';
 
   // Validate the requested access level
-  if (!Object.keys(OPERATOR_LEVELS).includes(accessLevel) {
+  if (!Object.keys(OPERATOR_LEVELS).includes(accessLevel)) {
     // Check if it's a specific permission request
     const allPermissions = Object.values(OPERATOR_LEVELS).flat();
     if (!allPermissions.includes(accessLevel)) {
