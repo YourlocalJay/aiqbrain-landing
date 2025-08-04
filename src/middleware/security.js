@@ -61,25 +61,32 @@ export async function securityMiddleware(request, env) {
     });
   }
 
-  // Enhanced rate limiting with atomic operations
+  // Enhanced rate limiting with atomic operations and env check
   const rateLimitKey = `rate_${visitorId}`;
-  const { value } = await env.AIQ_VISITORS.getWithMetadata(rateLimitKey) || { value: null };
-  const currentCount = value ? parseInt(value, 10) : 0;
+  let currentCount = 0;
+  let rateLimitMax = parseInt(env.RATE_LIMIT_MAX, 10) || 30;
 
-  const rateLimitMax = parseInt(env.RATE_LIMIT_MAX, 10) || 30;
-  if (currentCount > rateLimitMax) {
-    return new Response('Too many requests', {
-      status: 429,
-      headers: {
-        ...securityHeaders,
-        'Retry-After': '60'
-      }
+  if (env.AIQ_VISITORS && typeof env.AIQ_VISITORS.getWithMetadata === "function") {
+    const { value } = await env.AIQ_VISITORS.getWithMetadata(rateLimitKey) || { value: null };
+    currentCount = value ? parseInt(value, 10) : 0;
+
+    if (currentCount > rateLimitMax) {
+      return new Response('Too many requests', {
+        status: 429,
+        headers: {
+          ...securityHeaders,
+          'Retry-After': '60'
+        }
+      });
+    }
+
+    await env.AIQ_VISITORS.put(rateLimitKey, (currentCount + 1).toString(), {
+      expirationTtl: 60
     });
+  } else {
+    // KV not available, skip rate limiting
+    console.warn('AIQ_VISITORS KV namespace is not available – skipping rate limiting.');
   }
-
-  await env.AIQ_VISITORS.put(rateLimitKey, (currentCount + 1).toString(), {
-    expirationTtl: 60
-  });
 
   // If all checks pass, do not block; let the request continue to the next handler
   return null;

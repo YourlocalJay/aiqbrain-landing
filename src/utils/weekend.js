@@ -186,8 +186,34 @@ export function isExtendedWeekendHours(timezone = 'UTC') {
   }
 }
 
+
+/**
+ * Get dynamic weekend content, used for strategy pages.
+ * @returns {string}
+ */
+export function getWeekendContent() {
+  return "🚀 AIQBrain Weekend Monetization Unlocked: Special high-ROI tactics, priority CPA drops, and vault bonuses are active every Friday 6pm–Sunday midnight. Take action during this window for fastest gains. Operators only!";
+}
+
+/**
+ * Get time remaining until next weekend as human-readable string.
+ * @param {string} [timezone='UTC']
+ * @returns {string}
+ */
+export function getTimeUntilNext(timezone = 'UTC') {
+  const t = getTimeUntilNextWeekend(timezone);
+  if (!t || (t.days === 0 && t.hours === 0 && t.minutes === 0)) return "Now";
+  let s = "";
+  if (t.days) s += `${t.days}d `;
+  if (t.hours) s += `${t.hours}h `;
+  if (t.minutes) s += `${t.minutes}m`;
+  return s.trim();
+}
+
 export default {
   isWeekendActive,
   getTimeUntilNextWeekend,
-  isExtendedWeekendHours
+  isExtendedWeekendHours,
+  getWeekendContent,
+  getTimeUntilNext
 };
