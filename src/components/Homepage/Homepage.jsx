@@ -1,36 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const Homepage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [fingerprint, setFingerprint] = useState(null);
-  const [geoData, setGeoData] = useState(null);
   const [qualificationScore, setQualificationScore] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Enhanced scroll tracking with throttling
+  // Throttled scroll handler
   const handleScroll = useCallback(() => {
     const scrollThreshold = document.documentElement.scrollHeight * 0.4;
     setIsScrolled(window.scrollY > scrollThreshold);
   }, []);
 
-  // Comprehensive visitor fingerprinting
-  const generateFingerprint = useCallback(async () => {
+  // Secure qualification scoring
+  const assessQualification = useCallback(() => {
     try {
-      // Initialize FingerprintJS Pro (replace with your actual public key)
-      const fp = await FingerprintJS.load({ apiKey: 'your_fpjs_public_key' });
-      const { visitorId, confidence } = await fp.get();
-      
-      setFingerprint({
-        visitorId,
-        confidence: Math.round(confidence.score * 100)
-      });
-
-      // Basic qualification scoring
       let score = 0;
       
-      // Device scoring
+      // Device scoring (no fingerprinting)
       const isMobile = window.innerWidth < 768;
       const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
       score += isMobile ? 1 : isTablet ? 2 : 3;
@@ -39,55 +26,27 @@ const Homepage = () => {
       const userAgent = navigator.userAgent;
       if (!/bot|crawler|spider|headless/i.test(userAgent)) score += 2;
 
-      setQualificationScore(score);
+      // Referrer scoring
+      if (document.referrer && document.referrer.includes('aiqbrain.com')) {
+        score += 1;
+      }
+
+      setQualificationScore(Math.min(score, 10)); // Cap at 10
       setIsLoading(false);
     } catch (error) {
-      console.error('Fingerprinting error:', error);
-      setQualificationScore(1); // Fallback score
+      console.error('Assessment error:', error);
+      setQualificationScore(1);
       setIsLoading(false);
-    }
-  }, []);
-
-  // Geo-location detection
-  const fetchGeoData = useCallback(async () => {
-    try {
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
-      setGeoData({
-        country: data.country_name,
-        region: data.region,
-        city: data.city,
-        timezone: data.timezone,
-        isEU: Boolean(data.in_eu)
-      });
-
-      // Add geo-based scoring
-      setQualificationScore(prev => {
-        const targetCountries = ['United States', 'Canada', 'United Kingdom', 'Germany', 'Australia'];
-        return prev + (targetCountries.includes(data.country_name) ? 2 : 1;
-      });
-    } catch (error) {
-      console.error('Geo detection error:', error);
     }
   }, []);
 
   // Initialize tracking
   useEffect(() => {
-    generateFingerprint();
-    fetchGeoData();
+    assessQualification();
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Track initial page view
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: 'pageView',
-      pagePath: window.location.pathname,
-      visitorType: fingerprint ? 'returning' : 'new',
-      qualificationScore
-    });
-
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [generateFingerprint, fetchGeoData, handleScroll, fingerprint, qualificationScore]);
+  }, [assessQualification, handleScroll]);
 
   // Dynamic CTA based on qualification score
   const renderPrimaryCTA = () => {
@@ -95,7 +54,8 @@ const Homepage = () => {
       return (
         <a 
           href="/vault" 
-          className="cta-premium bg-gradient-to-r from-[#ff7b72] to-[#ff4d4d] hover:shadow-[0_0_15px_rgba(255,123,114,0.6)]"
+          className="cta-premium bg-gradient-to-r from-coral to-coral-dark hover:shadow-coral-glow"
+          data-analytics="premium-cta"
         >
           Unlock Premium Vault
         </a>
@@ -104,7 +64,8 @@ const Homepage = () => {
     return (
       <a 
         href="/strategy" 
-        className="cta-basic bg-[#58a6ff] hover:bg-[#3d8eff] hover:shadow-[0_0_15px_rgba(88,166,255,0.4)]"
+        className="cta-basic bg-blue hover:bg-blue-dark hover:shadow-blue-glow"
+        data-analytics="basic-cta"
       >
         Explore Strategies
       </a>
@@ -113,8 +74,8 @@ const Homepage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0e12]">
-        <div className="loader animate-spin rounded-full border-t-2 border-b-2 border-[#ff7b72] h-12 w-12"></div>
+      <div className="min-h-screen flex items-center justify-center bg-dark">
+        <div className="loader animate-spin rounded-full border-t-2 border-b-2 border-coral h-12 w-12"></div>
       </div>
     );
   }
@@ -125,200 +86,36 @@ const Homepage = () => {
         <title>AIQBrain | Claude-Centric Monetization Systems</title>
         <meta name="description" content="Advanced monetization frameworks for Claude operators with premium traffic routing and conversion optimization systems" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <link rel="preconnect" href="https://fpjs.io" />
-        <link rel="preconnect" href="https://ipapi.co" />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href="https://aiqbrain.com/vault" />
       </Head>
 
-      <div className="bg-[#0a0e12] min-h-screen text-[#e6edf3] relative overflow-x-hidden">
+      <div className="bg-dark min-h-screen text-light relative overflow-x-hidden">
         {/* Neural network background pattern */}
-        <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM1OGE2ZmYiIHN0cm9rZS13aWR0aD0iMC41Ij48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjEwIiByPSIxLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjQwIiByPSIxLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIxLjUiLz48bGluZSB4MT0iMjUiIHkxPSIyNSIgeDI9IjEwIiB5Mj0iMTAiLz48bGluZSB4MT0iMjUiIHkxPSIyNSIgeDI9IjQwIiB5Mj0iMTAiLz48bGluZSB4MT0iMjUiIHkxPSIyNSIgeDI9IjEwIiB5Mj0iNDAiLz48bGluZSB4MT0iMjUiIHkxPSIyNSIgeDI9IjQwIiB5Mj0iNDAiLz48L2c+PC9zdmc+')] bg-[length:50px_50px]"></div>
+        <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-neural-pattern"></div>
         
-        {/* Header with auth check */}
-        <header className="container mx-auto py-6 px-4 flex justify-between items-center relative z-10">
-          <div className="flex items-center">
-            <div className="w-8 h-8 mr-2 bg-[#ff7b72] rounded-md flex items-center justify-center">
-              <span className="font-bold text-[#0a0e12]">AQ</span>
-            </div>
-            <h1 className="text-xl font-bold font-['Space_Mono']">AIQBrain</h1>
-          </div>
-          
-          <nav className="hidden md:block">
-            <ul className="flex space-x-6">
-              <li><a href="/vault" className="nav-link hover:text-[#ff7b72]">Vault</a></li>
-              <li><a href="/strategy" className="nav-link hover:text-[#ff7b72]">Strategy</a></li>
-              <li><a href="/results" className="nav-link hover:text-[#ff7b72]">Results</a></li>
-              <li>
-                <a href="/request" className="nav-cta bg-[#ff7b72] hover:shadow-[0_0_12px_rgba(255,123,114,0.5)]">
-                  Request Access
-                </a>
-              </li>
-            </ul>
-          </nav>
-          
-          <button className="md:hidden text-[#e6edf3]">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </header>
+        {/* Secure header */}
+        <SecureHeader qualificationScore={qualificationScore} />
 
         <main>
           {/* Hero Section */}
-          <section className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-            <div className="max-w-3xl">
-              <h1 className="font-['Space_Mono'] font-bold text-4xl md:text-5xl leading-tight mb-6">
-                <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-[#ff7b72] to-[#ff4d4d]">
-                  Claude Monetization Systems
-                </span> for Strategic Operators
-              </h1>
-              <p className="text-lg mb-8 text-[#e6edf3]/90">
-                Advanced traffic routing and conversion frameworks that leverage Claude's capabilities while maintaining strict platform compliance and long-term viability.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                {renderPrimaryCTA()}
-                <a 
-                  href="/request" 
-                  className="cta-secondary border border-[#58a6ff] text-[#58a6ff] hover:bg-[rgba(88,166,255,0.1)]"
-                >
-                  Request Access
-                </a>
-              </div>
-              
-              {/* Trust indicators */}
-              <div className="mt-12 flex flex-wrap items-center gap-6 text-sm text-[#e6edf3]/70">
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-2 text-[#58a6ff]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
-                  </svg>
-                  <span>100% Platform Compliant</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-2 text-[#58a6ff]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"></path>
-                  </svg>
-                  <span>18-37% Conversion Uplift</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-2 text-[#58a6ff]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd"></path>
-                  </svg>
-                  <span>Application-Only Access</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
+          <HeroSection renderPrimaryCTA={renderPrimaryCTA} qualificationScore={qualificationScore} />
+          
           {/* Dynamic Content Section */}
-          <section className="bg-gradient-to-b from-[#121820] to-[#0a0e12] py-16">
-            <div className="container mx-auto px-4">
-              <h2 className="font-['Space_Mono'] font-bold text-3xl mb-12 text-center">
-                {qualificationScore >= 5 ? 
-                  "You Qualify For Advanced Systems" : 
-                  "Core Monetization Frameworks"}
-              </h2>
-              
-              <div className="grid md:grid-cols-3 gap-8">
-                {/* Dynamic card based on qualification */}
-                {qualificationScore >= 5 ? (
-                  <>
-                    <SystemCard 
-                      title="Premium Routing" 
-                      description="Advanced multi-signal traffic routing with machine learning optimization" 
-                      stat="31%"
-                      statLabel="ROI Increase"
-                      color="from-[#ff7b72] to-[#ff4d4d]"
-                    />
-                    <SystemCard 
-                      title="Geo-Targeted Offers" 
-                      description="Automated geo-specific offer presentation with dynamic fallbacks" 
-                      stat="42%"
-                      statLabel="Conversion Boost"
-                      color="from-[#58a6ff] to-[#3d8eff]"
-                    />
-                    <SystemCard 
-                      title="Elite Compliance" 
-                      description="Enterprise-level compliance architecture with automated audits" 
-                      stat="100%"
-                      statLabel="Platform Safety"
-                      color="from-[#2ea043] to-[#238636]"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <SystemCard 
-                      title="Basic Routing" 
-                      description="Essential traffic qualification and routing fundamentals" 
-                      stat="18%"
-                      statLabel="Avg. Uplift"
-                      color="from-[#58a6ff] to-[#3d8eff]"
-                    />
-                    <SystemCard 
-                      title="Core Frameworks" 
-                      description="Proven monetization architectures with compliance guardrails" 
-                      stat="23%"
-                      statLabel="CR Increase"
-                      color="from-[#58a6ff] to-[#3d8eff]"
-                    />
-                    <SystemCard 
-                      title="Analytics Suite" 
-                      description="Conversion tracking and optimization diagnostics" 
-                      stat="27%"
-                      statLabel="CPA Reduction"
-                      color="from-[#58a6ff] to-[#3d8eff]"
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </section>
+          <DynamicContentSection qualificationScore={qualificationScore} />
 
           {/* Results Section */}
           <ResultsSection qualificationScore={qualificationScore} />
           
           {/* Access CTA */}
-          <section className="bg-gradient-to-r from-[#121820] to-[#0d1117] py-16 border-y border-[rgba(88,166,255,0.1)]">
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="font-['Space_Mono'] font-bold text-3xl mb-4">
-                {qualificationScore >= 7 ? 
-                  "You Pre-Qualify For Elite Access" : 
-                  "Request System Access"}
-              </h2>
-              <p className="max-w-2xl mx-auto mb-8">
-                AIQBrain maintains strict access controls to ensure community quality and system integrity.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
-                  href="/request" 
-                  className="cta-premium bg-gradient-to-r from-[#ff7b72] to-[#ff4d4d] hover:shadow-[0_0_15px_rgba(255,123,114,0.6)]"
-                >
-                  {qualificationScore >= 7 ? "Fast-Track Application" : "Begin Application"}
-                </a>
-                {qualificationScore >= 5 && (
-                  <a 
-                    href="/vault-preview" 
-                    className="cta-secondary border border-[#58a6ff] text-[#58a6ff] hover:bg-[rgba(88,166,255,0.1)]"
-                  >
-                    Preview Vault Contents
-                  </a>
-                )}
-              </div>
-              {qualificationScore >= 5 && (
-                <div className="mt-6 text-sm text-[#58a6ff] flex items-center justify-center">
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
-                  </svg>
-                  <span>Your qualification score: {qualificationScore}/10</span>
-                </div>
-              )}
-            </div>
-          </section>
+          <AccessCTASection qualificationScore={qualificationScore} />
         </main>
 
         {/* Sticky CTA */}
         <StickyCTA isScrolled={isScrolled} qualificationScore={qualificationScore} />
         
-        {/* Footer */}
-        <Footer />
+        {/* Secure Footer */}
+        <SecureFooter />
       </div>
     </>
   );
@@ -326,29 +123,212 @@ const Homepage = () => {
 
 // Component for system cards
 const SystemCard = ({ title, description, stat, statLabel, color }) => (
-  <div className={`bg-gradient-to-br ${color}/10 to-transparent rounded-lg p-6 border border-[rgba(88,166,255,0.1)] hover:border-[rgba(88,166,255,0.3)] transition-all duration-300 hover:translate-y-[-4px]`}>
-    <h3 className={`text-xl font-['Space_Mono'] font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r ${color}`}>
+  <div className={`bg-gradient-to-br ${color}-fade to-transparent rounded-lg p-6 border border-blue-border hover:border-blue-border-hover transition-all duration-300 hover:-translate-y-1`}>
+    <h3 className={`text-xl font-mono font-bold mb-3 text-gradient ${color}-gradient`}>
       {title}
     </h3>
-    <p className="mb-4 text-[#e6edf3]/80">{description}</p>
+    <p className="mb-4 text-light/80">{description}</p>
     <div className="flex items-center">
-      <span className={`text-2xl font-bold mr-2 bg-clip-text text-transparent bg-gradient-to-r ${color}`}>{stat}</span>
-      <span className="text-sm text-[#e6edf3]/60">{statLabel}</span>
+      <span className={`text-2xl font-bold mr-2 text-gradient ${color}-gradient`}>{stat}</span>
+      <span className="text-sm text-light/60">{statLabel}</span>
     </div>
   </div>
 );
 
-// Results section component
+// Secure Header Component
+const SecureHeader = ({ qualificationScore }) => (
+  <header className="container mx-auto py-6 px-4 flex justify-between items-center relative z-10">
+    <div className="flex items-center">
+      <div className="w-8 h-8 mr-2 bg-coral rounded-md flex items-center justify-center">
+        <span className="font-bold text-dark">AQ</span>
+      </div>
+      <h1 className="text-xl font-bold font-mono">AIQBrain</h1>
+    </div>
+    
+    <nav className="hidden md:block">
+      <ul className="flex space-x-6">
+        <li><SecureNavLink href="/vault">Vault</SecureNavLink></li>
+        <li><SecureNavLink href="/strategy">Strategy</SecureNavLink></li>
+        <li><SecureNavLink href="/results">Results</SecureNavLink></li>
+        <li>
+          <SecureNavButton href="/request">
+            {qualificationScore >= 5 ? "Priority Access" : "Request Access"}
+          </SecureNavButton>
+        </li>
+      </ul>
+    </nav>
+    
+    <button className="md:hidden text-light" aria-label="Mobile menu">
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </header>
+);
+
+// Secure Nav Link Component
+const SecureNavLink = ({ href, children }) => (
+  <li>
+    <a 
+      href={href} 
+      className="nav-link hover:text-coral transition-colors duration-200"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  </li>
+);
+
+// Secure Nav Button Component
+const SecureNavButton = ({ href, children }) => (
+  <a 
+    href={href}
+    className="nav-cta bg-coral hover:shadow-coral-glow transition-all duration-200"
+    rel="noopener noreferrer"
+  >
+    {children}
+  </a>
+);
+
+// Hero Section Component
+const HeroSection = ({ renderPrimaryCTA, qualificationScore }) => (
+  <section className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+    <div className="max-w-3xl">
+      <h1 className="font-mono font-bold text-4xl md:text-5xl leading-tight mb-6">
+        <span className="text-gradient coral-gradient">
+          Claude Monetization Systems
+        </span> for Strategic Operators
+      </h1>
+      <p className="text-lg mb-8 text-light/90">
+        Advanced traffic routing and conversion frameworks that leverage Claude's capabilities while maintaining strict platform compliance and long-term viability.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        {renderPrimaryCTA()}
+        <SecureSecondaryCTA href="/request">
+          Request Access
+        </SecureSecondaryCTA>
+      </div>
+      
+      {/* Trust indicators */}
+      <TrustIndicators />
+    </div>
+  </section>
+);
+
+// Trust Indicators Component
+const TrustIndicators = () => (
+  <div className="mt-12 flex flex-wrap items-center gap-6 text-sm text-light/70">
+    <TrustItem icon="check" text="100% Platform Compliant" />
+    <TrustItem icon="bolt" text="18-37% Conversion Uplift" />
+    <TrustItem icon="lock" text="Application-Only Access" />
+  </div>
+);
+
+// Trust Item Component
+const TrustItem = ({ icon, text }) => {
+  const iconPaths = {
+    check: "M5 13l4 4L19 7",
+    bolt: "M13 10V3L4 14h7v7l9-11h-7z",
+    lock: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+  };
+
+  return (
+    <div className="flex items-center">
+      <svg className="w-4 h-4 mr-2 text-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={iconPaths[icon]} />
+      </svg>
+      <span>{text}</span>
+    </div>
+  );
+};
+
+// Dynamic Content Section Component
+const DynamicContentSection = ({ qualificationScore }) => (
+  <section className="bg-gradient-to-b from-dark-secondary to-dark py-16">
+    <div className="container mx-auto px-4">
+      <h2 className="font-mono font-bold text-3xl mb-12 text-center">
+        {qualificationScore >= 5 ? 
+          "You Qualify For Advanced Systems" : 
+          "Core Monetization Frameworks"}
+      </h2>
+      
+      <div className="grid md:grid-cols-3 gap-8">
+        {qualificationScore >= 5 ? (
+          <>
+            <SystemCard 
+              title="Premium Routing" 
+              description="Advanced multi-signal traffic routing with machine learning optimization" 
+              stat="31%"
+              statLabel="ROI Increase"
+              color="coral"
+            />
+            <SystemCard 
+              title="Geo-Targeted Offers" 
+              description="Automated geo-specific offer presentation with dynamic fallbacks" 
+              stat="42%"
+              statLabel="Conversion Boost"
+              color="blue"
+            />
+            <SystemCard 
+              title="Elite Compliance" 
+              description="Enterprise-level compliance architecture with automated audits" 
+              stat="100%"
+              statLabel="Platform Safety"
+              color="green"
+            />
+          </>
+        ) : (
+          <>
+            <SystemCard 
+              title="Basic Routing" 
+              description="Essential traffic qualification and routing fundamentals" 
+              stat="18%"
+              statLabel="Avg. Uplift"
+              color="blue"
+            />
+            <SystemCard 
+              title="Core Frameworks" 
+              description="Proven monetization architectures with compliance guardrails" 
+              stat="23%"
+              statLabel="CR Increase"
+              color="blue"
+            />
+            <SystemCard 
+              title="Analytics Suite" 
+              description="Conversion tracking and optimization diagnostics" 
+              stat="27%"
+              statLabel="CPA Reduction"
+              color="blue"
+            />
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+);
+
+// Secure Secondary CTA Component
+const SecureSecondaryCTA = ({ href, children }) => (
+  <a 
+    href={href} 
+    className="cta-secondary border border-blue text-blue hover:bg-blue/10 transition-colors duration-200"
+    rel="noopener noreferrer"
+  >
+    {children}
+  </a>
+);
+
+// Results Section Component
 const ResultsSection = ({ qualificationScore }) => (
   <section className="container mx-auto px-4 py-16">
     <div className="flex flex-col md:flex-row gap-12 items-center">
       <div className="md:w-1/2">
-        <h2 className="font-['Space_Mono'] font-bold text-3xl mb-6">
+        <h2 className="font-mono font-bold text-3xl mb-6">
           {qualificationScore >= 5 ? 
             "Operator-Grade Performance Metrics" : 
             "Proven Monetization Results"}
         </h2>
-        <p className="mb-6">
+        <p className="mb-6 text-light/90">
           AIQBrain systems are designed for experienced operators who understand that sustainable monetization requires both strategic architecture and tactical execution.
         </p>
         <ul className="space-y-4">
@@ -359,33 +339,44 @@ const ResultsSection = ({ qualificationScore }) => (
             <ResultItem text="Premium: Machine learning optimization of routing paths" />
           )}
         </ul>
-        <div className="mt-8">
-          <a href="/results" className="text-[#58a6ff] font-semibold flex items-center group">
-            View detailed case studies
-            <svg className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </div>
+        <SecureTextLink href="/results">
+          View detailed case studies
+        </SecureTextLink>
       </div>
-      <div className="md:w-1/2 bg-[#121820] p-6 rounded-lg border border-[rgba(88,166,255,0.2)]">
+      <div className="md:w-1/2 bg-dark-secondary p-6 rounded-lg border border-blue-border">
         <ConversionFunnel qualificationScore={qualificationScore} />
       </div>
     </div>
   </section>
 );
 
-// Result item component
+// Secure Text Link Component
+const SecureTextLink = ({ href, children }) => (
+  <div className="mt-8">
+    <a 
+      href={href} 
+      className="text-blue font-semibold flex items-center group transition-colors duration-200"
+      rel="noopener noreferrer"
+    >
+      {children}
+      <svg className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </a>
+  </div>
+);
+
+// Result Item Component
 const ResultItem = ({ text }) => (
   <li className="flex items-start">
-    <svg className="w-5 h-5 text-[#ff7b72] mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-5 h-5 text-coral mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
     </svg>
-    <span>{text}</span>
+    <span className="text-light/90">{text}</span>
   </li>
 );
 
-// Conversion funnel component
+// Conversion Funnel Component
 const ConversionFunnel = ({ qualificationScore }) => {
   const funnelData = qualificationScore >= 5 ? 
     [100, 88, 72, 55, 42] : 
@@ -399,19 +390,19 @@ const ConversionFunnel = ({ qualificationScore }) => {
         <div key={index}>
           <div 
             className={`w-full h-16 ${index === funnelData.length - 1 ? 
-              'bg-gradient-to-r from-[#ff7b72] to-[#ff4d4d] rounded-b-lg' : 
-              'bg-[rgba(88,166,255,0.1)]'} flex items-center justify-center relative`}
+              'bg-gradient-to-r from-coral to-coral-dark rounded-b-lg' : 
+              'bg-blue/10'} flex items-center justify-center relative`}
             style={{ width: `${value}%` }}
           >
-            <span className="font-['Space_Mono'] font-bold text-sm">
+            <span className="font-mono font-bold text-sm">
               {labels[index]}
             </span>
-            <span className="absolute right-3 text-[#e6edf3] font-bold">
+            <span className="absolute right-3 text-light font-bold">
               {value}%
             </span>
           </div>
           {index < funnelData.length - 1 && (
-            <svg className="w-8 h-8 text-[rgba(88,166,255,0.3)] mx-auto" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-8 h-8 text-blue/30 mx-auto" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v10.586l3.293-3.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 111.414-1.414L9 14.586V4a1 1 0 011-1z" clipRule="evenodd"></path>
             </svg>
           )}
@@ -421,90 +412,141 @@ const ConversionFunnel = ({ qualificationScore }) => {
   );
 };
 
-// Sticky CTA component
+// Access CTA Section Component
+const AccessCTASection = ({ qualificationScore }) => (
+  <section className="bg-gradient-to-r from-dark-secondary to-dark-semi py-16 border-y border-blue-border">
+    <div className="container mx-auto px-4 text-center">
+      <h2 className="font-mono font-bold text-3xl mb-4">
+        {qualificationScore >= 7 ? 
+          "You Pre-Qualify For Elite Access" : 
+          "Request System Access"}
+      </h2>
+      <p className="max-w-2xl mx-auto mb-8 text-light/90">
+        AIQBrain maintains strict access controls to ensure community quality and system integrity.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <SecurePrimaryCTA href="/request">
+          {qualificationScore >= 7 ? "Fast-Track Application" : "Begin Application"}
+        </SecurePrimaryCTA>
+        {qualificationScore >= 5 && (
+          <SecureSecondaryCTA href="/vault-preview">
+            Preview Vault Contents
+          </SecureSecondaryCTA>
+        )}
+      </div>
+      {qualificationScore >= 5 && (
+        <div className="mt-6 text-sm text-blue flex items-center justify-center">
+          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+          </svg>
+          <span>Your qualification score: {qualificationScore}/10</span>
+        </div>
+      )}
+    </div>
+  </section>
+);
+
+// Secure Primary CTA Component
+const SecurePrimaryCTA = ({ href, children }) => (
+  <a 
+    href={href} 
+    className="cta-premium bg-gradient-to-r from-coral to-coral-dark hover:shadow-coral-glow transition-all duration-200"
+    rel="noopener noreferrer"
+  >
+    {children}
+  </a>
+);
+
+// Sticky CTA Component
 const StickyCTA = ({ isScrolled, qualificationScore }) => (
-  <div className={`fixed bottom-0 left-0 right-0 bg-[#0a0e12] border-t border-[rgba(88,166,255,0.2)] p-4 transition-transform duration-300 z-50 ${isScrolled ? 'translate-y-0' : 'translate-y-full'}`}>
+  <div className={`fixed bottom-0 left-0 right-0 bg-dark border-t border-blue-border p-4 transition-transform duration-300 z-50 ${isScrolled ? 'translate-y-0' : 'translate-y-full'}`}>
     <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>
-        <h3 className="font-['Space_Mono'] font-bold text-lg">
+        <h3 className="font-mono font-bold text-lg">
           {qualificationScore >= 5 ? 
             "You Qualify For Advanced Access" : 
             "Ready To Improve Your Monetization?"}
         </h3>
-        <p className="text-[rgba(230,237,243,0.8)]">
+        <p className="text-light/80">
           {qualificationScore >= 5 ? 
             "Begin your fast-track application now" : 
             "Request access to AIQBrain systems"}
         </p>
       </div>
-      <a 
-        href="/request" 
-        className={`px-6 py-3 rounded font-semibold transition duration-200 whitespace-nowrap ${
-          qualificationScore >= 5 ? 
-            'bg-gradient-to-r from-[#ff7b72] to-[#ff4d4d] hover:shadow-[0_0_12px_rgba(255,123,114,0.5)]' : 
-            'bg-[#58a6ff] hover:bg-[#3d8eff] hover:shadow-[0_0_12px_rgba(88,166,255,0.4)]'
-        }`}
-      >
+      <SecurePrimaryCTA href="/request">
         {qualificationScore >= 5 ? 'Fast-Track Application' : 'Request Access'}
-      </a>
+      </SecurePrimaryCTA>
     </div>
   </div>
 );
 
-// Footer component
-const Footer = () => (
-  <footer className="bg-[#0a0e12] border-t border-[rgba(88,166,255,0.1)] py-12">
+// Secure Footer Component
+const SecureFooter = () => (
+  <footer className="bg-dark border-t border-blue-border py-12">
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center mb-4">
-            <div className="w-6 h-6 mr-2 bg-[#ff7b72] rounded-md flex items-center justify-center">
-              <span className="font-bold text-[#0a0e12] text-xs">AQ</span>
+            <div className="w-6 h-6 mr-2 bg-coral rounded-md flex items-center justify-center">
+              <span className="font-bold text-dark text-xs">AQ</span>
             </div>
-            <span className="font-['Space_Mono']">AIQBrain</span>
+            <span className="font-mono">AIQBrain</span>
           </div>
-          <p className="text-sm text-[rgba(230,237,243,0.6)]">
+          <p className="text-sm text-light/60">
             Advanced monetization systems for Claude operators.
           </p>
         </div>
         
         <div>
-          <h4 className="font-['Space_Mono'] font-bold text-sm mb-4">SYSTEMS</h4>
+          <h4 className="font-mono font-bold text-sm mb-4">SYSTEMS</h4>
           <ul className="space-y-2">
-            <li><a href="/vault" className="footer-link">Vault Access</a></li>
-            <li><a href="/strategy" className="footer-link">Core Frameworks</a></li>
-            <li><a href="/routing" className="footer-link">Traffic Routing</a></li>
-            <li><a href="/analytics" className="footer-link">Performance Analytics</a></li>
+            <FooterLink href="/vault">Vault Access</FooterLink>
+            <FooterLink href="/strategy">Core Frameworks</FooterLink>
+            <FooterLink href="/routing">Traffic Routing</FooterLink>
+            <FooterLink href="/analytics">Performance Analytics</FooterLink>
           </ul>
         </div>
         
         <div>
-          <h4 className="font-['Space_Mono'] font-bold text-sm mb-4">RESOURCES</h4>
+          <h4 className="font-mono font-bold text-sm mb-4">RESOURCES</h4>
           <ul className="space-y-2">
-            <li><a href="/compliance" className="footer-link">Compliance Guide</a></li>
-            <li><a href="/case-studies" className="footer-link">Case Studies</a></li>
-            <li><a href="/faq" className="footer-link">Operator FAQ</a></li>
-            <li><a href="/updates" className="footer-link">System Updates</a></li>
+            <FooterLink href="/compliance">Compliance Guide</FooterLink>
+            <FooterLink href="/case-studies">Case Studies</FooterLink>
+            <FooterLink href="/faq">Operator FAQ</FooterLink>
+            <FooterLink href="/updates">System Updates</FooterLink>
           </ul>
         </div>
         
         <div>
-          <h4 className="font-['Space_Mono'] font-bold text-sm mb-4">LEGAL</h4>
+          <h4 className="font-mono font-bold text-sm mb-4">LEGAL</h4>
           <ul className="space-y-2">
-            <li><a href="/terms" className="footer-link">Terms of Service</a></li>
-            <li><a href="/privacy" className="footer-link">Privacy Policy</a></li>
-            <li><a href="/disclaimer" className="footer-link">Disclaimer</a></li>
-            <li><a href="/contact" className="footer-link">Contact</a></li>
+            <FooterLink href="/terms">Terms of Service</FooterLink>
+            <FooterLink href="/privacy">Privacy Policy</FooterLink>
+            <FooterLink href="/disclaimer">Disclaimer</FooterLink>
+            <FooterLink href="/contact">Contact</FooterLink>
           </ul>
         </div>
       </div>
       
-      <div className="mt-12 pt-6 border-t border-[rgba(88,166,255,0.1)] text-center text-xs text-[rgba(230,237,243,0.5)]">
+      <div className="mt-12 pt-6 border-t border-blue-border text-center text-xs text-light/50">
         <p>© {new Date().getFullYear()} AIQBrain. All rights reserved.</p>
         <p className="mt-2">Not affiliated with Anthropic, OpenAI, or other mentioned platforms.</p>
       </div>
     </div>
   </footer>
+);
+
+// Footer Link Component
+const FooterLink = ({ href, children }) => (
+  <li>
+    <a 
+      href={href} 
+      className="footer-link text-light/60 hover:text-coral transition-colors duration-200"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  </li>
 );
 
 export default Homepage;
