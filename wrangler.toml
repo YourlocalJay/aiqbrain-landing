@@ -1,32 +1,3 @@
 name = "aiqbrain-landing"
 main = "src/worker.js"
 compatibility_date = "2025-06-01"
-
-[env.production]
-kv_namespaces = [
-  { binding = "AIQ_ANALYTICS", id = "ca35fdc99116429aad817ebb70b330fd" },
-  { binding = "AIQ_VISITORS", id = "28d78ba9bada415489c28bdf16b88f50" }
-]
-routes = [
-  { pattern = "aiqbrain.com/*", zone_name = "aiqbrain.com" },
-  { pattern = "trkr.aiqbrain.com/*", zone_name = "aiqbrain.com" }
-]
-
-[env.production.vars]
-ENVIRONMENT = "production"
-DEBUG_MODE = "false"
-PLAUSIBLE_API_KEY = "0Nk1YoUc7iG-QTpFhv6WgjHru51t3cwXiYJMtVZMHISg7U91KfrNytmh7ZJI4VEC"
-WEBHOOK_SECRET = "3c9381b73fd684c7f88a848d757a81647521b09bd43f2e9098d04bfcbe076e9e"
-WEBHOOK_URL = "https://api.aiqbrain.com/webhooks/events"
-GEO_ROUTING_ENABLED = "true"
-TIME_ROUTING_ENABLED = "true"
-DEVICE_ROUTING_ENABLED = "true"
-
-[env.staging]
-routes = [
-  { pattern = "staging.aiqbrain.com/*", zone_name = "aiqbrain.com" }
-]
-
-[env.staging.vars]
-ENVIRONMENT = "staging"
-DEBUG_MODE = "true"

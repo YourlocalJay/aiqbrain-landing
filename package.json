@@ -1,15 +1,12 @@
 {
   "name": "aiqbrain-landing",
   "version": "1.0.0",
-  "description": "AIQBrain landing page using Cloudflare Workers",
+  "description": "AIQBrain cloaking worker",
   "main": "src/worker.js",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "build": "wrangler build"
-  },
-  "dependencies": {
-    "itty-router": "^3.0.12"
   },
   "devDependencies": {
     "wrangler": "^4.27.0"
