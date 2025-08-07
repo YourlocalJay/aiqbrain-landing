@@ -1,3 +1,10 @@
 name = "aiqbrain-landing"
 main = "src/worker.js"
 compatibility_date = "2025-06-01"
+
+[[kv_namespaces]]
+binding = "UNLOCK_KV"
+id = "245ad1781ade43bcab7b60cf7a8c5934"
+
+[vars]
+UNLOCK_WEBHOOK_URL = "https://hook.us2.make.com/p8nhi2vxwmyrzvw875k4opocqcn2olrv"

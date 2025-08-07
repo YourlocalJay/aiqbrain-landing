@@ -1,4 +1,5 @@
 import { vaultHandler } from './handlers/vault';
+import { vaultUnlockHandler } from './handlers/vault-unlock';
 import { offersHandler } from './handlers/offers';
 import { notFoundHandler } from './handlers/not-found';
 
@@ -22,6 +23,12 @@ export const routes = [
     path: '/vault',
     handler: vaultHandler,
     metadata: { title: 'Vault Access' }
+  },
+  {
+    type: RouteType.EXACT,
+    path: '/vault-unlock',
+    handler: vaultUnlockHandler,
+    metadata: { title: 'Vault Unlock' }
   },
   {
     type: RouteType.EXACT,
