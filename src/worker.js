@@ -6,35 +6,35 @@ export default {
     try {
       const url = new URL(request.url);
       const { pathname } = url;
-      
+
       // Cache the request method for potential optimizations
       const method = request.method.toUpperCase();
 
       // Find matching route (using helper if available, otherwise fallback)
-      const route = matchRoute(pathname) || 
+      const route = matchRoute(pathname) ||
         routes.find(r => (
-          (r.path === pathname) || 
+          (r.path === pathname) ||
           (r.pathMatch && r.pathMatch(pathname))
         ));
 
       if (route) {
         // Add a simple performance marker for debugging
         ctx.performanceMark = performance.now();
-        
+
         const response = await route.handler(request, env, ctx);
-        
+
         // Log request timing in production
         if (env.NODE_ENV === 'production') {
           const duration = performance.now() - ctx.performanceMark;
           console.log(`[${method}] ${pathname} - ${duration.toFixed(2)}ms`);
         }
-        
+
         return applySecurityHeaders(response);
       }
 
       // No route matched - return 404
       return applySecurityHeaders(
-        new Response('Not found', { 
+        new Response('Not found', {
           status: 404,
           headers: { 'Content-Type': 'text/plain' }
         })
@@ -42,13 +42,13 @@ export default {
 
     } catch (error) {
       // Centralized error handling
-      console.error(`Request failed: ${error.message}`, { 
+      console.error(`Request failed: ${error.message}`, {
         url: request.url,
-        stack: error.stack 
+        stack: error.stack
       });
 
       return applySecurityHeaders(
-        new Response('Internal Server Error', { 
+        new Response('Internal Server Error', {
           status: 500,
           headers: { 'Content-Type': 'text/plain' }
         })
@@ -68,10 +68,3 @@ function matchRoute(pathname) {
   }
   return null;
 }
-      handler = notFoundHandler;
-    }
-
-    let response = await handler(request, env);
-    return headerMiddleware(request, env, response);
-  }
-};

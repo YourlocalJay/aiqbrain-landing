@@ -6,5 +6,9 @@ compatibility_date = "2025-06-01"
 binding = "UNLOCK_KV"
 id = "245ad1781ade43bcab7b60cf7a8c5934"
 
+[[kv_namespaces]]
+binding = "REDIRECT_LOG_KV"
+id = "5df78f1513a948959eaf964e9071449e"
+
 [vars]
 UNLOCK_WEBHOOK_URL = "https://hook.us2.make.com/p8nhi2vxwmyrzvw875k4opocqcn2olrv"
