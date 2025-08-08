@@ -14,7 +14,7 @@ const RouteType = {
 export const routes = [
   { type: RouteType.EXACT, path: '/', handler: vaultHandler, metadata: { title: 'Main Vault' } },
   { type: RouteType.EXACT, path: '/vault', handler: vaultHandler, metadata: { title: 'Vault Access' } },
-  { type: RouteType.EXACT, path: '/access', handler: accessHandler, metadata: { title: 'Access' } },
+{ type: RouteType.EXACT, path: '/access', handler: accessHandler, metadata: { title: 'Access', noindex: true } },
   { type: RouteType.EXACT, path: '/sv', handler: offersHandler, metadata: { title: 'Special Offers' } },
   { type: RouteType.EXACT, path: '/data/cloudflare_offers.json', handler: offersDataHandler, metadata: { isData: true } },
   { type: RouteType.EXACT, path: '/pb/mylead', handler: myleadPostbackHandler, metadata: { title: 'Postback' } },

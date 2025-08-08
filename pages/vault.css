@@ -183,6 +183,7 @@ section, header {
   border-radius: 1rem;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeIn 0.6s ease-out;
 }
 
 .form-group {
@@ -207,6 +208,11 @@ input, select {
   font-family: 'Space Mono', monospace;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease;
+  caret-color: var(--coral-primary);
+}
+
+input::placeholder {
+  color: var(--text-muted);
 }
 
 input:focus, select:focus {
@@ -227,12 +233,18 @@ input:focus, select:focus {
   cursor: pointer;
   box-shadow: 0 4px 15px var(--coral-glow);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
 }
 
 .submit-button:hover {
   background: var(--coral-hover);
   transform: translateY(-3px);
   box-shadow: 0 6px 20px var(--coral-glow);
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid var(--coral-primary);
+  outline-offset: 2px;
 }
 
 .disclaimer {
@@ -285,11 +297,11 @@ input:focus, select:focus {
   section, header {
     padding: 3rem 1rem;
   }
-  
+
   .hero {
     padding-top: 4rem;
   }
-  
+
   .system-card {
     padding: 1.5rem;
   }
