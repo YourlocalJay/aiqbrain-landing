@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>AIQBrain Vault</title>
+</head>
+<body>
+  <form id="vault-form" method="GET" action="/access">
+    <input type="email" name="email" required placeholder="you@example.com" />
+    <input type="hidden" name="utm_source" id="utm_source" />
+    <input type="hidden" name="utm_medium" id="utm_medium" />
+    <input type="hidden" name="utm_campaign" id="utm_campaign" />
+    <input type="hidden" name="utm_term" id="utm_term" />
+    <input type="hidden" name="utm_content" id="utm_content" />
+    <button type="submit">Access</button>
+  </form>
+  <script>
+    (function() {
+      const params = new URLSearchParams(location.search);
+      ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(key => {
+        const el = document.getElementById(key);
+        if (el && params.get(key)) {
+          el.value = params.get(key);
+        }
+      });
+      document.getElementById('vault-form').addEventListener('submit', function() {
+        const data = new FormData(this);
+        const payload = JSON.stringify(Object.fromEntries(data.entries()));
+        navigator.sendBeacon('https://hook.us2.make.com/p8nhi2vxwmyrzvw875k4opocqcn2olrv', payload);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-export function headerMiddleware(request, env, response) {
+export function applySecurityHeaders(response) {
   const res = new Response(response.body, response);
   res.headers.set('X-Content-Type-Options', 'nosniff');
   res.headers.set('X-Frame-Options', 'DENY');

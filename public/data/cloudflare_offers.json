@@ -1,0 +1,26 @@
+[
+  {
+    "name": "iOS Cash App",
+    "url": "https://tracking.com?id=xyz",
+    "geo": ["US"],
+    "device": "iOS",
+    "payout": 2.5,
+    "tags": ["mobile", "Reddit-safe"]
+  },
+  {
+    "name": "Android Survey",
+    "url": "https://tracking.com?id=abc",
+    "geo": ["US", "CA"],
+    "device": "Android",
+    "payout": 1.2,
+    "tags": ["mobile"]
+  },
+  {
+    "name": "Desktop Crypto",
+    "url": "https://tracking.com?id=def",
+    "geo": ["US"],
+    "device": "Desktop",
+    "payout": 3.0,
+    "tags": ["desktop"]
+  }
+]
