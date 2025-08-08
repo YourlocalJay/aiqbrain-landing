@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export async function vaultHandler(request, env, ctx) {
   const html = `<!DOCTYPE html>
 <html>
@@ -37,8 +38,12 @@ export async function vaultHandler(request, env, ctx) {
     </script>
   </body>
 </html>`;
+=======
+import vaultHTML from '../../public/vault/index.html' assert { type: 'text' };
+>>>>>>> cdac408ca54c2092d0fc7edaa46b36a01ca60344
 
-  return new Response(html, {
+export async function vaultHandler(request, env, ctx) {
+  return new Response(vaultHTML, {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'x-robots-tag': 'noindex, nofollow',
