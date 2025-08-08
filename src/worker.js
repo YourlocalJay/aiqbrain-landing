@@ -1,6 +1,6 @@
 import { applySecurityHeaders } from './middleware/headers';
 import { routes } from './routes';
-import { accessPage } from './handlers/access';
+import { accessHandler } from './handlers/access';
 
 export default {
   async fetch(request, env, ctx) {
@@ -9,7 +9,7 @@ export default {
       const { pathname } = url;
 
       if (pathname === '/access') {
-        return applySecurityHeaders(await accessPage(request));
+        return applySecurityHeaders(await accessHandler(request, env, ctx));
       }
 
       // Cache the request method for potential optimizations
