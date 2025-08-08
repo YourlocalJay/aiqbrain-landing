@@ -1,9 +1,10 @@
 import { vaultHandler } from './handlers/vault';
-import { vaultUnlockHandler } from './handlers/vault-unlock';
+import { accessHandler } from './handlers/access';
 import { offersHandler } from './handlers/offers';
+import { offersDataHandler } from './handlers/data';
+import { myleadPostbackHandler } from './handlers/postback';
 import { notFoundHandler } from './handlers/not-found';
 
-// Define route types for better maintainability
 const RouteType = {
   EXACT: 'exact',
   PATTERN: 'pattern',
@@ -11,49 +12,15 @@ const RouteType = {
 };
 
 export const routes = [
-  // Exact path matches
-  {
-    type: RouteType.EXACT,
-    path: '/',
-    handler: vaultHandler,
-    metadata: { title: 'Main Vault' }
-  },
-  {
-    type: RouteType.EXACT,
-    path: '/vault',
-    handler: vaultHandler,
-    metadata: { title: 'Vault Access' }
-  },
-  {
-    type: RouteType.EXACT,
-    path: '/vault-unlock',
-    handler: vaultUnlockHandler,
-    metadata: { title: 'Vault Unlock' }
-  },
-  {
-    type: RouteType.EXACT,
-    path: '/sv',
-    handler: offersHandler,
-    metadata: { title: 'Special Offers' }
-  },
-
-  // Pattern-based matches
-  {
-    type: RouteType.PATTERN,
-    test: (pathname) => pathname.startsWith('/offers/'),
-    handler: offersHandler,
-    metadata: { dynamic: true }
-  },
-
-  // Catch-all route (must be last)
-  {
-    type: RouteType.CATCH_ALL,
-    handler: notFoundHandler,
-    metadata: { is404: true }
-  }
+  { type: RouteType.EXACT, path: '/', handler: vaultHandler, metadata: { title: 'Main Vault' } },
+  { type: RouteType.EXACT, path: '/vault', handler: vaultHandler, metadata: { title: 'Vault Access' } },
+  { type: RouteType.EXACT, path: '/access', handler: accessHandler, metadata: { title: 'Access' } },
+  { type: RouteType.EXACT, path: '/sv', handler: offersHandler, metadata: { title: 'Special Offers' } },
+  { type: RouteType.EXACT, path: '/data/cloudflare_offers.json', handler: offersDataHandler, metadata: { isData: true } },
+  { type: RouteType.EXACT, path: '/pb/mylead', handler: myleadPostbackHandler, metadata: { title: 'Postback' } },
+  { type: RouteType.CATCH_ALL, handler: notFoundHandler, metadata: { is404: true } }
 ];
 
-// Optional: Helper function to match routes
 export function matchRoute(pathname) {
   for (const route of routes) {
     if (route.type === RouteType.EXACT && route.path === pathname) {
