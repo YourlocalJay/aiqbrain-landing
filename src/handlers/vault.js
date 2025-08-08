@@ -27,7 +27,7 @@ export async function vaultHandler(request, env, ctx) {
       <form id="access-form" method="GET" action="/access">
         <div>
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" required autocomplete="email" placeholder="operator@domain.com" />
+          <input id="email" name="email" type="email" required autocomplete="email" placeholder="operator@domain.com" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" />
         </div>
         <div>
           <label for="experience">Implementation Tier</label>
@@ -43,6 +43,7 @@ export async function vaultHandler(request, env, ctx) {
         <input type="hidden" name="utm_medium" />
         <input type="hidden" name="utm_campaign" />
         <input type="hidden" name="utm_content" />
+        <input type="text" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" />
         <button type="submit">Unlock →</button>
         <small>By continuing you agree to noindex access terms.</small>
       </form>
@@ -65,7 +66,11 @@ export async function vaultHandler(request, env, ctx) {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'x-robots-tag': 'noindex, nofollow',
-      'cache-control': 'no-store, max-age=0'
+      'cache-control': 'no-store, max-age=0',
+      'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; form-action 'self'",
+      'referrer-policy': 'no-referrer',
+      'permissions-policy': 'geolocation=(), microphone=(), camera=()',
+      'x-content-type-options': 'nosniff'
     }
   });
 }
