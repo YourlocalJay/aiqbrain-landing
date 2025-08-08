@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIQBrain Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="vault.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>AIQBrain Vault</h1>
+    <p class="subtitle">Premium Claude Monetization Systems</p>
+    <p>Unlock proven, Claude-powered revenue frameworks tailored for high-performance operators.</p>
+    <a href="#access-form" class="cta-button">Request Full Access</a>
+  </header>
+
+  <section class="preview">
+    <h2>Sample Systems Overview</h2>
+    <div class="cards">
+      <div class="system-card">
+        <span class="icon">✅</span>
+        <h3>Lead Magnet Nurture Flow</h3>
+        <ul>
+          <li>High-converting email scripts</li>
+          <li>Behavior-based trigger prompts</li>
+          <li>🔒 Full system available with approved access</li>
+        </ul>
+      </div>
+      <div class="system-card">
+        <span class="icon">🔒</span>
+        <h3>High-Ticket Audit Script</h3>
+        <ul>
+          <li>Consultative question path</li>
+          <li>Dynamic objection handlers</li>
+          <li>🔒 Full system available with approved access</li>
+        </ul>
+      </div>
+      <div class="system-card">
+        <span class="icon">🔒</span>
+        <h3>Enterprise Upsell Framework</h3>
+        <ul>
+          <li>Tiered upgrade prompts</li>
+          <li>Retention automation hooks</li>
+          <li>🔒 Full system available with approved access</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <h2>Request Full Vault Access</h2>
+    <form id="access-form" method="POST" action="/vault-unlock" class="access-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="experience">Claude Experience</label>
+        <select id="experience" name="experience" required>
+          <option value="" disabled selected>Select experience level</option>
+          <option>Beginner</option>
+          <option>Intermediate</option>
+          <option>Advanced</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-button">Request Access</button>
+      <p class="disclaimer">Access requests are reviewed manually. We'll contact you if approved.</p>
+    </form>
+  </section>
+
+  <footer class="site-footer">
+    <nav>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Compliance</a>
+    </nav>
+  </footer>
+</body>
+</html>
