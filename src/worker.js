@@ -1,11 +1,16 @@
 import { applySecurityHeaders } from './middleware/headers';
 import { routes } from './routes';
+import { accessPage } from './handlers/access';
 
 export default {
   async fetch(request, env, ctx) {
     try {
       const url = new URL(request.url);
       const { pathname } = url;
+
+      if (pathname === '/access') {
+        return applySecurityHeaders(await accessPage(request));
+      }
 
       // Cache the request method for potential optimizations
       const method = request.method.toUpperCase();
