@@ -12,8 +12,7 @@ id = "5df78f1513a948959eaf964e9071449e"
 
 [[kv_namespaces]]
 binding = "BOT_LOG_KV"
-id = "596e08056965435ba928a8086d82df9"
+id = "59e608056956435ba9288a0866d82df9"
 
 [vars]
-UNLOCK_WEBHOOK_URL = "https://hook.us2.make.com/p8nhi2vxwmyrzvw875k4opocqcn2olrv"
 OFFERS_PATH = "/data/cloudflare_offers.json"
