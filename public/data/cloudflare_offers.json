@@ -1,26 +1,68 @@
 [
   {
-    "name": "iOS Cash App",
-    "url": "https://tracking.com?id=xyz",
-    "geo": ["US"],
-    "device": "iOS",
-    "payout": 2.5,
-    "tags": ["mobile", "Reddit-safe"]
-  },
-  {
-    "name": "Android Survey",
-    "url": "https://tracking.com?id=abc",
-    "geo": ["US", "CA"],
-    "device": "Android",
-    "payout": 1.2,
-    "tags": ["mobile"]
-  },
-  {
-    "name": "Desktop Crypto",
-    "url": "https://tracking.com?id=def",
+    "name": "US Desktop – Test",
+    "network": "Manual",
+    "url": "https://www.apple.com/",
     "geo": ["US"],
     "device": "Desktop",
-    "payout": 3.0,
-    "tags": ["desktop"]
+    "payout": 2.50,
+    "category": "Test",
+    "tags": ["manual","safe"],
+    "active": true
+  },
+  {
+    "name": "US Android – Test",
+    "network": "Manual",
+    "url": "https://play.google.com/store",
+    "geo": ["US"],
+    "device": "Android",
+    "payout": 1.80,
+    "category": "Test",
+    "tags": ["manual","mobile"],
+    "active": true
+  },
+  {
+    "name": "US iOS – Test",
+    "network": "Manual",
+    "url": "https://apps.apple.com/us",
+    "geo": ["US"],
+    "device": "iOS",
+    "payout": 2.10,
+    "category": "Test",
+    "tags": ["manual","mobile"],
+    "active": true
+  },
+  {
+    "name": "UK iOS – Test",
+    "network": "Manual",
+    "url": "https://apps.apple.com/gb",
+    "geo": ["UK"],
+    "device": "iOS",
+    "payout": 2.20,
+    "category": "Test",
+    "tags": ["manual","mobile"],
+    "active": true
+  },
+  {
+    "name": "Weekend Desktop – Test",
+    "network": "Manual",
+    "url": "https://www.microsoft.com/",
+    "geo": ["ALL"],
+    "device": "Desktop",
+    "payout": 1.00,
+    "category": "Test",
+    "tags": ["manual"],
+    "active": true
+  },
+  {
+    "name": "Fallback – All GEO/Devices",
+    "network": "Manual",
+    "url": "https://www.wikipedia.org/",
+    "geo": ["ALL"],
+    "device": "ALL",
+    "payout": 0.10,
+    "category": "Test",
+    "tags": ["fallback"],
+    "active": true
   }
 ]
