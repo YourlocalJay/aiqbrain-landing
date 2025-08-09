@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "build": "wrangler build"
+    "build": "wrangler build",
+    "test": "node --test scripts/__tests__/validate_offers.test.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.27.0"
