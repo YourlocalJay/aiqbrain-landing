@@ -1,0 +1,127 @@
+name: Validate Offers & Comment
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "public/data/cloudflare_offers.json"
+      - "wrangler.toml"
+      - "scripts/validate_offers.mjs"
+
+jobs:
+  validate-and-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run validator and capture output
+        id: validate
+        env:
+          # Optional override. If omitted, script will read from wrangler.toml [vars].ALLOWED_HOSTS
+          # ALLOWED_HOSTS: apple.com,play.google.com,apps.apple.com,microsoft.com,wikipedia.org
+          NODE_NO_WARNINGS: "1"
+        run: |
+          set -o pipefail
+          node scripts/validate_offers.mjs 2>&1 | tee offers_validation.txt
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          # Compact status for badge
+          if [ $status -eq 0 ]; then
+            echo "result=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=failure" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload raw report (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offers-validation-report
+          path: offers_validation.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Comment on PR with summary (sticky)
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const core = require('@actions/core');
+            const { context, github } = require('@actions/github');
+
+            const exitCode = Number(core.getInput('exit_code')) || 1; // via with: below
+            const result    = core.getInput('result') || 'failure';
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            // Read validation output (plain text)
+            let bodyText = '';
+            try {
+              bodyText = fs.readFileSync('offers_validation.txt', 'utf8');
+            } catch (e) {
+              bodyText = 'No validator output captured.';
+            }
+
+            const statusBadge = result === 'success'
+              ? '✅ **Validation passed**'
+              : '❌ **Validation failed**';
+
+            // Shorten long logs in comment
+            const MAX_LEN = 4000;
+            const trimmed = bodyText.length > MAX_LEN
+              ? bodyText.slice(0, MAX_LEN) + '\n… (truncated)'
+              : bodyText;
+
+            const header = '<!-- offers-validation-comment -->';
+            const md = `${header}
+            ${statusBadge}
+
+            **Workflow:** \`${{ github.workflow }}\`
+            **Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            <details><summary>Validation output</summary>
+
+            \n\`\`\`
+            ${trimmed}
+            \`\`\`\n
+            </details>
+
+            _This comment will update on subsequent runs._`;
+
+            // Find existing sticky comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number, per_page: 100
+            });
+
+            const existing = comments.find(c => c.user.type === 'Bot' && c.body && c.body.includes('<!-- offers-validation-comment -->'));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner, repo,
+                comment_id: existing.id,
+                body: md
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number, body: md
+              });
+            }
+
+            // Fail the job if the validator failed (exit_code != 0)
+            if (exitCode !== 0) {
+              core.setFailed('Offers validation failed. See comment for details.');
+            }
+          result-encoding: string
+          exit_code: ${{ steps.validate.outputs.exit_code }}
+          result: ${{ steps.validate.outputs.result }}
