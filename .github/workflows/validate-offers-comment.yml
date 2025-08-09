@@ -7,6 +7,11 @@ on:
       - "public/data/cloudflare_offers.json"
       - "wrangler.toml"
       - "scripts/validate_offers.mjs"
+  push:
+    paths:
+      - "public/data/cloudflare_offers.json"
+      - "wrangler.toml"
+      - "scripts/validate_offers.mjs"
 
 jobs:
   validate-and-comment:
