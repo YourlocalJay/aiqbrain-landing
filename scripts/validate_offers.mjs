@@ -7,6 +7,7 @@ const read = (p) => fs.readFileSync(p, "utf8");
 const repoRoot = process.cwd();
 const dataPath = path.join(repoRoot, "public/data/cloudflare_offers.json");
 const wranglerPath = path.join(repoRoot, "wrangler.toml");
+const useJson = process.argv.includes("--json");
 
 function parseAllowedHosts() {
   // 1) ENV wins
@@ -24,13 +25,21 @@ function parseAllowedHosts() {
   return []; // empty = no host restriction (warn later)
 }
 
-function fail(msg) {
-  console.error("❌", msg);
+const errors = [];
+
+function fail(msg, index = null) {
+  if (useJson) {
+    errors.push({ index, message: msg });
+  } else {
+    console.error("❌", msg);
+  }
   process.exitCode = 1;
 }
 
 function ok(msg) {
-  console.log("✅", msg);
+  if (!useJson) {
+    console.log("✅", msg);
+  }
 }
 
 function hostnameOf(url) {
@@ -46,7 +55,12 @@ let raw;
 try {
   raw = read(dataPath);
 } catch (e) {
-  console.error(`❌ Missing file: ${dataPath}`);
+  const msg = `Missing file: ${dataPath}`;
+  if (useJson) {
+    console.log(JSON.stringify({ success: false, errors: [{ index: null, message: msg }] }, null, 2));
+  } else {
+    console.error(`❌ ${msg}`);
+  }
   process.exit(1);
 }
 
@@ -54,7 +68,12 @@ let offers;
 try {
   offers = JSON.parse(raw);
 } catch (e) {
-  console.error("❌ JSON parse error in cloudflare_offers.json:", e.message);
+  const msg = `JSON parse error in cloudflare_offers.json: ${e.message}`;
+  if (useJson) {
+    console.log(JSON.stringify({ success: false, errors: [{ index: null, message: msg }] }, null, 2));
+  } else {
+    console.error(`❌ ${msg}`);
+  }
   process.exit(1);
 }
 
@@ -63,7 +82,7 @@ if (!Array.isArray(offers) || offers.length === 0) {
 }
 
 const allowedHosts = parseAllowedHosts();
-if (allowedHosts.length === 0) {
+if (allowedHosts.length === 0 && !useJson) {
   console.warn("⚠️  No ALLOWED_HOSTS found (env or wrangler.toml). URL host checks will be skipped.");
 }
 
@@ -75,7 +94,7 @@ offers.forEach((o, idx) => {
   // Required keys
   for (const k of required) {
     if (!(k in o)) {
-      fail(`${where}: missing required field "${k}"`);
+      fail(`${where}: missing required field "${k}"`, idx);
       invalidCount++;
     }
   }
@@ -83,54 +102,58 @@ offers.forEach((o, idx) => {
 
   // Types & values
   if (typeof o.name !== "string" || !o.name.trim()) {
-    fail(`${where}: "name" must be a non-empty string`);
+    fail(`${where}: "name" must be a non-empty string`, idx);
     invalidCount++;
   }
 
   if (typeof o.url !== "string" || !o.url.trim()) {
-    fail(`${where}: "url" must be a non-empty string`);
+    fail(`${where}: "url" must be a non-empty string`, idx);
     invalidCount++;
   } else {
     if (!o.url.startsWith("https://")) {
-      fail(`${where}: "url" must start with https:// — got ${o.url}`);
+      fail(`${where}: "url" must start with https:// — got ${o.url}`, idx);
       invalidCount++;
     }
     const host = hostnameOf(o.url);
     if (!host) {
-      fail(`${where}: "url" is not a valid URL — ${o.url}`);
+      fail(`${where}: "url" is not a valid URL — ${o.url}`, idx);
       invalidCount++;
     } else if (allowedHosts.length) {
       const allowed = allowedHosts.some(h => host === h || host.endsWith("." + h));
       if (!allowed) {
-        fail(`${where}: host "${host}" not in ALLOWED_HOSTS: ${allowedHosts.join(", ")}`);
+        fail(`${where}: host "${host}" not in ALLOWED_HOSTS: ${allowedHosts.join(", ")}`, idx);
         invalidCount++;
       }
     }
   }
 
   if (!Array.isArray(o.geo) || o.geo.some(g => typeof g !== "string" || !g.trim())) {
-    fail(`${where}: "geo" must be an array of non-empty strings`);
+    fail(`${where}: "geo" must be an array of non-empty strings`, idx);
     invalidCount++;
   }
 
   if (typeof o.device !== "string" || !o.device.trim()) {
-    fail(`${where}: "device" must be a non-empty string`);
+    fail(`${where}: "device" must be a non-empty string`, idx);
     invalidCount++;
   }
 
   const payout = Number(o.payout);
   if (!Number.isFinite(payout) || payout < 0) {
-    fail(`${where}: "payout" must be a number >= 0`);
+    fail(`${where}: "payout" must be a number >= 0`, idx);
     invalidCount++;
   }
 
   if (typeof o.active !== "boolean") {
-    fail(`${where}: "active" must be boolean`);
+    fail(`${where}: "active" must be boolean`, idx);
     invalidCount++;
   }
 });
 
-if (invalidCount === 0) {
+if (useJson) {
+  const output = { success: invalidCount === 0, errors };
+  console.log(JSON.stringify(output, null, 2));
+  process.exit(invalidCount === 0 ? 0 : 1);
+} else if (invalidCount === 0) {
   ok(`Validated ${offers.length} offers successfully.`);
 } else {
   console.error(`\n❌ Validation failed with ${invalidCount} error(s).`);
