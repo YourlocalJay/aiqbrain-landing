@@ -160,9 +160,33 @@ export async function offersHandler(request, env, ctx) {
   };
 
   const finalUrl = chosen ? appendSubs(chosen.url, utms) : '';
+  const qs = url.searchParams;
+  const debug = qs.get('debug') === '1';
 
-  // Debug mode: render a page showing decision instead of redirect
-  const debug = url.searchParams.get('debug') === '1';
+  const allowedHosts = (env.ALLOWED_HOSTS || '')
+    .split(',')
+    .map(s => s.trim().toLowerCase())
+    .filter(Boolean);
+
+  let hostAllowed = true;
+  try {
+    const dest = new URL(finalUrl);
+    const host = dest.hostname.toLowerCase();
+    hostAllowed = allowedHosts.length === 0 || allowedHosts.some(h => host === h || host.endsWith('.' + h));
+    if (!hostAllowed) {
+      if (debug) {
+        return new Response(JSON.stringify({
+          error: 'destination host is not allowed',
+          finalUrl,
+          allowedHosts
+        }, null, 2), { status: 200, headers: { 'content-type': 'application/json', 'x-robots-tag': 'noindex, nofollow' } });
+      }
+      return new Response('Blocked: destination host is not allowed.', { status: 404, headers: { 'x-robots-tag': 'noindex, nofollow' } });
+    }
+  } catch (e) {
+    // fall through; existing error handling will catch bad URLs
+  }
+
   if (debug) {
     const body = `<!doctype html><html><head><meta charset="utf-8"/>
 <meta name="robots" content="noindex,nofollow"/>
@@ -175,9 +199,12 @@ export async function offersHandler(request, env, ctx) {
 <p><strong>Final URL:</strong> ${finalUrl ? `<a href="${finalUrl}">${finalUrl}</a>` : '<em>n/a</em>'}</p>
 <h3>UTMs</h3>
 <pre>${JSON.stringify(utms, null, 2)}</pre>
+<h3>Allowed Hosts</h3>
+<pre>${JSON.stringify(allowedHosts, null, 2)}</pre>
+<p><strong>Host allowed:</strong> ${hostAllowed}</p>
 <h3>Raw offer</h3>
 <pre>${JSON.stringify(chosen, null, 2)}</pre>
-${finalUrl && !isLikelyBad(finalUrl) ? `<p><a href="${finalUrl}">Proceed to offer →</a></p>` : '<p><strong>Blocked</strong>: destination host is not allowed.</p>'}
+${finalUrl && hostAllowed && !isLikelyBad(finalUrl) ? `<p><a href="${finalUrl}">Proceed to offer →</a></p>` : '<p><strong>Blocked</strong>: destination host is not allowed.</p>'}
 </body></html>`;
     return new Response(body, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow' } });
   }

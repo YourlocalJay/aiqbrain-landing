@@ -16,3 +16,4 @@ id = "59e608056956435ba9288a0866d82df9"
 
 [vars]
 OFFERS_PATH = "/data/cloudflare_offers.json"
+ALLOWED_HOSTS = "apple.com,play.google.com,apps.apple.com,microsoft.com,wikipedia.org"
