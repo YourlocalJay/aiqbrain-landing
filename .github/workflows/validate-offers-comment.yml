@@ -31,8 +31,9 @@ jobs:
           NODE_NO_WARNINGS: "1"
         run: |
           set -o pipefail
-          node scripts/validate_offers.mjs 2>&1 | tee offers_validation.txt
+          node scripts/validate_offers.mjs --json > offers_validation.json
           status=$?
+          cat offers_validation.json
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           # Compact status for badge
           if [ $status -eq 0 ]; then
@@ -46,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: offers-validation-report
-          path: offers_validation.txt
+          path: offers_validation.json
           if-no-files-found: ignore
           retention-days: 7
 
@@ -65,23 +66,25 @@ jobs:
             const repo  = context.repo.repo;
             const issue_number = context.issue.number;
 
-            // Read validation output (plain text)
-            let bodyText = '';
+            let data;
             try {
-              bodyText = fs.readFileSync('offers_validation.txt', 'utf8');
+              data = JSON.parse(fs.readFileSync('offers_validation.json', 'utf8'));
             } catch (e) {
-              bodyText = 'No validator output captured.';
+              data = { success: false, errors: [{ index: null, message: 'No validator output captured.' }] };
+            }
+
+            const errors = Array.isArray(data.errors) ? data.errors : [];
+            let table;
+            if (errors.length) {
+              const rows = errors.map(e => `| ${e.index ?? ''} | ${e.message} |`).join('\n');
+              table = `| Offer | Error |\n| --- | --- |\n${rows}`;
+            } else {
+              table = '_No validation errors._';
             }
 
             const statusBadge = result === 'success'
               ? '✅ **Validation passed**'
               : '❌ **Validation failed**';
-
-            // Shorten long logs in comment
-            const MAX_LEN = 4000;
-            const trimmed = bodyText.length > MAX_LEN
-              ? bodyText.slice(0, MAX_LEN) + '\n… (truncated)'
-              : bodyText;
 
             const header = '<!-- offers-validation-comment -->';
             const md = `${header}
@@ -90,12 +93,7 @@ jobs:
             **Workflow:** \`${{ github.workflow }}\`
             **Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
-            <details><summary>Validation output</summary>
-
-            \n\`\`\`
-            ${trimmed}
-            \`\`\`\n
-            </details>
+            ${table}
 
             _This comment will update on subsequent runs._`;
 
