@@ -2,18 +2,10 @@ name = "aiqbrain-landing"
 main = "src/worker.js"
 compatibility_date = "2025-06-01"
 
-[[kv_namespaces]]
-binding = "UNLOCK_KV"
-id = "245ad1781ade43bcab7b60cf7a8c5934"
-
-[[kv_namespaces]]
-binding = "REDIRECT_LOG_KV"
-id = "5df78f1513a948959eaf964e9071449e"
+[vars]
+OFFERS_PATH = "/data/cloudflare_offers.json"
+ALLOWED_HOSTS = "aiqbrain.com"
 
 [[kv_namespaces]]
 binding = "BOT_LOG_KV"
-id = "59e608056956435ba9288a0866d82df9"
-
-[vars]
-OFFERS_PATH = "/data/cloudflare_offers.json"
-ALLOWED_HOSTS = "apple.com,play.google.com,apps.apple.com,microsoft.com,wikipedia.org"
+id = "YOUR_KV_NAMESPACE_ID"
