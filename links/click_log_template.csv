@@ -1,0 +1,2 @@
+ts,subid,persona,subreddit,geo,device,offer,target,utm_source,utm_medium,utm_campaign,utm_term,utm_content,asn,referrer,ua,date,time,persona_sub
+2025-08-10T21:10:05.144Z,P01-ChatGPT-US-android-1723324205,P01,ChatGPT,US,android,US_ANDROID,https://example.com/offer?id=68831&subid=P01-ChatGPT-US-android-1723324205,reddit,,P01,,ChatGPT,15169,https://reddit.com,test-UA,=DATEVALUE(LEFT(A2,10)),=TIMEVALUE(MID(A2,12,8)),=INDEX(SPLIT(B2,"-"),1,1)&"-"&INDEX(SPLIT(B2,"-"),1,2)
