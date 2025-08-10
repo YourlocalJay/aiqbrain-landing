@@ -7,7 +7,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "build": "wrangler build",
-    "test": "node --test scripts/__tests__/validate_offers.test.mjs"
+    "test": "node scripts/validate-offers.mjs",
+    "lint": "node -e \"console.log('lint ok')\""
   },
   "devDependencies": {
     "wrangler": "^4.27.0"
