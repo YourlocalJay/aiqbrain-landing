@@ -9,3 +9,29 @@ ALLOWED_HOSTS = "aiqbrain.com"
 [[kv_namespaces]]
 binding = "BOT_LOG_KV"
 id = "YOUR_KV_NAMESPACE_ID"
+
+name = "aiqbrain-landing"
+main = "src/worker.js"
+compatibility_date = "2025-06-01"
+
+[[kv_namespaces]]
+binding = "BOT_LOG_KV"
+id = "59e608056956435ba9288a0866d82df9"
+preview_id = "935398f9f4cc4a10809b8acbcc9a809c"
+
+[vars]
+# existing vars kept
+OFFERS_PATH = "/data/cloudflare_offers.json"
+ALLOWED_HOSTS = "aiqbrain.com"
+
+# offer env vars for geo/device routing
+US_ANDROID = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
+US_IOS     = "https://singingfiles.com/show.php?l=0&u=2427730&id=69234"
+UK_ANDROID = "https://singingfiles.com/show.php?l=0&u=2427730&id=68583"
+CAN_ANDROID= "https://singingfiles.com/show.php?l=0&u=2427730&id=68846"
+CAN_IOS    = "https://singingfiles.com/show.php?l=0&u=2427730&id=69339"
+FALLBACK_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
+
+# logging / security
+MAKE_WEBHOOK_URL = "https://hook.integromat.com/xxxxx"  # TODO: replace with your real Make.com webhook URL
+BOT_ASN_DENYLIST = "15169,32934,8075,16509,14618,54113"  # Google, Meta, Microsoft, AWS, Amazon, Fastly
