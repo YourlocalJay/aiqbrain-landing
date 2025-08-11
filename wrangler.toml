@@ -18,5 +18,5 @@ CAN_ANDROID= "https://singingfiles.com/show.php?l=0&u=2427730&id=68846"
 CAN_IOS    = "https://singingfiles.com/show.php?l=0&u=2427730&id=69339"
 FALLBACK_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
 
-MAKE_WEBHOOK_URL = "https://hook.integromat.com/xxxxx"  # TODO: replace with your real Make.com webhook URL
+MAKE_WEBHOOK_URL = "https://hook.us2.make.com/xo6kznpoafou41c9d84wjxstg487rbfe"  # TODO: replace with your real Make.com webhook URL
 BOT_ASN_DENYLIST = "15169,32934,8075,16509,14618,54113"  # Google, Meta, Microsoft, AWS, Amazon, Fastly
