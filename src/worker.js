@@ -77,6 +77,47 @@ export default {
       });
     }
 
+    // Shortlink redirect: /go?t=<b64u(target)>&e=<epoch>&m=<b64u(json-meta)>&s=<sig>
+    if (pathname === '/go') {
+      const verdict = await verifyGoRequest(url, env.LINK_SECRET || '');
+      if (!verdict.ok) {
+        return new Response(JSON.stringify({ ok: false, error: verdict.reason }), {
+          status: 400,
+          headers: jsonHeadersNoIndex()
+        });
+      }
+
+      const inbound = url.searchParams;
+      const targetURL = new URL(verdict.target);
+      for (const k of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','sub1','sub2','sub3']) {
+        if (inbound.has(k)) targetURL.searchParams.set(k, inbound.get(k));
+      }
+
+      // Optional: add KV click logging here
+
+      return Response.redirect(targetURL.toString(), 302);
+    }
+
+    // Dev-only link generator: /mk?t=<url>&ttl=<sec>&note=...&token=<env token>
+    if (pathname === '/mk') {
+      if (!(env.DEBUG_LIVE_LINKS === 'true')) {
+        return new Response('Forbidden', { status: 403 });
+      }
+      const token = url.searchParams.get('token');
+      if (!token || token !== (env.LINK_DEV_TOKEN || 'dev')) {
+        return new Response('Forbidden', { status: 403 });
+      }
+
+      const target = url.searchParams.get('t');
+      if (!target) return new Response('Missing t', { status: 400 });
+
+      const ttl = parseInt(url.searchParams.get('ttl') || env.LINK_DEFAULT_TTL || '86400', 10);
+      const meta = { note: url.searchParams.get('note') || '' };
+      const unsigned = buildGoURL(url.origin, { target, expires: nowSec() + ttl, meta });
+      const signed = await signGoURL(unsigned, env.LINK_SECRET || '');
+      return new Response(JSON.stringify({ ok: true, link: signed }), { headers: jsonHeadersNoIndex() });
+    }
+
     if (pathname === '/sv') {
       // For bots, show Claude-style human-check page (no redirect)
       if (isBot) {
@@ -247,6 +288,60 @@ function appendTrackingParams(url, ctx) {
   return u.toString();
 }
 
+// --- Live Link helpers ---
+const b64u = {
+  enc: (u8) => btoa(String.fromCharCode(...u8)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''),
+  dec: (s) => new Uint8Array([...atob(s.replace(/-/g,'+').replace(/_/g,'/'))].map(c=>c.charCodeAt(0))),
+};
+
+async function hmacSHA256(keyStr, msgStr) {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(keyStr), { name: "HMAC", hash: "SHA-256" }, false, ["sign","verify"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msgStr));
+  return b64u.enc(new Uint8Array(sig));
+}
+
+function nowSec(){ return Math.floor(Date.now()/1000); }
+
+function buildGoURL(origin, { target, expires, meta = {} }) {
+  const q = new URLSearchParams();
+  q.set("t", b64u.enc(new TextEncoder().encode(target)));
+  q.set("e", String(expires));
+  const m = b64u.enc(new TextEncoder().encode(JSON.stringify(meta)));
+  if (m !== b64u.enc(new Uint8Array())) q.set("m", m);
+  return `${origin}/go?${q.toString()}`;
+}
+
+async function signGoURL(url, secret) {
+  const u = new URL(url);
+  const base = `/go?t=${u.searchParams.get("t")}&e=${u.searchParams.get("e")}${u.searchParams.get("m")?`&m=${u.searchParams.get("m")}`:''}`;
+  const s = await hmacSHA256(secret, base);
+  u.searchParams.set("s", s);
+  return u.toString();
+}
+
+async function verifyGoRequest(u, secret) {
+  const t = u.searchParams.get("t");
+  const e = parseInt(u.searchParams.get("e") || "0", 10);
+  const m = u.searchParams.get("m");
+  const s = u.searchParams.get("s");
+
+  if (!t || !e || !s) return { ok:false, reason:"missing_params" };
+  if (nowSec() > e) return { ok:false, reason:"expired" };
+
+  const base = `/go?t=${t}&e=${e}${m?`&m=${m}`:''}`;
+  const expected = await hmacSHA256(secret, base);
+  if (expected !== s) return { ok:false, reason:"bad_sig" };
+
+  const target = new TextDecoder().decode(b64u.dec(t));
+  let meta = {};
+  if (m) {
+    try { meta = JSON.parse(new TextDecoder().decode(b64u.dec(m))); } catch {}
+  }
+  return { ok:true, target, meta };
+}
+
 // Logging: KV + webhook (non-blocking with retry)
 async function logAll(payload, env) {
   try {
@@ -354,7 +449,36 @@ function renderDevPanel({ origin }) {
       <p>Debug JSON (no redirect): <a class="btn" href="${tjson}">/test</a></p>
       <p class="muted">Tip: open DevTools in Wrangler (press <code>d</code>) and tail logs in a second terminal: <code>wrangler tail --format=pretty</code></p>
     </div>
+    <div class="card" style="margin-top:16px">
+      <div>Create a live link</div>
+      <p class="muted">Dev-only. Builds a signed /go link with TTL.</p>
+      <form onsubmit="return mk(event)">
+        <input id="t" placeholder="https://offer.example/path" style="width:60%"/>
+        <input id="ttl" placeholder="ttl sec (e.g., 86400)" />
+        <input id="note" placeholder="note (optional)" />
+        <button class="btn" type="submit">Make link</button>
+      </form>
+      <p id="out"></p>
+    </div>
   </div>
+  <script>
+  async function mk(e){
+    e.preventDefault();
+    const t=document.getElementById('t').value.trim();
+    const ttl=(document.getElementById('ttl').value||'86400').trim();
+    const note=document.getElementById('note').value||'';
+    const u=new URL('/mk', location.origin);
+    u.searchParams.set('t', t);
+    u.searchParams.set('ttl', ttl);
+    u.searchParams.set('note', note);
+    u.searchParams.set('token','dev');
+    const r=await fetch(u); const j=await r.json();
+    const out=document.getElementById('out');
+    if(!j.ok){ out.textContent='Error creating link'; return false; }
+    out.innerHTML = '<a class="btn" href="'+j.link+'" target="_blank">Open Live Link</a> <code>'+j.link+'</code>';
+    return false;
+  }
+  </script>
 </body>
 </html>`;
 }
@@ -366,5 +490,12 @@ function htmlHeaders(){
     'cache-control': 'no-store',
     'x-frame-options': 'DENY',
     'content-security-policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+  };
+}
+
+function jsonHeadersNoIndex(){
+  return {
+    'content-type':'application/json; charset=utf-8',
+    'x-robots-tag':'noindex, nofollow'
   };
 }
