@@ -58,6 +58,17 @@ export default {
       return accessPage(url, env);
     }
 
+    if (pathname === '/test') {
+      const data = { geo, device, ua, utm, subid, asn };
+      return new Response(JSON.stringify(data, null, 2), {
+        status: 200,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'cache-control': 'no-store'
+        }
+      });
+    }
+
     if (pathname === '/sv') {
       // For bots, show Claude-style human-check page (no redirect)
       if (isBot) {
