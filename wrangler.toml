@@ -20,12 +20,12 @@ FALLBACK_OFFER = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
 
 MAKE_WEBHOOK_URL = "https://hook.us2.make.com/xo6kznpoafou41c9d84wjxstg487rbfe"  # TODO: replace with your real Make.com webhook URL
 BOT_ASN_DENYLIST = "15169,32934,8075,16509,14618,54113"  # Google, Meta, Microsoft, AWS, Amazon, Fastly
+
 LINK_SECRET = "replace-with-32+char-random"
 LINK_DEFAULT_TTL = "86400" # 24h
 DEBUG_LIVE_LINKS = "true"
 LINK_DEV_TOKEN = "dev"
 
-[vars]
 BLOCKLIST_HOSTS = "eat.bunochanmedia.com"
 FALLBACK_URL = "https://<clean-offer-or-vault>"
 EDGE_HARD_FALLBACK = "true"
