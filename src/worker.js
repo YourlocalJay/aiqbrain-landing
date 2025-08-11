@@ -1,5 +1,4 @@
 
-import { accessPage } from './handlers/access';
 
 export default {
   async fetch(request, env, ctx) {
@@ -58,9 +57,6 @@ export default {
       });
     }
 
-    if (pathname === '/access') {
-      return accessPage(url, env);
-    }
 
     if (pathname === '/test') {
       const data = { geo, device, ua, utm, subid, asn };
