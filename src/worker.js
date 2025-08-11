@@ -43,8 +43,16 @@ export default {
     const subid = buildSubid({ persona, subreddit, geo, device, ts });
 
     // --- Routes ---
-    if (pathname === '/' || pathname === '/vault') {
-      // Serve stealth HTML (inject webhook URL for client-side actions if needed)
+    // Root: Dev Panel (local testing shortcuts)
+    if (pathname === '/') {
+      return new Response(renderDevPanel({ origin: url.origin }), {
+        status: 200,
+        headers: htmlHeaders()
+      });
+    }
+
+    // Stealth vault page (unchanged behavior)
+    if (pathname === '/vault') {
       const assetRes = await fetch(new URL('/vault/index.html', request.url));
       let html = await assetRes.text();
       const inject = `<script>window.MAKE_WEBHOOK_URL=${JSON.stringify(env.MAKE_WEBHOOK_URL || '')};</script>`;
@@ -301,6 +309,50 @@ function renderClaudeStyleFallback({ geo, device }) {
       <p class="muted">We couldn’t verify your client automatically. If you’re human, refresh and try again.</p>
       <div><span class="pill">GEO: ${geo}</span> <span class="pill">Device: ${device}</span></div>
       <p class="muted" style="font-size:12px">Bots & scrapers see this page; real users redirect to the vault offer.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+function renderDevPanel({ origin }) {
+  const base = origin.replace(/\/+$/, "");
+  const ex1 = `${base}/sv?utm_source=reddit&utm_campaign=P01&utm_content=ChatGPT&geo=US&device=android`;
+  const ex2 = `${base}/sv?utm_source=reddit&utm_campaign=P04&utm_content=ClaudeAI&geo=UK&device=ios`;
+  const ex3 = `${base}/sv?utm_source=reddit&utm_campaign=P08&utm_content=Canva&geo=CA&device=android`;
+  const tjson = `${base}/test?utm_source=reddit&utm_campaign=P10&utm_content=Futurology&geo=US&device=android`;
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AIQBrain • Dev Panel</title>
+<style>
+  :root{--bg:#0b1116;--fg:#e6e6e6;--muted:#9aa0a6;--acc:#7bffb2;}
+  html,body{height:100%} body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 Inter,ui-sans-serif,system-ui}
+  .wrap{max-width:780px;margin:0 auto;padding:36px 20px}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  a.btn{display:inline-block;margin:8px 10px 0 0;padding:10px 14px;border:1px solid rgba(255,255,255,.2);border-radius:10px;color:var(--fg);text-decoration:none}
+  a.btn:hover{border-color:var(--acc)}
+  code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>AIQBrain • Dev Panel</h2>
+    <p class="muted">Quick links to test redirect + logging. These include geo/device overrides for local dev.</p>
+    <div class="card">
+      <div>Examples:</div>
+      <p>
+        <a class="btn" href="${ex1}">US • Android • P01 / r/ChatGPT</a>
+        <a class="btn" href="${ex2}">UK • iOS • P04 / r/ClaudeAI</a>
+        <a class="btn" href="${ex3}">CA • Android • P08 / r/Canva</a>
+      </p>
+      <p>Debug JSON (no redirect): <a class="btn" href="${tjson}">/test</a></p>
+      <p class="muted">Tip: open DevTools in Wrangler (press <code>d</code>) and tail logs in a second terminal: <code>wrangler tail --format=pretty</code></p>
     </div>
   </div>
 </body>
