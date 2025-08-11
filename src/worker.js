@@ -10,6 +10,10 @@ export default {
 
     // --- Host allowlist ---
     const allowedHosts = (env.ALLOWED_HOSTS || '').split(',').map(h=>h.trim().toLowerCase()).filter(Boolean);
+    // During local dev, disable host check
+    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+      allowedHosts.length = 0;
+    }
     if (allowedHosts.length && !allowedHosts.includes(host)) {
       return new Response('Not found', { status: 404 });
     }

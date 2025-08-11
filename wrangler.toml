@@ -9,7 +9,7 @@ preview_id = "935398f9f4cc4a10809b8acbcc9a809c"
 
 [vars]
 OFFERS_PATH = "/data/cloudflare_offers.json"
-ALLOWED_HOSTS = "aiqbrain.com"
+ALLOWED_HOSTS = ""
 
 US_ANDROID = "https://singingfiles.com/show.php?l=0&u=2427730&id=68831"
 US_IOS     = "https://singingfiles.com/show.php?l=0&u=2427730&id=69234"
