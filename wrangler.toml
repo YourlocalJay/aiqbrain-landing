@@ -24,3 +24,8 @@ LINK_SECRET = "replace-with-32+char-random"
 LINK_DEFAULT_TTL = "86400" # 24h
 DEBUG_LIVE_LINKS = "true"
 LINK_DEV_TOKEN = "dev"
+
+[vars]
+BLOCKLIST_HOSTS = "eat.bunochanmedia.com"
+FALLBACK_URL = "https://<clean-offer-or-vault>"
+EDGE_HARD_FALLBACK = "true"
