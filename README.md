@@ -5,6 +5,7 @@ Minimal Cloudflare Worker used to serve a Claude-themed bait page and cloak offe
 ## Routes
 - `/` and `/vault` – static bait page
 - `/sv` and `/offers/*` – offer redirect with basic bot filtering
+- `/go` – signed shortlink redirect
 - all other paths – plain 404
 
 ## Development
@@ -41,6 +42,10 @@ Offers are stored in `public/data/cloudflare_offers.json`. Edit this file and co
 - `OFFERS_PATH` – path to the offers file (default `/data/cloudflare_offers.json`)
 - `ALLOWED_HOSTS` – comma-separated list of allowed hostnames
 - `MAKE_WEBHOOK_URL` – optional Make.com webhook used by the vault form
+- `LINK_SECRET` – HMAC secret for signed `/go` links
+- `LINK_DEFAULT_TTL` – default TTL for generated links in seconds
+- `DEBUG_LIVE_LINKS` – when `true`, enables the `/mk` dev link generator
+- `LINK_DEV_TOKEN` – token required by `/mk` (dev only)
 
 ### Deployment
 ```
