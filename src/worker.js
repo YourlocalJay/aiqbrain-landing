@@ -1,4 +1,5 @@
-
+const ALLOWED_SCHEMES = new Set(['https:']);
+const rateBuckets = new Map();
 
 export default {
   async fetch(request, env, ctx) {
@@ -92,8 +93,31 @@ export default {
       for (const k of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','sub1','sub2','sub3']) {
         if (inbound.has(k)) targetURL.searchParams.set(k, inbound.get(k));
       }
+      const BLOCKLIST_HOSTS = (env.BLOCKLIST_HOSTS || '').split(',').map(s=>s.trim()).filter(Boolean);
+      const fallback = env.FALLBACK_URL || `${url.origin}/vault`;
+      if (BLOCKLIST_HOSTS.includes(targetURL.hostname)) {
+        return Response.redirect(fallback, 302);
+      }
+      if (isEdgeOrWindows(ua) && env.EDGE_HARD_FALLBACK === 'true') {
+        return Response.redirect(fallback, 302);
+      }
 
-      // Optional: add KV click logging here
+      const fp = await sha256(
+        (request.headers.get('cf-connecting-ip')||'') +
+        (request.headers.get('user-agent')||'') +
+        (request.headers.get('accept-language')||'')
+      );
+      ctx.waitUntil(env.CLICK_LOG?.fetch(env.CLICK_LOG, {
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body: JSON.stringify({
+          ts: new Date().toISOString(),
+          linkMeta: verdict.meta,
+          destHost: targetURL.hostname,
+          fp, ua: request.headers.get('user-agent')||'',
+          utm: Object.fromEntries(['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].map(k=>[k, url.searchParams.get(k)]))
+        })
+      }).catch(()=>{}));
 
       return Response.redirect(targetURL.toString(), 302);
     }
@@ -108,10 +132,29 @@ export default {
         return new Response('Forbidden', { status: 403 });
       }
 
+      const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+      const now = Date.now();
+      let bucket = rateBuckets.get(ip) || { count: 0, ts: now };
+      if (now - bucket.ts > 60000) bucket = { count: 0, ts: now };
+      bucket.count++;
+      rateBuckets.set(ip, bucket);
+      if (bucket.count > 10) {
+        return new Response('Rate limit', { status: 429 });
+      }
+
       const target = url.searchParams.get('t');
       if (!target) return new Response('Missing t', { status: 400 });
 
-      const ttl = parseInt(url.searchParams.get('ttl') || env.LINK_DEFAULT_TTL || '86400', 10);
+      const MAX_TTL = parseInt(env.LINK_MAX_TTL || '604800', 10);
+      const ttl = Math.min(
+        parseInt(url.searchParams.get('ttl') || env.LINK_DEFAULT_TTL || '86400', 10),
+        MAX_TTL
+      );
+      try {
+        const test = new URL(target);
+        if (!ALLOWED_SCHEMES.has(test.protocol)) return new Response('Bad scheme', { status: 400 });
+      } catch { return new Response('Bad URL', { status: 400 }); }
+
       const meta = { note: url.searchParams.get('note') || '' };
       const unsigned = buildGoURL(url.origin, { target, expires: nowSec() + ttl, meta });
       const signed = await signGoURL(unsigned, env.LINK_SECRET || '');
@@ -326,19 +369,26 @@ async function verifyGoRequest(u, secret) {
   const e = parseInt(u.searchParams.get("e") || "0", 10);
   const m = u.searchParams.get("m");
   const s = u.searchParams.get("s");
-
   if (!t || !e || !s) return { ok:false, reason:"missing_params" };
-  if (nowSec() > e) return { ok:false, reason:"expired" };
+  if (Number.isNaN(e) || e <= 0) return { ok:false, reason:"bad_exp" };
+  if (Math.floor(Date.now()/1000) > e) return { ok:false, reason:"expired" };
 
   const base = `/go?t=${t}&e=${e}${m?`&m=${m}`:''}`;
-  const expected = await hmacSHA256(secret, base);
-  if (expected !== s) return { ok:false, reason:"bad_sig" };
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret), { name:"HMAC", hash:"SHA-256" }, false, ["sign","verify"]
+  );
+  const sigBytes = b64u.dec(s);
+  const ok = await crypto.subtle.verify("HMAC", key, sigBytes, new TextEncoder().encode(base));
+  if (!ok) return { ok:false, reason:"bad_sig" };
 
   const target = new TextDecoder().decode(b64u.dec(t));
   let meta = {};
-  if (m) {
-    try { meta = JSON.parse(new TextDecoder().decode(b64u.dec(m))); } catch {}
-  }
+  if (m) { try { meta = JSON.parse(new TextDecoder().decode(b64u.dec(m))); } catch { meta = {}; } }
+
+  let targetURL;
+  try { targetURL = new URL(target); } catch { return { ok:false, reason:"bad_url" }; }
+  if (!ALLOWED_SCHEMES.has(targetURL.protocol)) return { ok:false, reason:"disallowed_scheme" };
+
   return { ok:true, target, meta };
 }
 
@@ -376,6 +426,15 @@ async function postWithRetry(url, body, attempts = 3) {
     await new Promise(r => setTimeout(r, 150 * (i + 1)));
   }
   throw lastErr;
+}
+
+async function sha256(s){
+  const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return b64u.enc(new Uint8Array(d));
+}
+
+function isEdgeOrWindows(ua=''){
+  return /Edg\//.test(ua) || /Windows NT/.test(ua);
 }
 
 // Claude-style fallback HTML for bots
