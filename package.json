@@ -1,16 +1,18 @@
 {
-  "name": "aiqbrain-landing",
-  "version": "1.0.0",
-  "description": "AIQBrain cloaking worker",
-  "main": "src/worker.js",
+  "name": "aiqbrain-persona-007",
+  "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "build": "wrangler build",
-    "test": "node scripts/validate-offers.mjs",
-    "lint": "node -e \"console.log('lint ok')\""
+    "build:manifest": "node offers/merge_and_score.mjs",
+    "build:pdfs": "node templates/render_pdfs.mjs",
+    "build": "npm run build:manifest && npm run build:pdfs"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^23.4.0",
+    "yaml": "^2.5.0"
   },
   "devDependencies": {
-    "wrangler": "^4.27.0"
+    "typescript": "^5.5.4",
+    "wrangler": "^3.75.0"
   }
 }

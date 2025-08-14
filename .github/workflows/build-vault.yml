@@ -1,0 +1,33 @@
+name: Build Vault PDFs
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 1 * * *"  # ≈6:30pm PT daily
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    env:
+      CPA_CPAGRIP_USER_ID: ${{ secrets.CPA_CPAGRIP_USER_ID }}
+      CPA_CPAGRIP_API_KEY: ${{ secrets.CPA_CPAGRIP_API_KEY }}
+      AIQBRAIN_CLOAK_BASE: ${{ secrets.AIQBRAIN_CLOAK_BASE }}
+      ROUTE_SV: ${{ secrets.ROUTE_SV }}
+      UTM_DEFAULT: ${{ secrets.UTM_DEFAULT }}
+      ALLOWED_GEOS: ${{ secrets.ALLOWED_GEOS }}
+      PREFERRED_DEVICES: ${{ secrets.PREFERRED_DEVICES }}
+      MIN_PRIZE_VALUE: ${{ secrets.MIN_PRIZE_VALUE }}
+      TIME_WINDOW_DAYS: ${{ secrets.TIME_WINDOW_DAYS }}
+      TRACKING_SALT: ${{ secrets.TRACKING_SALT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run build
+      - name: Commit artifacts
+        run: |
+          git config user.name "vault-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add public/ data/manifest.json
+          git commit -m "Vault build $(date -u +%F)" || echo "No changes"
+          git push

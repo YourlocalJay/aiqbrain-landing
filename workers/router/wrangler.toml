@@ -1,0 +1,10 @@
+name = "aiq-007-router"
+main = "src/index.ts"
+compatibility_date = "2025-08-01"
+
+[vars]
+WEBHOOK_LOG_URL = "${WEBHOOK_LOG_URL}"
+
+[[kv_namespaces]]
+binding = "KV_LOGS"
+id = "${CF_KV_NAMESPACE_ID}"

@@ -1,0 +1,8 @@
+r/giveaways:
+  max_title: 300
+  banned_words: [scam, crypto]
+  links: comments_only
+r/Sweepstakes:
+  max_title: 150
+  banned_words: [referral]
+  links: allow

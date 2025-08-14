@@ -1,0 +1,2 @@
+- Wed/Fri/Sun: 6–10pm ET
+- Sat/Sun: Pinterest morning drops

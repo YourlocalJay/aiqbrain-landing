@@ -1,0 +1,9 @@
+[
+  {
+    "id": "seed:example",
+    "prize_type": "gift_card",
+    "prize_name": "Amazon Gift Card",
+    "prize_value": 100,
+    "entry_url": "https://example.com"
+  }
+]
